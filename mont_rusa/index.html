@@ -1,1 +1,819 @@
+<!DOCTYPE html>
+<!--
+  Montaña rusa: energía cinética, potencial y su conservación
+  Interactivo de Física para estudiantes ASE/GED en español.
+  © José M. Fernández. Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0).
+  https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="author" content="José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago">
+  <meta name="license" content="CC BY-NC-SA 4.0">
+  <meta name="description" content="Simulación interactiva de una montaña rusa para explorar la energía cinética, la energía potencial y su conservación.">
+  <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">
+  <title>Montaña rusa: energía cinética, potencial y su conservación</title>
+  <style>
+    :root{
+      --tinta:#1f2430;          /* texto principal, alto contraste */
+      --tinta-suave:#555b66;    /* texto secundario (>= AA sobre blanco) */
+      --marca:#5C3900;          /* marrón institucional (10.29:1 sobre blanco) */
+      --marca-oscura:#734700;
+      --potencial:#c0392b;      /* energía potencial (rojo) */
+      --cinetica:#e08a00;       /* energía cinética (ámbar) */
+      --cinetica-tinta:#5C3900; /* texto sobre ámbar */
+      --panel:#ffffff;
+      --borde:#c9cdd6;
+      --fondo:#eef1f6;
+      --cielo-a:#bfe3fb;
+      --cielo-b:#eaf6ff;
+      --madera:#7a4a22;
+      --madera-clara:#a06a38;
+      --foco:#0b5cad;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+      color:var(--tinta);
+      background:var(--fondo);
+      line-height:1.4;
+      -webkit-text-size-adjust:100%;
+    }
+    .lienzo{
+      max-width:1100px;
+      margin:0 auto;
+      padding:10px 12px 4px;
+    }
+    header.titulo{
+      display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+      border-bottom:3px solid var(--marca);
+      padding-bottom:6px;margin-bottom:8px;
+    }
+    header.titulo h1{
+      font-size:clamp(1.05rem,2.4vw,1.5rem);
+      margin:0;color:var(--marca);font-weight:700;letter-spacing:.2px;
+    }
+    header.titulo p{margin:0;font-size:.82rem;color:var(--tinta-suave);}
 
+    /* Aviso de orientación (solo teléfono vertical) */
+    .aviso-orientacion{
+      display:none;background:#fff8e7;border:1px solid #e0b400;
+      color:var(--marca);border-radius:8px;padding:8px 12px;margin-bottom:8px;
+      font-size:.9rem;font-weight:600;
+    }
+    @media (orientation:portrait) and (max-width:820px){
+      .aviso-orientacion{display:flex;align-items:center;gap:8px;}
+    }
+
+    /* Escenario: barra de energía + simulación */
+    .escena{
+      display:grid;
+      grid-template-columns:118px 1fr;
+      gap:10px;align-items:stretch;
+    }
+    @media (max-width:560px){ .escena{grid-template-columns:96px 1fr;} }
+
+    /* Barra de energía */
+    .barra-energia{
+      background:var(--panel);border:1px solid var(--borde);border-radius:12px;
+      padding:8px 8px 6px;display:flex;flex-direction:column;
+    }
+    .barra-energia .rotulo-total{
+      font-size:.72rem;text-align:center;color:var(--tinta-suave);
+      font-weight:600;margin-bottom:4px;
+    }
+    .barra-svg-envoltura{flex:1;min-height:160px;}
+    .leyenda{font-size:.72rem;margin-top:6px;display:flex;flex-direction:column;gap:3px;}
+    .leyenda .item{display:flex;align-items:center;gap:6px;}
+    .muestra{width:14px;height:14px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(0,0,0,.25);}
+    .muestra.pot{background:var(--potencial);}
+    .muestra.cin{background:var(--cinetica);}
+    .muestra.cal{background:repeating-linear-gradient(45deg,#8a9099 0 3px,#5f656e 3px 5px);}
+    .leyenda .item b{font-weight:700;}
+    .leyenda .valor{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;color:var(--tinta);}
+
+    /* Simulación */
+    .sim{position:relative;background:var(--panel);border:1px solid var(--borde);
+      border-radius:12px;overflow:hidden;}
+    .sim svg{display:block;width:100%;height:auto;touch-action:none;}
+
+    /* Panel de datos: superpuesto arriba, centrado y angosto para no tapar las subidas */
+    .datos{
+      position:absolute;top:8px;left:50%;transform:translateX(-50%);
+      width:max-content;max-width:64%;
+      background:rgba(255,255,255,.95);border:1px solid var(--borde);
+      border-radius:10px;padding:7px 14px;
+      display:grid;grid-template-columns:auto auto;gap:2px 20px;
+      font-size:.8rem;font-variant-numeric:tabular-nums;
+      box-shadow:0 2px 8px rgba(0,0,0,.14);
+    }
+    @media (max-width:560px){ .datos{max-width:76%;grid-template-columns:auto auto;font-size:.72rem;gap:1px 12px;padding:6px 10px;} }
+    .datos .dato{display:flex;justify-content:space-between;gap:8px;}
+    .datos .dato .k{color:var(--tinta-suave);}
+    .datos .dato .v{font-weight:700;color:var(--tinta);}
+    .datos .dato.cin .v{color:var(--marca-oscura);}
+    .datos .dato.pot .v{color:var(--potencial);}
+    .datos .dato.cal .v{color:#5f656e;}
+    .solo-friccion[hidden]{display:none;}
+    .datos[hidden]{display:none;}
+
+    .sugerencia-libre{
+      position:absolute;bottom:8px;left:8px;right:8px;text-align:center;
+      background:rgba(92,57,0,.92);color:#fff;font-size:.8rem;font-weight:600;
+      padding:5px 8px;border-radius:8px;
+    }
+    .sugerencia-libre[hidden]{display:none;}
+
+    /* Controles */
+    .controles{
+      margin-top:10px;display:flex;flex-direction:column;gap:8px;align-items:center;
+    }
+    .fila-controles{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;}
+    .grupo{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;}
+    .grupo .etiqueta-grupo{flex:0 0 auto;font-size:.75rem;color:var(--tinta-suave);
+      font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-right:2px;}
+    button{
+      font-family:inherit;font-size:.9rem;font-weight:600;
+      min-height:44px;padding:8px 14px;border-radius:10px;
+      border:1.5px solid var(--marca);background:#fff;color:var(--marca);
+      cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+      transition:background .15s,color .15s,transform .05s;
+    }
+    button:hover{background:#f4ecdf;}
+    button:active{transform:translateY(1px);}
+    button.primario{background:var(--marca);color:#fff;}
+    button.primario:hover{background:var(--marca-oscura);}
+    button.caso[aria-pressed="true"]{background:var(--marca);color:#fff;}
+    button.fric[aria-pressed="true"]{background:var(--marca);color:#fff;}
+    button:focus-visible{outline:3px solid var(--foco);outline-offset:2px;}
+    button .icono{font-size:1.05em;line-height:1;}
+
+    /* Preguntas guía */
+    details.preguntas{
+      margin-top:10px;background:var(--panel);border:1px solid var(--borde);
+      border-radius:12px;overflow:hidden;
+    }
+    details.preguntas>summary{
+      cursor:pointer;list-style:none;padding:12px 14px;
+      font-weight:700;color:var(--marca);font-size:1rem;
+      display:flex;align-items:center;gap:8px;min-height:44px;
+    }
+    details.preguntas>summary::-webkit-details-marker{display:none;}
+    details.preguntas>summary::after{content:"▾";margin-left:auto;transition:transform .2s;}
+    details.preguntas[open]>summary::after{transform:rotate(180deg);}
+    details.preguntas>summary:focus-visible{outline:3px solid var(--foco);outline-offset:-3px;}
+    .preguntas-cuerpo{padding:0 16px 14px;}
+    .preguntas-cuerpo h2{
+      font-size:.95rem;color:var(--marca-oscura);margin:12px 0 4px;
+      border-left:4px solid var(--cinetica);padding-left:8px;
+    }
+    .preguntas-cuerpo ul{margin:0 0 6px;padding-left:22px;}
+    .preguntas-cuerpo li{margin:3px 0;font-size:.92rem;}
+
+    footer.licencia{
+      margin:14px 0 8px;font-size:.75rem;color:var(--tinta-suave);text-align:center;
+      border-top:1px solid var(--borde);padding-top:8px;
+    }
+    footer.licencia a{color:var(--marca);}
+
+    /* Solo lectores de pantalla */
+    .visualmente-oculto{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0 0 0 0);white-space:nowrap;border:0;
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      button{transition:none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="lienzo">
+    <header class="titulo">
+      <h1>Montaña rusa: energía cinética, potencial y su conservación</h1>
+      <p>La energía total permanece constante (sin fricción).</p>
+    </header>
+
+    <div class="aviso-orientacion" role="note">
+      <span aria-hidden="true">🔄</span>
+      <span>Para una mejor vista, coloca el teléfono en posición horizontal.</span>
+    </div>
+
+    <div class="escena">
+      <!-- Barra de energía -->
+      <section class="barra-energia" aria-label="Barra de energía">
+        <div class="rotulo-total">Energía total<br>(constante)</div>
+        <div class="barra-svg-envoltura">
+          <svg viewBox="0 0 60 300" preserveAspectRatio="none" role="img"
+               aria-label="Barra de energía: potencial (rojo) abajo, cinética (ámbar) en medio y calor por fricción (gris) arriba. Los tres siempre suman la energía total.">
+            <defs>
+              <pattern id="rayasCalor" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="7" height="7" fill="#8a9099"/>
+                <line x1="0" y1="0" x2="0" y2="7" stroke="#5f656e" stroke-width="2.5"/>
+              </pattern>
+            </defs>
+            <rect x="6" y="6" width="48" height="288" rx="6" fill="#f2f4f8" stroke="#c9cdd6"/>
+            <!-- potencial (rojo) abajo -->
+            <rect id="barra-pot" x="8" y="150" width="44" height="142" fill="#c0392b"/>
+            <!-- cinética (ámbar) en medio -->
+            <rect id="barra-cin" x="8" y="8" width="44" height="142" fill="#e08a00"/>
+            <!-- calor por fricción (gris rayado) arriba -->
+            <rect id="barra-cal" x="8" y="8" width="44" height="0" fill="url(#rayasCalor)"/>
+            <rect x="6" y="6" width="48" height="288" rx="6" fill="none" stroke="#8a8f99" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="leyenda" aria-hidden="true">
+          <div class="item"><span class="muestra cin"></span><b>Cinética</b><span class="valor" id="ley-cin">0 J</span></div>
+          <div class="item"><span class="muestra pot"></span><b>Potencial</b><span class="valor" id="ley-pot">157 J</span></div>
+          <div class="item solo-friccion" id="ley-item-cal" hidden><span class="muestra cal"></span><b>Calor</b><span class="valor" id="ley-cal">0 J</span></div>
+        </div>
+      </section>
+
+      <!-- Simulación -->
+      <section class="sim" aria-label="Simulación de la montaña rusa">
+        <svg id="pista" viewBox="0 0 1000 520" role="img"
+             aria-labelledby="pista-titulo pista-desc">
+          <title id="pista-titulo">Montaña rusa con una pelota que rueda por la pista.</title>
+          <desc id="pista-desc">La pelota parte del punto más alto a la izquierda y recorre la pista. En cada punto, la altura determina la energía potencial y la rapidez determina la energía cinética.</desc>
+          <defs>
+            <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--cielo-a)"/>
+              <stop offset="1" stop-color="var(--cielo-b)"/>
+            </linearGradient>
+            <radialGradient id="pelotaGrad" cx="0.35" cy="0.30" r="0.75">
+              <stop offset="0" stop-color="#ff8a7a"/>
+              <stop offset="0.55" stop-color="#d0392b"/>
+              <stop offset="1" stop-color="#9c241a"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="1000" height="520" fill="url(#cielo)"/>
+          <!-- soportes (truss) -->
+          <g id="soportes" stroke="var(--madera-clara)" stroke-width="2" opacity="0.5"></g>
+          <!-- suelo -->
+          <line x1="0" y1="460" x2="1000" y2="460" stroke="#6b4a2a" stroke-width="2" opacity="0.5"/>
+          <!-- pista -->
+          <path id="via" fill="none" stroke="var(--madera)" stroke-width="7"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- tiradores del caso libre -->
+          <g id="tiradores"></g>
+          <!-- pelota -->
+          <circle id="pelota" r="12" fill="url(#pelotaGrad)" stroke="#7a1a12" stroke-width="1"/>
+        </svg>
+
+        <!-- Panel de datos -->
+        <div class="datos" id="panel-datos" role="group" aria-label="Panel de datos">
+          <div class="dato cin"><span class="k">Energía cinética</span><span class="v" id="d-cin">0.00 J</span></div>
+          <div class="dato"><span class="k">Rapidez</span><span class="v" id="d-vel">0.00 m/s</span></div>
+          <div class="dato pot"><span class="k">Energía potencial</span><span class="v" id="d-pot">156.80 J</span></div>
+          <div class="dato"><span class="k">Altura</span><span class="v" id="d-alt">16.00 m</span></div>
+          <div class="dato solo-friccion" hidden><span class="k">Energía mecánica</span><span class="v" id="d-mec">156.80 J</span></div>
+          <div class="dato cal solo-friccion" hidden><span class="k">Calor (fricción)</span><span class="v" id="d-cal">0.00 J</span></div>
+          <div class="dato"><span class="k">Energía total</span><span class="v" id="d-tot">156.80 J</span></div>
+          <div class="dato"><span class="k">Tiempo</span><span class="v" id="d-t">0.00 s</span></div>
+        </div>
+
+        <div class="sugerencia-libre" id="hint-libre" hidden>
+          Arrastra los puntos <span aria-hidden="true">●</span> para modificar la pista.
+        </div>
+      </section>
+    </div>
+
+    <!-- Controles -->
+    <div class="controles" role="toolbar" aria-label="Controles de la simulación">
+      <div class="fila-controles">
+        <div class="grupo" role="group" aria-label="Selección de pista">
+          <span class="etiqueta-grupo">Pista</span>
+          <button type="button" class="caso" data-caso="0" aria-pressed="true">Caso 1</button>
+          <button type="button" class="caso" data-caso="1" aria-pressed="false">Caso 2</button>
+          <button type="button" class="caso" data-caso="2" aria-pressed="false">Caso 3</button>
+          <button type="button" class="caso" data-caso="3" aria-pressed="false">Caso libre</button>
+        </div>
+        <div class="grupo" role="group" aria-label="Fricción">
+          <span class="etiqueta-grupo">Fricción</span>
+          <button type="button" class="fric" data-mu="0" aria-pressed="true">Sin fricción</button>
+          <button type="button" class="fric" data-mu="0.03" aria-pressed="false">Poca</button>
+          <button type="button" class="fric" data-mu="0.07" aria-pressed="false">Media</button>
+          <button type="button" class="fric" data-mu="0.14" aria-pressed="false">Mucha</button>
+        </div>
+      </div>
+      <div class="fila-controles">
+        <div class="grupo" role="group" aria-label="Reproducción">
+          <span class="etiqueta-grupo">Acción</span>
+          <button type="button" class="primario" id="btn-play" aria-label="Iniciar el recorrido">
+            <span class="icono" id="play-icono" aria-hidden="true">▶</span><span id="play-texto">Iniciar</span>
+          </button>
+          <button type="button" id="btn-reiniciar">
+            <span class="icono" aria-hidden="true">⟲</span>Reiniciar
+          </button>
+          <button type="button" id="btn-datos" aria-pressed="true">
+            <span class="icono" aria-hidden="true">📊</span><span id="datos-texto">Ocultar datos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preguntas guía (plegable) -->
+    <details class="preguntas">
+      <summary><span aria-hidden="true">💡</span>Preguntas guía</summary>
+      <div class="preguntas-cuerpo">
+        <h2>Energía potencial</h2>
+        <ul>
+          <li>¿Qué color de la barra está asociado a la energía potencial y cuál a la energía cinética?</li>
+          <li>¿En qué puntos es máxima la energía potencial? ¿Cómo es la altura en ese punto?</li>
+        </ul>
+        <h2>Energía cinética</h2>
+        <ul>
+          <li>¿En qué puntos es máxima la energía cinética? ¿Cómo es la rapidez en ese punto?</li>
+        </ul>
+        <h2>Relación entre ambas energías</h2>
+        <ul>
+          <li>Cuando la pelota baja, ¿qué ocurre con la energía potencial: aumenta o disminuye?</li>
+          <li>¿Qué transformación de energía sucede cuando la pelota baja? ¿Y cuando sube?</li>
+          <li>¿Por qué la pelota no puede alcanzar una altura mayor que la inicial? Si la energía se conserva, ¿qué le impide subir más alto que su punto de partida?</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- Región para lectores de pantalla -->
+    <div class="visualmente-oculto" aria-live="polite" id="anuncio"></div>
+
+    <footer class="licencia">
+      <p>Montaña rusa: energía cinética, potencial y su conservación · Obra de
+      José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago.<br>
+      Bajo licencia
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">
+      Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</a>.</p>
+    </footer>
+  </div>
+
+<script>
+"use strict";
+(function(){
+  /* ====================== Constantes físicas ====================== */
+  const g = 9.8;        // m/s^2
+  const m = 1;          // kg
+  const H_M = 16;       // altura máxima (m) -> punto de partida
+  const REAL_W = 40;    // ancho real de la pista (m)
+  const E_TOT = m * g * H_M;   // 156.80 J (constante)
+
+  /* ====================== Geometría del lienzo ====================== */
+  const W = 1000, Hsvg = 520;
+  const PAD_X = 60, PAD_TOP = 40, PAD_BOTTOM = 60;
+  const PLOT_H = Hsvg - PAD_TOP - PAD_BOTTOM;   // 420
+  const BASE_Y = Hsvg - PAD_BOTTOM;             // 460
+
+  const xToPix = xf => PAD_X + xf * (W - 2*PAD_X);
+  const hToPix = hf => BASE_Y - hf * PLOT_H;
+  const pixToH = yp => (BASE_Y - yp) / PLOT_H;
+
+  /* ====================== Definición de pistas ======================
+     Cada caso es una lista de puntos de control {x, h} con x y h en [0,1].
+     Los extremos siempre están a h=1 para contener la pelota. */
+  const CASOS = [
+    // Caso 1: valle simple
+    [ {x:0,h:1}, {x:0.5,h:0.02}, {x:1,h:1} ],
+    // Caso 2: dos valles con una loma intermedia
+    [ {x:0,h:1}, {x:0.22,h:0.05}, {x:0.5,h:0.62}, {x:0.78,h:0.05}, {x:1,h:1} ],
+    // Caso 3: colina, valle profundo, colina
+    [ {x:0,h:1}, {x:0.16,h:0.12}, {x:0.38,h:0.78}, {x:0.6,h:0.04}, {x:0.84,h:0.7}, {x:1,h:1} ],
+    // Caso libre (editable): parte de una forma sencilla
+    [ {x:0,h:1}, {x:0.28,h:0.15}, {x:0.5,h:0.55}, {x:0.72,h:0.15}, {x:1,h:1} ]
+  ];
+  const CASO_LIBRE = 3;
+
+  /* ====================== Estado ====================== */
+  let casoActual = 0;
+  let puntos = clonar(CASOS[0]);   // puntos de control activos
+  let curva = [];                  // muestreo denso {xf,hf}
+  let arc = [];                    // longitud de arco acumulada (m)
+  let largoTotal = 0;              // longitud total (m)
+
+  let s = 0;                       // posición de la pelota (m de arco)
+  let dir = 1;                     // sentido (+1 derecha, -1 izquierda)
+  let tiempo = 0;                  // s
+  let jugando = false;
+  let liberada = false;            // control del arranque desde el reposo
+
+  // Fricción
+  let mu = 0;                      // coeficiente de fricción (0 = ideal, sin fricción)
+  let Emec = E_TOT;                // energía mecánica actual (cinética + potencial)
+  let Eheat = 0;                   // energía disipada como calor
+  let detenida = false;            // la pelota se detuvo por la fricción
+  let sRev = null;                 // arco del último punto de retorno (para detectar el reposo)
+  let hMin = 0, sBottom = 0, PEmin = 0;  // punto más bajo de la pista
+
+  function clonar(a){ return a.map(p=>({x:p.x,h:p.h})); }
+
+  /* ====================== Curva de Catmull-Rom ====================== */
+  function construirCurva(){
+    const P = puntos;
+    const n = P.length;
+    const muestras = [];
+    const porSeg = 60;
+    for(let i=0;i<n-1;i++){
+      const p0 = P[Math.max(0,i-1)];
+      const p1 = P[i];
+      const p2 = P[i+1];
+      const p3 = P[Math.min(n-1,i+2)];
+      for(let j=0;j<porSeg;j++){
+        const t = j/porSeg;
+        muestras.push({
+          xf: catmull(p0.x,p1.x,p2.x,p3.x,t),
+          hf: catmull(p0.h,p1.h,p2.h,p3.h,t)
+        });
+      }
+    }
+    muestras.push({xf:P[n-1].x, hf:P[n-1].h});
+    // clamp alturas a [0,1] por seguridad
+    for(const q of muestras){ if(q.hf<0)q.hf=0; if(q.hf>1)q.hf=1; }
+    curva = muestras;
+
+    // longitud de arco en metros
+    arc = [0];
+    for(let i=1;i<curva.length;i++){
+      const dx = (curva[i].xf-curva[i-1].xf)*REAL_W;
+      const dy = (curva[i].hf-curva[i-1].hf)*H_M;
+      arc.push(arc[i-1] + Math.hypot(dx,dy));
+    }
+    largoTotal = arc[arc.length-1];
+
+    // punto más bajo de la pista (para el reposo con fricción)
+    hMin = 1; let idxMin = 0;
+    for(let i=0;i<curva.length;i++){ if(curva[i].hf < hMin){ hMin = curva[i].hf; idxMin = i; } }
+    sBottom = arc[idxMin];
+    PEmin = m*g*(hMin*H_M);
+  }
+
+  function catmull(p0,p1,p2,p3,t){
+    const t2=t*t, t3=t2*t;
+    return 0.5*((2*p1) + (-p0+p2)*t + (2*p0-5*p1+4*p2-p3)*t2 + (-p0+3*p1-3*p2+p3)*t3);
+  }
+
+  /* ====================== Interpolación por longitud de arco ====================== */
+  function muestraEn(sVal){
+    if(sVal<=0) return curva[0];
+    if(sVal>=largoTotal) return curva[curva.length-1];
+    // búsqueda binaria en arc[]
+    let lo=0, hi=arc.length-1;
+    while(lo<hi-1){
+      const mid=(lo+hi)>>1;
+      if(arc[mid]<=sVal) lo=mid; else hi=mid;
+    }
+    const t=(sVal-arc[lo])/(arc[hi]-arc[lo] || 1);
+    return {
+      xf: curva[lo].xf + (curva[hi].xf-curva[lo].xf)*t,
+      hf: curva[lo].hf + (curva[hi].hf-curva[lo].hf)*t
+    };
+  }
+
+  /* ====================== Dibujo de la pista ====================== */
+  const elVia = document.getElementById("via");
+  const elSoportes = document.getElementById("soportes");
+  const elPelota = document.getElementById("pelota");
+  const elTiradores = document.getElementById("tiradores");
+
+  function dibujarPista(){
+    // trazo de la vía
+    let d = "";
+    for(let i=0;i<curva.length;i++){
+      const px=xToPix(curva[i].xf), py=hToPix(curva[i].hf);
+      d += (i===0?"M":"L") + px.toFixed(1) + " " + py.toFixed(1) + " ";
+    }
+    elVia.setAttribute("d", d.trim());
+
+    // soportes verticales bajo la vía
+    let sop = "";
+    const paso = Math.max(1, Math.floor(curva.length/26));
+    for(let i=0;i<curva.length;i+=paso){
+      const px=xToPix(curva[i].xf), py=hToPix(curva[i].hf);
+      sop += `<line x1="${px.toFixed(1)}" y1="${py.toFixed(1)}" x2="${px.toFixed(1)}" y2="460"/>`;
+    }
+    elSoportes.innerHTML = sop;
+  }
+
+  function dibujarTiradores(){
+    if(casoActual!==CASO_LIBRE){ elTiradores.innerHTML=""; return; }
+    let t="";
+    for(let i=1;i<puntos.length-1;i++){   // solo puntos interiores
+      const px=xToPix(puntos[i].x), py=hToPix(puntos[i].h);
+      t += `<circle class="tirador" data-idx="${i}" cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="13"
+             fill="#5C3900" stroke="#fff" stroke-width="2.5" style="cursor:grab" tabindex="0"
+             role="slider" aria-label="Altura del punto ${i}"
+             aria-valuemin="0" aria-valuemax="16" aria-valuenow="${(puntos[i].h*H_M).toFixed(1)}"/>`;
+    }
+    elTiradores.innerHTML=t;
+    conectarTiradores();
+  }
+
+  /* ====================== Bucle de física ====================== */
+  const DT_FIS = 0.004;   // paso fijo (s)
+  let ultimo = 0;
+
+  function paso(dtReal){
+    if(detenida) return;
+    // subdividir para no “atravesar” los puntos de retorno
+    let restante = Math.min(dtReal, 0.05);
+    while(restante > 0){
+      const dt = Math.min(DT_FIS, restante);
+      restante -= dt;
+
+      const h_m = muestraEn(s).hf * H_M;
+      let KE = Emec - m*g*h_m;   // la cinética sale de la energía mecánica disponible
+
+      // Si ya no queda energía cinética en el punto actual, invierte el sentido.
+      if(KE <= 0 && !liberada){
+        invertir();
+        s += dir * 0.06;
+        if(s<0) s=0; if(s>largoTotal) s=largoTotal;
+        if(detenida) return;
+        continue;
+      }
+      if(liberada){ KE = Math.max(KE, 0.5); } // impulso mínimo al soltar
+      liberada = false;
+
+      const v = Math.sqrt(2*KE/m);
+      let sNext = s + dir * v * dt;
+      if(sNext < 0) sNext = 0;
+      if(sNext > largoTotal) sNext = largoTotal;
+
+      // Fricción: pérdida de energía mecánica = μ·m·g·cos(θ)·distancia.
+      // cos(θ) = fracción horizontal del desplazamiento a lo largo de la pista.
+      if(mu > 0){
+        const dxm = (muestraEn(sNext).xf - muestraEn(s).xf) * REAL_W;
+        const dsm = Math.abs(sNext - s);
+        const cosT = dsm > 0 ? Math.abs(dxm)/dsm : 1;
+        const dW = mu * m * g * cosT * dsm;
+        Emec = Math.max(PEmin, Emec - dW);
+        Eheat = E_TOT - Emec;
+      }
+
+      // Inversión predictiva: si el siguiente punto exige más energía mecánica
+      // de la disponible, la pelota no puede subir y se devuelve.
+      const KEnext = Emec - m*g*(muestraEn(sNext).hf * H_M);
+      if(KEnext < 0){
+        invertir();
+        if(detenida) return;
+        continue;
+      }
+
+      s = sNext;
+      tiempo += dt;
+    }
+  }
+
+  // Invierte el sentido y comprueba si, con fricción, la pelota ya casi no oscila
+  // (dos retornos consecutivos muy cercanos): entonces se considera detenida.
+  function invertir(){
+    if(mu > 0 && sRev !== null && Math.abs(s - sRev) < 0.6){
+      detenida = true;
+      jugando = false;
+      // energía mecánica residual = potencial del punto de reposo (cinética nula)
+      Emec = m*g*(muestraEn(s).hf * H_M);
+      Eheat = E_TOT - Emec;
+      actualizarPlay();
+      anuncio.textContent = "La pelota se detuvo. La fricción convirtió toda la energía mecánica en calor.";
+    }
+    sRev = s;
+    dir = -dir;
+  }
+
+  /* ====================== Render ====================== */
+  const barraPot = document.getElementById("barra-pot");
+  const barraCin = document.getElementById("barra-cin");
+  const barraCal = document.getElementById("barra-cal");
+  const leyPot = document.getElementById("ley-pot");
+  const leyCin = document.getElementById("ley-cin");
+  const leyCal = document.getElementById("ley-cal");
+  const dCin=document.getElementById("d-cin"), dPot=document.getElementById("d-pot"),
+        dTot=document.getElementById("d-tot"), dVel=document.getElementById("d-vel"),
+        dAlt=document.getElementById("d-alt"), dT=document.getElementById("d-t"),
+        dMec=document.getElementById("d-mec"), dCal=document.getElementById("d-cal");
+  const anuncio=document.getElementById("anuncio");
+  let tAnuncio=0;
+
+  function render(){
+    const q = muestraEn(s);
+    // pelota
+    elPelota.setAttribute("cx", xToPix(q.xf).toFixed(1));
+    elPelota.setAttribute("cy", (hToPix(q.hf)-12).toFixed(1)); // apoyada sobre la vía
+
+    // energías: la mecánica (Emec) se reparte en potencial y cinética;
+    // el calor (Eheat) es lo disipado por la fricción. Los tres suman E_TOT.
+    const h_m = q.hf * H_M;
+    const PE = m*g*h_m;
+    const KE = Math.max(0, Emec - PE);
+    const v = Math.sqrt(2*KE/m);
+
+    // barra apilada: potencial (abajo) + cinética (medio) + calor (arriba) = total
+    const bTop=8, bTot=284;
+    const potH = (PE/E_TOT)*bTot;
+    const cinH = (KE/E_TOT)*bTot;
+    const calH = (Eheat/E_TOT)*bTot;
+    barraPot.setAttribute("y", (bTop+bTot-potH).toFixed(1));
+    barraPot.setAttribute("height", Math.max(0,potH).toFixed(1));
+    barraCin.setAttribute("y", (bTop+calH).toFixed(1));
+    barraCin.setAttribute("height", Math.max(0,cinH).toFixed(1));
+    barraCal.setAttribute("y", bTop.toFixed(1));
+    barraCal.setAttribute("height", Math.max(0,calH).toFixed(1));
+
+    leyPot.textContent = PE.toFixed(0)+" J";
+    leyCin.textContent = KE.toFixed(0)+" J";
+    leyCal.textContent = Eheat.toFixed(0)+" J";
+
+    dCin.textContent = KE.toFixed(2)+" J";
+    dPot.textContent = PE.toFixed(2)+" J";
+    dTot.textContent = E_TOT.toFixed(2)+" J";
+    dVel.textContent = v.toFixed(2)+" m/s";
+    dAlt.textContent = h_m.toFixed(2)+" m";
+    dT.textContent   = tiempo.toFixed(2)+" s";
+    dMec.textContent = Emec.toFixed(2)+" J";
+    dCal.textContent = Eheat.toFixed(2)+" J";
+  }
+
+  function anunciar(t){
+    if(t - tAnuncio < 1.5) return; // no saturar al lector de pantalla
+    tAnuncio = t;
+    const q = muestraEn(s);
+    const h_m=q.hf*H_M, PE=m*g*h_m, KE=Math.max(0,E_TOT-PE), v=Math.sqrt(2*KE/m);
+    anuncio.textContent =
+      `Altura ${h_m.toFixed(1)} metros. Rapidez ${v.toFixed(1)} metros por segundo. `+
+      `Energía cinética ${KE.toFixed(0)} joules, energía potencial ${PE.toFixed(0)} joules.`;
+  }
+
+  /* ====================== Animación ====================== */
+  function bucle(ts){
+    if(!ultimo) ultimo = ts;
+    const dtReal = (ts - ultimo)/1000;
+    ultimo = ts;
+    if(jugando){
+      paso(dtReal);
+      anunciar(ts/1000);
+    }
+    render();
+    requestAnimationFrame(bucle);
+  }
+
+  /* ====================== Controles ====================== */
+  const btnPlay=document.getElementById("btn-play");
+  const playIcono=document.getElementById("play-icono");
+  const playTexto=document.getElementById("play-texto");
+  const btnReiniciar=document.getElementById("btn-reiniciar");
+  const btnDatos=document.getElementById("btn-datos");
+  const datosTexto=document.getElementById("datos-texto");
+  const panelDatos=document.getElementById("panel-datos");
+  const hintLibre=document.getElementById("hint-libre");
+  const botonesCaso=[...document.querySelectorAll("button.caso")];
+  const rotuloTotal=document.querySelector(".rotulo-total");
+
+  function actualizarPlay(){
+    playIcono.textContent = jugando ? "⏸" : "▶";
+    playTexto.textContent = jugando ? "Pausar" : "Iniciar";
+    btnPlay.setAttribute("aria-label", jugando ? "Pausar el recorrido" : "Iniciar el recorrido");
+  }
+
+  function reiniciar(){
+    jugando=false;
+    s = largoTotal*0.01;   // apenas pasado el borde superior izquierdo
+    dir=1; tiempo=0; liberada=false;
+    Emec=E_TOT; Eheat=0; detenida=false; sRev=null;   // energías al valor inicial
+    ultimo=0;
+    actualizarPlay();
+    render();
+    anuncio.textContent="Simulación reiniciada. La pelota está en el punto más alto, a la izquierda.";
+  }
+
+  btnPlay.addEventListener("click", ()=>{
+    if(detenida) reiniciar();
+    jugando=!jugando;
+    if(jugando) liberada = (s <= largoTotal*0.02); // impulso solo si arranca desde el tope
+    actualizarPlay();
+  });
+  btnReiniciar.addEventListener("click", reiniciar);
+  btnDatos.addEventListener("click", ()=>{
+    const oculto = !panelDatos.hasAttribute("hidden");
+    if(oculto){ panelDatos.setAttribute("hidden",""); }
+    else { panelDatos.removeAttribute("hidden"); }
+    btnDatos.setAttribute("aria-pressed", String(!oculto));
+    datosTexto.textContent = oculto ? "Mostrar datos" : "Ocultar datos";
+  });
+
+  botonesCaso.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const c=parseInt(b.dataset.caso,10);
+      cambiarCaso(c);
+    });
+  });
+
+  // Fricción
+  const botonesFric=[...document.querySelectorAll("button.fric")];
+  const itemsSoloFric=[...document.querySelectorAll(".solo-friccion")];
+  botonesFric.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      mu = parseFloat(b.dataset.mu);
+      botonesFric.forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+      const conFric = mu > 0;
+      itemsSoloFric.forEach(el=> el.hidden = !conFric);
+      rotuloTotal.innerHTML = conFric
+        ? 'Energía total<br>(cinética + potencial + calor)'
+        : 'Energía total<br>(constante)';
+      reiniciar();
+    });
+  });
+
+  function cambiarCaso(c){
+    casoActual=c;
+    puntos = clonar(CASOS[c]);
+    construirCurva();
+    dibujarPista();
+    dibujarTiradores();
+    botonesCaso.forEach(b=>b.setAttribute("aria-pressed", String(parseInt(b.dataset.caso,10)===c)));
+    hintLibre.hidden = (c!==CASO_LIBRE);
+    reiniciar();
+  }
+
+  /* ====================== Arrastre en el caso libre ====================== */
+  const svgPista=document.getElementById("pista");
+  let arrastrando=null;
+
+  function puntoSVG(ev){
+    const r=svgPista.getBoundingClientRect();
+    const cx = (ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+    const cy = (ev.touches?ev.touches[0].clientY:ev.clientY)-r.top;
+    return { x: cx*(W/r.width), y: cy*(Hsvg/r.height) };
+  }
+
+  function moverTirador(y){
+    if(arrastrando==null) return;
+    let hf = pixToH(y);
+    // Las lomas interiores no pueden igualar el punto de partida (queda por debajo),
+    // de modo que la pelota siempre las corona: la energía se conserva sin ambigüedad.
+    hf = Math.max(0, Math.min(0.98, hf));
+    puntos[arrastrando].h = hf;
+    construirCurva();
+    dibujarPista();
+    // actualiza posición del tirador
+    const el = elTiradores.querySelector(`[data-idx="${arrastrando}"]`);
+    if(el){
+      el.setAttribute("cy", hToPix(hf).toFixed(1));
+      el.setAttribute("aria-valuenow", (hf*H_M).toFixed(1));
+    }
+    if(!jugando) reiniciar();
+  }
+
+  function conectarTiradores(){
+    elTiradores.querySelectorAll(".tirador").forEach(t=>{
+      t.addEventListener("pointerdown", ev=>{
+        ev.preventDefault();
+        arrastrando=parseInt(t.dataset.idx,10);
+        t.style.cursor="grabbing";
+        t.setPointerCapture && t.setPointerCapture(ev.pointerId);
+      });
+      // teclado: flechas arriba/abajo cambian la altura
+      t.addEventListener("keydown", ev=>{
+        const i=parseInt(t.dataset.idx,10);
+        let delta=0;
+        if(ev.key==="ArrowUp") delta=0.03;
+        else if(ev.key==="ArrowDown") delta=-0.03;
+        else return;
+        ev.preventDefault();
+        puntos[i].h=Math.max(0,Math.min(0.98,puntos[i].h+delta));
+        construirCurva(); dibujarPista();
+        t.setAttribute("cy", hToPix(puntos[i].h).toFixed(1));
+        t.setAttribute("aria-valuenow",(puntos[i].h*H_M).toFixed(1));
+        if(!jugando) reiniciar();
+      });
+    });
+  }
+
+  svgPista.addEventListener("pointermove", ev=>{
+    if(arrastrando==null) return;
+    ev.preventDefault();
+    moverTirador(puntoSVG(ev).y);
+  });
+  window.addEventListener("pointerup", ()=>{
+    if(arrastrando!=null){
+      const el=elTiradores.querySelector(`[data-idx="${arrastrando}"]`);
+      if(el) el.style.cursor="grab";
+    }
+    arrastrando=null;
+  });
+
+  /* ====================== Atajos de teclado ====================== */
+  document.addEventListener("keydown", ev=>{
+    if(ev.target.classList && ev.target.classList.contains("tirador")) return;
+    if(ev.code==="Space"){ ev.preventDefault(); btnPlay.click(); }
+    else if(ev.key==="r"||ev.key==="R"){ reiniciar(); }
+  });
+
+  /* ====================== Inicio ====================== */
+  construirCurva();
+  dibujarPista();
+  dibujarTiradores();
+  reiniciar();
+  requestAnimationFrame(bucle);
+})();
+</script>
+</body>
+</html>
