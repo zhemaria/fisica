@@ -1,1 +1,347 @@
+<!DOCTYPE html>
+<!--
+  Bombillas: de energía eléctrica a luz y calor (LED vs. incandescente)
+  Interactivo de Física para estudiantes ASE/GED en español.
+  © José M. Fernández. Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0).
+  https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="author" content="José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago">
+  <meta name="license" content="CC BY-NC-SA 4.0">
+  <meta name="description" content="Comparación interactiva de una bombilla LED y una incandescente: cómo reparten la energía eléctrica en luz y calor, y su eficiencia.">
+  <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">
+  <title>Bombillas: de energía eléctrica a luz y calor</title>
+  <style>
+    :root{
+      --tinta:#1f2430;
+      --tinta-suave:#555b66;
+      --marca:#5C3900;
+      --marca-oscura:#734700;
+      --calor:#c0392b;      /* rojo = calor */
+      --luz:#e08a00;        /* ámbar = luz */
+      --panel:#ffffff;
+      --borde:#c9cdd6;
+      --fondo:#eef1f6;
+      --foco:#0b5cad;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+      color:var(--tinta);background:var(--fondo);line-height:1.4;-webkit-text-size-adjust:100%;}
+    .lienzo{max-width:1000px;margin:0 auto;padding:10px 12px 4px;}
+    header.titulo{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+      border-bottom:3px solid var(--marca);padding-bottom:6px;margin-bottom:8px;}
+    header.titulo h1{font-size:clamp(1.02rem,2.3vw,1.45rem);margin:0;color:var(--marca);font-weight:700;}
+    header.titulo p{margin:0;font-size:.82rem;color:var(--tinta-suave);}
 
+    .entrada{display:flex;align-items:center;justify-content:center;gap:8px;
+      background:#fff8e7;border:1px solid #e6c14d;border-radius:10px;
+      padding:7px 12px;margin-bottom:10px;font-size:.9rem;font-weight:600;color:var(--marca);}
+    .entrada .rayo{font-size:1.1em;}
+
+    /* Dos bombillas lado a lado */
+    .comparacion{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .bombilla{background:var(--panel);border:1px solid var(--borde);border-radius:12px;
+      padding:10px 10px 12px;display:flex;flex-direction:column;align-items:center;}
+    .bombilla h2{font-size:1rem;margin:0 0 6px;color:var(--marca);text-align:center;}
+    .bombilla-fila{display:flex;gap:8px;width:100%;align-items:stretch;justify-content:center;}
+    .bombilla-svg{flex:1 1 auto;max-width:150px;}
+    .bombilla-svg svg{display:block;width:100%;height:auto;}
+    .barra-mini{flex:0 0 46px;display:flex;flex-direction:column;}
+    .barra-mini svg{display:block;width:100%;height:auto;flex:1;min-height:130px;}
+
+    .eficiencia{margin-top:8px;font-size:.95rem;color:var(--tinta-suave);text-align:center;}
+    .eficiencia b{font-size:1.5rem;color:var(--marca-oscura);font-variant-numeric:tabular-nums;}
+    .reparto{margin-top:2px;font-size:.82rem;font-variant-numeric:tabular-nums;text-align:center;}
+    .reparto .luz{color:var(--marca-oscura);font-weight:700;}
+    .reparto .calor{color:var(--calor);font-weight:700;}
+    .reparto[hidden]{display:none;}
+
+    .leyenda-mini{font-size:.68rem;margin-top:4px;display:flex;flex-direction:column;gap:2px;}
+    .leyenda-mini .item{display:flex;align-items:center;gap:4px;}
+    .muestra{width:11px;height:11px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(0,0,0,.25);}
+    .muestra.luz{background:var(--luz);}
+    .muestra.calor{background:var(--calor);}
+
+    .apagada-txt{font-size:.85rem;color:var(--tinta-suave);font-style:italic;margin-top:8px;}
+    .apagada-txt[hidden]{display:none;}
+
+    /* Controles */
+    .controles{margin-top:12px;display:flex;flex-direction:column;gap:8px;align-items:center;}
+    .fila-controles{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;}
+    .grupo{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;}
+    .grupo .etiqueta-grupo{flex:0 0 auto;font-size:.75rem;color:var(--tinta-suave);
+      font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-right:2px;}
+    button{font-family:inherit;font-size:.9rem;font-weight:600;min-height:44px;padding:8px 14px;
+      border-radius:10px;border:1.5px solid var(--marca);background:#fff;color:var(--marca);
+      cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+      transition:background .15s,color .15s,transform .05s;}
+    button:hover{background:#f4ecdf;}
+    button:active{transform:translateY(1px);}
+    button.modo[aria-pressed="true"]{background:var(--marca);color:#fff;}
+    button:focus-visible{outline:3px solid var(--foco);outline-offset:2px;}
+    button .icono{font-size:1.05em;line-height:1;}
+
+    details.preguntas{margin-top:10px;background:var(--panel);border:1px solid var(--borde);
+      border-radius:12px;overflow:hidden;}
+    details.preguntas>summary{cursor:pointer;list-style:none;padding:12px 14px;font-weight:700;
+      color:var(--marca);font-size:1rem;display:flex;align-items:center;gap:8px;min-height:44px;}
+    details.preguntas>summary::-webkit-details-marker{display:none;}
+    details.preguntas>summary::after{content:"▾";margin-left:auto;transition:transform .2s;}
+    details.preguntas[open]>summary::after{transform:rotate(180deg);}
+    details.preguntas>summary:focus-visible{outline:3px solid var(--foco);outline-offset:-3px;}
+    .preguntas-cuerpo{padding:0 16px 14px;}
+    .preguntas-cuerpo ul{margin:6px 0 0;padding-left:22px;}
+    .preguntas-cuerpo li{margin:5px 0;font-size:.92rem;}
+
+    footer.licencia{margin:14px 0 8px;font-size:.75rem;color:var(--tinta-suave);text-align:center;
+      border-top:1px solid var(--borde);padding-top:8px;}
+    footer.licencia a{color:var(--marca);}
+    .visualmente-oculto{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+    /* Animaciones (respetan reduce-motion) */
+    .brillo{transition:opacity .5s ease;}
+    .ondas-calor{opacity:0;transition:opacity .4s ease;}
+    .ondas-calor.activo{opacity:.85;animation:subir 1.6s linear infinite;}
+    @keyframes subir{0%{transform:translateY(4px)}100%{transform:translateY(-6px)}}
+    @media (prefers-reduced-motion:reduce){
+      .brillo,.ondas-calor{transition:none;}
+      .ondas-calor.activo{animation:none;}
+      button{transition:none;}
+    }
+  </style>
+</head>
+<body>
+  <div class="lienzo">
+    <header class="titulo">
+      <h1>Bombillas: de energía eléctrica a luz y calor</h1>
+      <p>La misma electricidad se transforma en luz y calor; la suma se conserva.</p>
+    </header>
+
+    <div class="entrada" role="note">
+      <span class="rayo" aria-hidden="true">⚡</span>
+      <span>Entrada: 100 J de energía eléctrica — la misma para las dos bombillas.</span>
+    </div>
+
+    <div class="comparacion">
+      <!-- LED -->
+      <section class="bombilla" data-tipo="led" aria-label="Bombilla LED">
+        <h2>Bombilla LED</h2>
+        <div class="bombilla-fila">
+          <div class="bombilla-svg">
+            <svg viewBox="0 0 160 210" role="img" aria-label="Bombilla LED">
+              <circle class="brillo" id="glow-led" cx="80" cy="78" r="66" fill="#dff3ff" opacity="0"/>
+              <!-- casquillo con aletas (disipador) -->
+              <rect x="60" y="120" width="40" height="10" rx="2" fill="#b9bec6"/>
+              <path d="M58 130 h44 l-6 34 h-32 z" fill="#c9ced6" stroke="#9aa1ab" stroke-width="1.5"/>
+              <line x1="66" y1="132" x2="62" y2="162" stroke="#9aa1ab" stroke-width="1.2"/>
+              <line x1="80" y1="132" x2="80" y2="164" stroke="#9aa1ab" stroke-width="1.2"/>
+              <line x1="94" y1="132" x2="98" y2="162" stroke="#9aa1ab" stroke-width="1.2"/>
+              <rect x="70" y="164" width="20" height="12" rx="2" fill="#8a8f99"/>
+              <!-- bulbo -->
+              <path d="M50 96 a30 34 0 1 1 60 0 q0 16 -12 24 h-36 q-12 -8 -12 -24 z"
+                    fill="#eef7ff" stroke="#9fb6c4" stroke-width="2"/>
+              <!-- chip LED -->
+              <rect id="chip-led" x="66" y="70" width="28" height="20" rx="3" fill="#ffe9a8" stroke="#d9b24a" stroke-width="1"/>
+              <circle cx="73" cy="80" r="3" fill="#fff4cc"/><circle cx="80" cy="80" r="3" fill="#fff4cc"/><circle cx="87" cy="80" r="3" fill="#fff4cc"/>
+            </svg>
+          </div>
+          <div class="barra-mini">
+            <svg viewBox="0 0 44 260" preserveAspectRatio="none" role="img"
+                 aria-label="Reparto de energía de la bombilla LED: luz (ámbar) arriba, calor (rojo) abajo.">
+              <rect x="4" y="4" width="36" height="252" rx="5" fill="#f2f4f8" stroke="#c9cdd6"/>
+              <rect id="led-calor" x="6" y="200" width="32" height="54" fill="#c0392b"/>
+              <rect id="led-luz"   x="6" y="6"   width="32" height="194" fill="#e08a00"/>
+              <rect x="4" y="4" width="36" height="252" rx="5" fill="none" stroke="#8a8f99" stroke-width="1.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="leyenda-mini" aria-hidden="true">
+          <div class="item"><span class="muestra luz"></span>Luz</div>
+          <div class="item"><span class="muestra calor"></span>Calor</div>
+        </div>
+        <div class="eficiencia">Eficiencia <b id="led-efi">0%</b></div>
+        <div class="reparto" id="led-reparto"><span class="luz" id="led-vluz">0 J de luz</span> · <span class="calor" id="led-vcalor">0 J de calor</span></div>
+        <div class="apagada-txt" id="led-apagada">Apagada</div>
+      </section>
+
+      <!-- Incandescente -->
+      <section class="bombilla" data-tipo="inc" aria-label="Bombilla incandescente">
+        <h2>Bombilla incandescente</h2>
+        <div class="bombilla-fila">
+          <div class="bombilla-svg">
+            <svg viewBox="0 0 160 210" role="img" aria-label="Bombilla incandescente">
+              <circle class="brillo" id="glow-inc" cx="80" cy="74" r="70" fill="#ffdf9e" opacity="0"/>
+              <!-- ondas de calor -->
+              <g class="ondas-calor" id="ondas-inc" aria-hidden="true" stroke="#e57345" stroke-width="2.5" fill="none" stroke-linecap="round">
+                <path d="M40 40 q6 -8 12 0 q6 8 12 0"/>
+                <path d="M96 36 q6 -8 12 0 q6 8 12 0"/>
+                <path d="M62 24 q6 -8 12 0 q6 8 12 0"/>
+              </g>
+              <!-- casquillo de rosca -->
+              <rect x="66" y="120" width="28" height="10" rx="2" fill="#b9bec6"/>
+              <path d="M64 130 h32 v22 h-32 z" fill="#c9ced6" stroke="#9aa1ab" stroke-width="1.5"/>
+              <line x1="64" y1="137" x2="96" y2="137" stroke="#9aa1ab" stroke-width="1.4"/>
+              <line x1="64" y1="145" x2="96" y2="145" stroke="#9aa1ab" stroke-width="1.4"/>
+              <path d="M68 152 h24 l-4 12 h-16 z" fill="#8a8f99"/>
+              <!-- bulbo de vidrio -->
+              <path d="M48 92 a32 36 0 1 1 64 0 q0 18 -14 28 h-36 q-14 -10 -14 -28 z"
+                    fill="#fff8e6" stroke="#c9b98a" stroke-width="2"/>
+              <!-- filamento -->
+              <path id="filamento" d="M70 118 v-18 q0 -6 4 -6 q4 0 4 6 v2 q0 6 4 6 q4 0 4 -6 v-2 q0 -6 4 -6 q4 0 4 6 v18"
+                    fill="none" stroke="#b98a3a" stroke-width="2"/>
+              <line x1="70" y1="118" x2="70" y2="128" stroke="#9aa1ab" stroke-width="2"/>
+              <line x1="94" y1="118" x2="94" y2="128" stroke="#9aa1ab" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="barra-mini">
+            <svg viewBox="0 0 44 260" preserveAspectRatio="none" role="img"
+                 aria-label="Reparto de energía de la bombilla incandescente: luz (ámbar) arriba, calor (rojo) abajo.">
+              <rect x="4" y="4" width="36" height="252" rx="5" fill="#f2f4f8" stroke="#c9cdd6"/>
+              <rect id="inc-calor" x="6" y="30" width="32" height="224" fill="#c0392b"/>
+              <rect id="inc-luz"   x="6" y="6"  width="32" height="24"  fill="#e08a00"/>
+              <rect x="4" y="4" width="36" height="252" rx="5" fill="none" stroke="#8a8f99" stroke-width="1.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="leyenda-mini" aria-hidden="true">
+          <div class="item"><span class="muestra luz"></span>Luz</div>
+          <div class="item"><span class="muestra calor"></span>Calor</div>
+        </div>
+        <div class="eficiencia">Eficiencia <b id="inc-efi">0%</b></div>
+        <div class="reparto" id="inc-reparto"><span class="luz" id="inc-vluz">0 J de luz</span> · <span class="calor" id="inc-vcalor">0 J de calor</span></div>
+        <div class="apagada-txt" id="inc-apagada">Apagada</div>
+      </section>
+    </div>
+
+    <!-- Controles -->
+    <div class="controles" role="toolbar" aria-label="Controles">
+      <div class="fila-controles">
+        <div class="grupo" role="group" aria-label="Encender bombillas">
+          <span class="etiqueta-grupo">Encender</span>
+          <button type="button" class="modo" data-modo="ambas" aria-pressed="true">Ambas</button>
+          <button type="button" class="modo" data-modo="led" aria-pressed="false">Solo LED</button>
+          <button type="button" class="modo" data-modo="inc" aria-pressed="false">Solo incandescente</button>
+          <button type="button" class="modo" data-modo="off" aria-pressed="false">Apagar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preguntas guía -->
+    <details class="preguntas">
+      <summary><span aria-hidden="true">💡</span>Preguntas guía</summary>
+      <div class="preguntas-cuerpo">
+        <ul>
+          <li>¿Cuál bombilla convierte más electricidad en luz? ¿Cuál desperdicia más en calor?</li>
+          <li>Con la misma energía de entrada, ¿por qué la incandescente se calienta mucho más?</li>
+          <li>¿Por qué se dice que la bombilla LED es más eficiente?</li>
+          <li>En ambas, luz + calor = 100 J. ¿Se pierde energía o solo se transforma en otras formas?</li>
+          <li>Si quisieras ahorrar energía en tu casa, ¿cuál elegirías y por qué?</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="visualmente-oculto" aria-live="polite" id="anuncio"></div>
+
+    <footer class="licencia">
+      <p>Bombillas: de energía eléctrica a luz y calor · Obra de
+      José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago.<br>
+      Bajo licencia
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">
+      Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</a>.</p>
+    </footer>
+  </div>
+
+<script>
+"use strict";
+(function(){
+  const ENTRADA = 100; // J de electricidad (igual para ambas)
+  // Reparto didáctico de la energía de entrada
+  const DATOS = {
+    led: { luz:85, calor:15 },
+    inc: { luz:10, calor:90 }
+  };
+
+  // Geometría de la barra mini (viewBox 0..260)
+  const BTOP=6, BTOT=248;
+
+  const el = id => document.getElementById(id);
+  const refs = {
+    led:{ luz:el('led-luz'), calor:el('led-calor'), efi:el('led-efi'),
+          vluz:el('led-vluz'), vcalor:el('led-vcalor'), reparto:el('led-reparto'),
+          apagada:el('led-apagada'), glow:el('glow-led') },
+    inc:{ luz:el('inc-luz'), calor:el('inc-calor'), efi:el('inc-efi'),
+          vluz:el('inc-vluz'), vcalor:el('inc-vcalor'), reparto:el('inc-reparto'),
+          apagada:el('inc-apagada'), glow:el('glow-inc') }
+  };
+  const ondasInc = el('ondas-inc');
+  const anuncio = el('anuncio');
+
+  // Estado objetivo (fracción encendida 0..1) para animar el llenado
+  const estado = { led:{on:false, k:0}, inc:{on:false, k:0} };
+
+  function pintarBarra(tipo, frac){
+    const d = DATOS[tipo], r = refs[tipo];
+    // valores actuales según fracción de encendido
+    const luz = d.luz*frac, calor = d.calor*frac;
+    const luzH = (luz/ENTRADA)*BTOT;
+    const calorH = (calor/ENTRADA)*BTOT;
+    r.luz.setAttribute('y', BTOP.toFixed(1));
+    r.luz.setAttribute('height', Math.max(0,luzH).toFixed(1));
+    r.calor.setAttribute('y', (BTOP+BTOT-calorH).toFixed(1));
+    r.calor.setAttribute('height', Math.max(0,calorH).toFixed(1));
+    // textos (mostramos el valor final cuando está encendida)
+    if(estado[tipo].on){
+      r.efi.textContent = d.luz+'%';
+      r.vluz.textContent = d.luz+' J de luz';
+      r.vcalor.textContent = d.calor+' J de calor';
+      r.reparto.hidden = false;
+      r.apagada.hidden = true;
+      r.glow.setAttribute('opacity', (0.85*frac).toFixed(2));
+    } else {
+      r.efi.textContent = '0%';
+      r.reparto.hidden = true;
+      r.apagada.hidden = false;
+      r.glow.setAttribute('opacity', (0.85*frac).toFixed(2));
+    }
+  }
+
+  // Bucle de animación (suaviza el encendido/apagado)
+  function bucle(){
+    ['led','inc'].forEach(tipo=>{
+      const objetivo = estado[tipo].on ? 1 : 0;
+      estado[tipo].k += (objetivo - estado[tipo].k)*0.15;
+      if(Math.abs(objetivo-estado[tipo].k)<0.005) estado[tipo].k=objetivo;
+      pintarBarra(tipo, estado[tipo].k);
+    });
+    ondasInc.classList.toggle('activo', estado.inc.on);
+    requestAnimationFrame(bucle);
+  }
+
+  function aplicarModo(modo){
+    estado.led.on = (modo==='ambas' || modo==='led');
+    estado.inc.on = (modo==='ambas' || modo==='inc');
+    document.querySelectorAll('button.modo').forEach(b=>
+      b.setAttribute('aria-pressed', String(b.dataset.modo===modo)));
+    // anuncio para lector de pantalla
+    const partes=[];
+    if(estado.led.on) partes.push('LED: 85% luz, 15% calor');
+    if(estado.inc.on) partes.push('Incandescente: 10% luz, 90% calor');
+    anuncio.textContent = partes.length ? ('Encendida. '+partes.join('. ')+'.') : 'Bombillas apagadas.';
+  }
+
+  document.querySelectorAll('button.modo').forEach(b=>{
+    b.addEventListener('click', ()=>aplicarModo(b.dataset.modo));
+  });
+
+  // Inicio: ambas encendidas para ver la comparación de entrada
+  aplicarModo('ambas');
+  requestAnimationFrame(bucle);
+})();
+</script>
+</body>
+</html>
