@@ -1,1 +1,521 @@
+<!DOCTYPE html>
+<!--
+  Péndulo: energía cinética, potencial y su conservación
+  Interactivo de Física para estudiantes ASE/GED en español.
+  © José M. Fernández. Licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0).
+  https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="author" content="José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago">
+  <meta name="license" content="CC BY-NC-SA 4.0">
+  <meta name="description" content="Simulación interactiva de un péndulo para explorar la energía cinética, la energía potencial y su conservación.">
+  <link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">
+  <title>Péndulo: energía cinética, potencial y su conservación</title>
+  <style>
+    :root{
+      --tinta:#1f2430;
+      --tinta-suave:#555b66;
+      --marca:#5C3900;
+      --marca-oscura:#734700;
+      --potencial:#c0392b;
+      --cinetica:#e08a00;
+      --panel:#ffffff;
+      --borde:#c9cdd6;
+      --fondo:#eef1f6;
+      --cielo-a:#bfe3fb;
+      --cielo-b:#eaf6ff;
+      --cuerda:#5C3900;
+      --foco:#0b5cad;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+      color:var(--tinta);background:var(--fondo);line-height:1.4;-webkit-text-size-adjust:100%;
+    }
+    .lienzo{max-width:1000px;margin:0 auto;padding:10px 12px 4px;}
+    header.titulo{
+      display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+      border-bottom:3px solid var(--marca);padding-bottom:6px;margin-bottom:8px;
+    }
+    header.titulo h1{font-size:clamp(1.05rem,2.4vw,1.5rem);margin:0;color:var(--marca);font-weight:700;}
+    header.titulo p{margin:0;font-size:.82rem;color:var(--tinta-suave);}
 
+    .aviso-orientacion{
+      display:none;background:#fff8e7;border:1px solid #e0b400;color:var(--marca);
+      border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:.9rem;font-weight:600;
+    }
+    @media (orientation:portrait) and (max-width:820px){
+      .aviso-orientacion{display:flex;align-items:center;gap:8px;}
+    }
+
+    .escena{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:stretch;}
+    @media (max-width:560px){ .escena{grid-template-columns:96px 1fr;} }
+
+    /* Barra de energía */
+    .barra-energia{background:var(--panel);border:1px solid var(--borde);border-radius:12px;
+      padding:8px 8px 6px;display:flex;flex-direction:column;}
+    .barra-energia .rotulo-total{font-size:.72rem;text-align:center;color:var(--tinta-suave);
+      font-weight:600;margin-bottom:4px;}
+    .barra-svg-envoltura{flex:1;min-height:160px;}
+    .leyenda{font-size:.72rem;margin-top:6px;display:flex;flex-direction:column;gap:3px;}
+    .leyenda .item{display:flex;align-items:center;gap:6px;}
+    .muestra{width:14px;height:14px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(0,0,0,.25);}
+    .muestra.pot{background:var(--potencial);}
+    .muestra.cin{background:var(--cinetica);}
+    .leyenda .item b{font-weight:700;}
+    .leyenda .valor{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;color:var(--tinta);}
+
+    /* Simulación */
+    .sim{background:var(--panel);border:1px solid var(--borde);border-radius:12px;overflow:hidden;
+      display:flex;flex-direction:column;}
+    .sim-lienzo{position:relative;}
+    .sim svg{display:block;width:100%;height:auto;touch-action:none;}
+
+    /* Datos: franja bajo el dibujo */
+    .datos{background:#fbfcfe;border-top:1px solid var(--borde);padding:9px 12px;
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px 18px;
+      font-size:.82rem;font-variant-numeric:tabular-nums;}
+    @media (max-width:560px){ .datos{grid-template-columns:1fr 1fr;font-size:.74rem;} }
+    .datos .dato{display:flex;justify-content:space-between;gap:8px;}
+    .datos .dato .k{color:var(--tinta-suave);}
+    .datos .dato .v{font-weight:700;color:var(--tinta);}
+    .datos .dato.cin .v{color:var(--marca-oscura);}
+    .datos .dato.pot .v{color:var(--potencial);}
+    .datos[hidden]{display:none;}
+
+    .sugerencia{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+      background:rgba(92,57,0,.92);color:#fff;font-size:.8rem;font-weight:600;
+      padding:5px 12px;border-radius:8px;white-space:nowrap;}
+    .sugerencia[hidden]{display:none;}
+
+    /* Controles */
+    .controles{margin-top:10px;display:flex;flex-direction:column;gap:8px;align-items:center;}
+    .fila-controles{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;}
+    .grupo{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;}
+    .grupo .etiqueta-grupo{flex:0 0 auto;font-size:.75rem;color:var(--tinta-suave);
+      font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-right:2px;}
+    button{font-family:inherit;font-size:.9rem;font-weight:600;min-height:44px;padding:8px 14px;
+      border-radius:10px;border:1.5px solid var(--marca);background:#fff;color:var(--marca);
+      cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+      transition:background .15s,color .15s,transform .05s;}
+    button:hover{background:#f4ecdf;}
+    button:active{transform:translateY(1px);}
+    button.primario{background:var(--marca);color:#fff;}
+    button.primario:hover{background:var(--marca-oscura);}
+    button.ang[aria-pressed="true"]{background:var(--marca);color:#fff;}
+    button:focus-visible{outline:3px solid var(--foco);outline-offset:2px;}
+    button .icono{font-size:1.05em;line-height:1;}
+
+    details.preguntas{margin-top:10px;background:var(--panel);border:1px solid var(--borde);
+      border-radius:12px;overflow:hidden;}
+    details.preguntas>summary{cursor:pointer;list-style:none;padding:12px 14px;font-weight:700;
+      color:var(--marca);font-size:1rem;display:flex;align-items:center;gap:8px;min-height:44px;}
+    details.preguntas>summary::-webkit-details-marker{display:none;}
+    details.preguntas>summary::after{content:"▾";margin-left:auto;transition:transform .2s;}
+    details.preguntas[open]>summary::after{transform:rotate(180deg);}
+    details.preguntas>summary:focus-visible{outline:3px solid var(--foco);outline-offset:-3px;}
+    .preguntas-cuerpo{padding:0 16px 14px;}
+    .preguntas-cuerpo ul{margin:6px 0 0;padding-left:22px;}
+    .preguntas-cuerpo li{margin:5px 0;font-size:.92rem;}
+
+    footer.licencia{margin:14px 0 8px;font-size:.75rem;color:var(--tinta-suave);text-align:center;
+      border-top:1px solid var(--borde);padding-top:8px;}
+    footer.licencia a{color:var(--marca);}
+
+    .visualmente-oculto{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+    @media (prefers-reduced-motion:reduce){ button{transition:none;} }
+  </style>
+</head>
+<body>
+  <div class="lienzo">
+    <header class="titulo">
+      <h1>Péndulo: energía cinética, potencial y su conservación</h1>
+      <p>La energía total permanece constante (sin fricción).</p>
+    </header>
+
+    <div class="aviso-orientacion" role="note">
+      <span aria-hidden="true">🔄</span>
+      <span>Para una mejor vista, coloca el teléfono en posición horizontal.</span>
+    </div>
+
+    <div class="escena">
+      <!-- Barra de energía -->
+      <section class="barra-energia" aria-label="Barra de energía">
+        <div class="rotulo-total">Energía total<br>(constante)</div>
+        <div class="barra-svg-envoltura">
+          <svg viewBox="0 0 60 300" preserveAspectRatio="none" role="img"
+               aria-label="Barra de energía: potencial (rojo) abajo y cinética (ámbar) arriba. Las dos siempre suman la energía total.">
+            <rect x="6" y="6" width="48" height="288" rx="6" fill="#f2f4f8" stroke="#c9cdd6"/>
+            <rect id="barra-pot" x="8" y="150" width="44" height="142" fill="#c0392b"/>
+            <rect id="barra-cin" x="8" y="8" width="44" height="142" fill="#e08a00"/>
+            <rect x="6" y="6" width="48" height="288" rx="6" fill="none" stroke="#8a8f99" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="leyenda" aria-hidden="true">
+          <div class="item"><span class="muestra cin"></span><b>Cinética</b><span class="valor" id="ley-cin">0 J</span></div>
+          <div class="item"><span class="muestra pot"></span><b>Potencial</b><span class="valor" id="ley-pot">0 J</span></div>
+        </div>
+      </section>
+
+      <!-- Simulación -->
+      <section class="sim" aria-label="Simulación del péndulo">
+        <div class="sim-lienzo">
+          <svg id="pendulo" viewBox="0 0 640 430" role="img" aria-labelledby="p-titulo p-desc">
+            <title id="p-titulo">Péndulo que oscila de un lado a otro.</title>
+            <desc id="p-desc">En los extremos el péndulo está más alto y momentáneamente quieto: la energía es toda potencial. En el punto más bajo va más rápido: la energía es toda cinética.</desc>
+            <defs>
+              <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="var(--cielo-a)"/>
+                <stop offset="1" stop-color="var(--cielo-b)"/>
+              </linearGradient>
+              <radialGradient id="bobGrad" cx="0.35" cy="0.30" r="0.75">
+                <stop offset="0" stop-color="#ff8a7a"/>
+                <stop offset="0.55" stop-color="#d0392b"/>
+                <stop offset="1" stop-color="#9c241a"/>
+              </radialGradient>
+              <pattern id="techo" width="14" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
+                <rect width="14" height="10" fill="#c9a06a"/>
+                <line x1="0" y1="10" x2="10" y2="0" stroke="#8a5a2b" stroke-width="2"/>
+              </pattern>
+            </defs>
+            <rect x="0" y="0" width="640" height="430" fill="url(#cielo)"/>
+            <!-- techo/soporte -->
+            <rect x="0" y="0" width="640" height="34" fill="url(#techo)"/>
+            <line x1="0" y1="34" x2="640" y2="34" stroke="#6b4423" stroke-width="3"/>
+            <!-- trayectoria (arco punteado) -->
+            <path id="arco" fill="none" stroke="#5C3900" stroke-width="2" stroke-dasharray="5 7" opacity="0.35"/>
+            <!-- referencia vertical al punto más bajo -->
+            <line id="vertical" stroke="#5C3900" stroke-width="1.5" stroke-dasharray="3 6" opacity="0.30"/>
+            <!-- marcadores de los extremos (puntos más altos) -->
+            <circle id="ext-izq" r="7" fill="none" stroke="#c0392b" stroke-width="2" opacity="0.5"/>
+            <circle id="ext-der" r="7" fill="none" stroke="#c0392b" stroke-width="2" opacity="0.5"/>
+            <!-- cuerda -->
+            <line id="cuerda" stroke="var(--cuerda)" stroke-width="3"/>
+            <!-- pivote -->
+            <circle cx="320" cy="66" r="6" fill="#3a2600"/>
+            <!-- pesa (bob) -->
+            <circle id="bob" r="18" fill="url(#bobGrad)" stroke="#7a1a12" stroke-width="1"
+                    tabindex="0" role="slider" aria-label="Ángulo de suelta del péndulo, en grados"
+                    aria-valuemin="5" aria-valuemax="70" aria-valuenow="40"/>
+          </svg>
+
+          <div class="sugerencia" id="hint" hidden>Arrastra la pesa para elegir el ángulo de suelta.</div>
+        </div>
+
+        <!-- Datos -->
+        <div class="datos" id="panel-datos" role="group" aria-label="Panel de datos">
+          <div class="dato cin"><span class="k">Energía cinética</span><span class="v" id="d-cin">0.00 J</span></div>
+          <div class="dato"><span class="k">Rapidez</span><span class="v" id="d-vel">0.00 m/s</span></div>
+          <div class="dato pot"><span class="k">Energía potencial</span><span class="v" id="d-pot">0.00 J</span></div>
+          <div class="dato"><span class="k">Altura</span><span class="v" id="d-alt">0.00 m</span></div>
+          <div class="dato"><span class="k">Energía total</span><span class="v" id="d-tot">0.00 J</span></div>
+          <div class="dato"><span class="k">Ángulo</span><span class="v" id="d-ang">40°</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Controles -->
+    <div class="controles" role="toolbar" aria-label="Controles de la simulación">
+      <div class="fila-controles">
+        <div class="grupo" role="group" aria-label="Ángulo de suelta">
+          <span class="etiqueta-grupo">Ángulo</span>
+          <button type="button" class="ang" data-ang="20" aria-pressed="false">20°</button>
+          <button type="button" class="ang" data-ang="40" aria-pressed="true">40°</button>
+          <button type="button" class="ang" data-ang="60" aria-pressed="false">60°</button>
+        </div>
+      </div>
+      <div class="fila-controles">
+        <div class="grupo" role="group" aria-label="Acción">
+          <span class="etiqueta-grupo">Acción</span>
+          <button type="button" class="primario" id="btn-play" aria-label="Iniciar el movimiento">
+            <span class="icono" id="play-icono" aria-hidden="true">▶</span><span id="play-texto">Iniciar</span>
+          </button>
+          <button type="button" id="btn-reiniciar">
+            <span class="icono" aria-hidden="true">⟲</span>Reiniciar
+          </button>
+          <button type="button" id="btn-datos" aria-pressed="true">
+            <span class="icono" aria-hidden="true">📊</span><span id="datos-texto">Ocultar datos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preguntas guía -->
+    <details class="preguntas">
+      <summary><span aria-hidden="true">💡</span>Preguntas guía</summary>
+      <div class="preguntas-cuerpo">
+        <ul>
+          <li>¿En qué puntos del recorrido es máxima la energía potencial? ¿Cómo es la rapidez en esos puntos?</li>
+          <li>¿En qué punto es máxima la energía cinética? ¿Cómo es la altura en ese punto?</li>
+          <li>Cuando la pesa baja, ¿qué le pasa a la energía potencial? ¿Y a la cinética?</li>
+          <li>Con un ángulo de suelta mayor, ¿la energía total es mayor o menor? Observa la barra.</li>
+          <li>Sin fricción, ¿por qué el péndulo vuelve siempre a la misma altura de la que partió?</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="visualmente-oculto" aria-live="polite" id="anuncio"></div>
+
+    <footer class="licencia">
+      <p>Péndulo: energía cinética, potencial y su conservación · Obra de
+      José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago.<br>
+      Bajo licencia
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">
+      Creative Commons Atribución-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</a>.</p>
+    </footer>
+  </div>
+
+<script>
+"use strict";
+(function(){
+  /* ============ Constantes físicas ============ */
+  const g = 9.8;     // m/s^2
+  const m = 1;       // kg
+  const L = 2;       // longitud del péndulo (m)
+
+  /* ============ Geometría del dibujo ============ */
+  const PX = 320, PY = 66;   // pivote
+  const Lpx = 300;           // longitud de la cuerda en píxeles
+  const grados = r => r*180/Math.PI;
+  const rad = d => d*Math.PI/180;
+
+  /* ============ Estado ============ */
+  let thetaMax = rad(40);    // amplitud (ángulo de suelta)
+  let theta = thetaMax;      // ángulo actual (desde la vertical)
+  let dir = -1;              // sentido del movimiento
+  let E0 = m*g*L*(1-Math.cos(thetaMax)); // energía total (depende de la amplitud)
+  let tiempo = 0;
+  let jugando = false;
+  let liberada = false;
+
+  /* ============ Elementos ============ */
+  const svg = document.getElementById("pendulo");
+  const elBob = document.getElementById("bob");
+  const elCuerda = document.getElementById("cuerda");
+  const elArco = document.getElementById("arco");
+  const elVert = document.getElementById("vertical");
+  const elExtIzq = document.getElementById("ext-izq");
+  const elExtDer = document.getElementById("ext-der");
+  const barraPot = document.getElementById("barra-pot");
+  const barraCin = document.getElementById("barra-cin");
+  const leyPot = document.getElementById("ley-pot");
+  const leyCin = document.getElementById("ley-cin");
+  const dCin=document.getElementById("d-cin"), dPot=document.getElementById("d-pot"),
+        dTot=document.getElementById("d-tot"), dVel=document.getElementById("d-vel"),
+        dAlt=document.getElementById("d-alt"), dAng=document.getElementById("d-ang");
+  const anuncio=document.getElementById("anuncio");
+
+  /* ============ Posiciones ============ */
+  const bobX = th => PX + Lpx*Math.sin(th);
+  const bobY = th => PY + Lpx*Math.cos(th);
+
+  function dibujarFijos(){
+    // arco de la trayectoria entre -thetaMax y +thetaMax
+    let d="";
+    const n=40;
+    for(let i=0;i<=n;i++){
+      const th = -thetaMax + (2*thetaMax)*(i/n);
+      d += (i===0?"M":"L") + bobX(th).toFixed(1) + " " + bobY(th).toFixed(1) + " ";
+    }
+    elArco.setAttribute("d", d.trim());
+    elVert.setAttribute("x1", PX); elVert.setAttribute("y1", PY);
+    elVert.setAttribute("x2", PX); elVert.setAttribute("y2", (PY+Lpx).toFixed(1));
+    elExtIzq.setAttribute("cx", bobX(-thetaMax).toFixed(1));
+    elExtIzq.setAttribute("cy", bobY(-thetaMax).toFixed(1));
+    elExtDer.setAttribute("cx", bobX(thetaMax).toFixed(1));
+    elExtDer.setAttribute("cy", bobY(thetaMax).toFixed(1));
+    elBob.setAttribute("aria-valuenow", Math.round(grados(thetaMax)));
+  }
+
+  /* ============ Física (por energía: conservación exacta) ============ */
+  const DT = 0.004;
+  function PE(th){ return m*g*L*(1-Math.cos(th)); }
+
+  function paso(dtReal){
+    let restante = Math.min(dtReal, 0.05);
+    while(restante > 0){
+      const dt = Math.min(DT, restante);
+      restante -= dt;
+
+      let KE = E0 - PE(theta);
+      if(KE <= 0 && !liberada){        // en un extremo: invierte el sentido
+        dir = -dir;
+        theta += dir * 0.004;
+        continue;
+      }
+      if(liberada){ KE = Math.max(KE, E0*0.0015); } // arranque suave desde el reposo
+      liberada = false;
+
+      // rapidez angular a partir de la energía cinética: KE = ½ m L² ω²
+      const omega = Math.sqrt(2*KE/(m*L*L));
+      let thNext = theta + dir*omega*dt;
+
+      // inversión predictiva: no pasar del ángulo de suelta
+      if(E0 - PE(thNext) < 0){ dir = -dir; continue; }
+
+      theta = thNext;
+      tiempo += dt;
+    }
+  }
+
+  /* ============ Render ============ */
+  let tAnuncio=0, ultimo=0;
+
+  function render(){
+    const bx=bobX(theta), by=bobY(theta);
+    elBob.setAttribute("cx", bx.toFixed(1));
+    elBob.setAttribute("cy", by.toFixed(1));
+    elCuerda.setAttribute("x1", PX); elCuerda.setAttribute("y1", PY);
+    elCuerda.setAttribute("x2", bx.toFixed(1)); elCuerda.setAttribute("y2", by.toFixed(1));
+
+    const h = L*(1-Math.cos(theta));   // altura sobre el punto más bajo
+    const PEv = m*g*h;
+    const KEv = Math.max(0, E0 - PEv);
+    const v = Math.sqrt(2*KEv/m);
+
+    const bTop=8, bTot=284;
+    const potH = E0>0 ? (PEv/E0)*bTot : 0;
+    barraPot.setAttribute("y", (bTop+bTot-potH).toFixed(1));
+    barraPot.setAttribute("height", Math.max(0,potH).toFixed(1));
+    barraCin.setAttribute("y", bTop.toFixed(1));
+    barraCin.setAttribute("height", Math.max(0,bTot-potH).toFixed(1));
+
+    leyPot.textContent = PEv.toFixed(1)+" J";
+    leyCin.textContent = KEv.toFixed(1)+" J";
+    dCin.textContent = KEv.toFixed(2)+" J";
+    dPot.textContent = PEv.toFixed(2)+" J";
+    dTot.textContent = E0.toFixed(2)+" J";
+    dVel.textContent = v.toFixed(2)+" m/s";
+    dAlt.textContent = h.toFixed(2)+" m";
+    dAng.textContent = Math.round(Math.abs(grados(theta)))+"°";
+  }
+
+  function anunciar(t){
+    if(t - tAnuncio < 1.5) return;
+    tAnuncio = t;
+    const h=L*(1-Math.cos(theta)), PEv=m*g*h, KEv=Math.max(0,E0-PEv), v=Math.sqrt(2*KEv/m);
+    anuncio.textContent = `Altura ${h.toFixed(2)} metros. Rapidez ${v.toFixed(2)} metros por segundo. `+
+      `Energía cinética ${KEv.toFixed(1)} joules, potencial ${PEv.toFixed(1)} joules.`;
+  }
+
+  function bucle(ts){
+    if(!ultimo) ultimo=ts;
+    const dtReal=(ts-ultimo)/1000; ultimo=ts;
+    if(jugando){ paso(dtReal); anunciar(ts/1000); }
+    render();
+    requestAnimationFrame(bucle);
+  }
+
+  /* ============ Controles ============ */
+  const btnPlay=document.getElementById("btn-play");
+  const playIcono=document.getElementById("play-icono");
+  const playTexto=document.getElementById("play-texto");
+  const btnReiniciar=document.getElementById("btn-reiniciar");
+  const btnDatos=document.getElementById("btn-datos");
+  const datosTexto=document.getElementById("datos-texto");
+  const panelDatos=document.getElementById("panel-datos");
+  const hint=document.getElementById("hint");
+  const botonesAng=[...document.querySelectorAll("button.ang")];
+
+  function actualizarPlay(){
+    playIcono.textContent = jugando ? "⏸" : "▶";
+    playTexto.textContent = jugando ? "Pausar" : "Iniciar";
+    btnPlay.setAttribute("aria-label", jugando ? "Pausar el movimiento" : "Iniciar el movimiento");
+  }
+
+  function reiniciar(){
+    jugando=false;
+    E0 = m*g*L*(1-Math.cos(thetaMax));
+    theta = thetaMax; dir=-1; tiempo=0; liberada=false; ultimo=0;
+    dibujarFijos();
+    actualizarPlay();
+    render();
+    anuncio.textContent="Péndulo listo en su punto más alto, a la derecha.";
+  }
+
+  btnPlay.addEventListener("click", ()=>{
+    jugando=!jugando;
+    if(jugando) liberada = (Math.abs(theta) >= thetaMax*0.98);
+    actualizarPlay();
+  });
+  btnReiniciar.addEventListener("click", reiniciar);
+  btnDatos.addEventListener("click", ()=>{
+    const oculto = !panelDatos.hasAttribute("hidden");
+    if(oculto) panelDatos.setAttribute("hidden","");
+    else panelDatos.removeAttribute("hidden");
+    btnDatos.setAttribute("aria-pressed", String(!oculto));
+    datosTexto.textContent = oculto ? "Mostrar datos" : "Ocultar datos";
+  });
+
+  botonesAng.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      thetaMax = rad(parseFloat(b.dataset.ang));
+      botonesAng.forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+      reiniciar();
+    });
+  });
+
+  /* ============ Arrastre de la pesa (elige el ángulo) ============ */
+  let arrastrando=false;
+  function anguloDesdePuntero(ev){
+    const r=svg.getBoundingClientRect();
+    const cx=((ev.touches?ev.touches[0].clientX:ev.clientX)-r.left)*(640/r.width);
+    const cy=((ev.touches?ev.touches[0].clientY:ev.clientY)-r.top)*(430/r.height);
+    let th=Math.atan2(cx-PX, cy-PY);            // ángulo desde la vertical
+    const lim=rad(70);
+    if(th>lim)th=lim; if(th<-lim)th=-lim;
+    return th;
+  }
+  function fijarAngulo(th){
+    thetaMax=Math.max(rad(5), Math.abs(th));
+    theta = th>=0 ? thetaMax : -thetaMax;
+    botonesAng.forEach(x=>x.setAttribute("aria-pressed","false"));
+    E0 = m*g*L*(1-Math.cos(thetaMax));
+    dibujarFijos(); render();
+  }
+  elBob.addEventListener("pointerdown", ev=>{
+    if(jugando) return;
+    ev.preventDefault(); arrastrando=true;
+    elBob.setPointerCapture && elBob.setPointerCapture(ev.pointerId);
+  });
+  svg.addEventListener("pointermove", ev=>{
+    if(!arrastrando) return;
+    ev.preventDefault(); fijarAngulo(anguloDesdePuntero(ev));
+  });
+  window.addEventListener("pointerup", ()=>{ arrastrando=false; });
+  // teclado en la pesa: flechas cambian el ángulo de suelta
+  elBob.addEventListener("keydown", ev=>{
+    if(jugando) return;
+    let d=0;
+    if(ev.key==="ArrowRight"||ev.key==="ArrowUp") d=rad(3);
+    else if(ev.key==="ArrowLeft"||ev.key==="ArrowDown") d=-rad(3);
+    else return;
+    ev.preventDefault();
+    let nueva=Math.abs(grados(thetaMax))+grados(d);
+    nueva=Math.max(5,Math.min(70,nueva));
+    thetaMax=rad(nueva); theta=thetaMax; dir=-1;
+    botonesAng.forEach(x=>x.setAttribute("aria-pressed","false"));
+    E0=m*g*L*(1-Math.cos(thetaMax));
+    dibujarFijos(); render();
+  });
+
+  /* ============ Atajos ============ */
+  document.addEventListener("keydown", ev=>{
+    if(ev.target===elBob) return;
+    if(ev.code==="Space"){ ev.preventDefault(); btnPlay.click(); }
+    else if(ev.key==="r"||ev.key==="R"){ reiniciar(); }
+  });
+
+  /* ============ Inicio ============ */
+  reiniciar();
+  hint.hidden=false;
+  requestAnimationFrame(bucle);
+})();
+</script>
+</body>
+</html>
