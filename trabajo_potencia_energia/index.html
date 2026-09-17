@@ -1,1 +1,1509 @@
+<!doctype html>
+<!--
+  Trabajo, potencia y energía mecánica (Lección 6.2) · Spanish ASE Science
+  © 2026 José M. Fernández, ABE/ASE Math Master Teacher,
+  Harry S. Truman College — City Colleges of Chicago.
+  Licencia: Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0
+  Internacional (CC BY-NC-SA 4.0) — https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trabajo, potencia y energía mecánica</title>
+<meta name="description" content="Interactivo de la Lección 6.2: el trabajo como área de fuerza por distancia, la potencia frente al tiempo, y la energía cinética y potencial con sus fórmulas.">
+<meta name="author" content="José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago">
+<meta name="license" content="CC BY-NC-SA 4.0">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">
+<style>
+@charset "utf-8";
+/* ============================================================================
+   Estilos unificados de los interactivos · Spanish ASE Science
+   José M. Fernández, ABE/ASE Math Master Teacher,
+   Harry S. Truman College — City Colleges of Chicago
+   © 2026 · CC BY-NC-SA 4.0
+   https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+   ----------------------------------------------------------------------------
+   CÓMO SE USA
+   Este bloque se copia completo dentro de <style> en cada interactivo, para que
+   el archivo siga siendo autónomo. La clase de unidad va en el <body>:
+       <body class="u4">   → Unidad 4, verde oliva
+   Unidades: u1 verde azulado · u2 gris pizarra · u3 verde · u4 verde oliva
+             u5 rojo anaranjado · u6 azul índigo · u7 violeta · u8 azul
+   Todos los colores de acento cumplen 4,5:1 sobre blanco y admiten texto
+   blanco encima. El ámbar de los avisos usa #5c3900 (10,29:1).
+   ========================================================================== */
 
+/* ── 1. PALETA POR UNIDAD ──────────────────────────────────────────────── */
+:root{
+  --u:#37474f; --u2:#263238; --u-bg:#eceff1;   /* valor por defecto */
+  --texto:#222; --texto-sec:#555; --linea:#e0e0e0;
+  --pagina:#f5f7fa; --papel:#ffffff;
+  --amb:#5c3900; --amb-bg:#fff8e1; --amb-borde:#b45309;
+  --ok:#1b5e20; --ok-bg:#e8f5e9; --mal:#7f1d1d; --mal-bg:#fbe9e7;
+  --radio:12px; --sombra:0 2px 8px rgba(0,0,0,.07);
+}
+body.u1{--u:#00695c;--u2:#004d40;--u-bg:#e0f2f1;}
+body.u2{--u:#37474f;--u2:#263238;--u-bg:#eceff1;}
+body.u3{--u:#1b5e20;--u2:#0f3d13;--u-bg:#e8f5e9;}
+body.u4{--u:#33691e;--u2:#1f4211;--u-bg:#f1f8e9;}
+body.u5{--u:#bf360c;--u2:#8c2708;--u-bg:#fbe9e7;}
+body.u6{--u:#1e3a8a;--u2:#142a63;--u-bg:#e8eaf6;}
+body.u7{--u:#5b21b6;--u2:#40157f;--u-bg:#ede7f6;}
+body.u8{--u:#0d47a1;--u2:#093271;--u-bg:#e3f2fd;}
+
+/* ── 2. BASE ───────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;margin:0;background:var(--pagina);
+  color:var(--texto);line-height:1.55;font-size:16px;}
+.contenedor{max-width:1100px;margin:0 auto;padding:24px;}
+a{color:#0b3d91;}
+h1,h2,h3{line-height:1.3;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+:focus-visible{outline:3px solid var(--u);outline-offset:2px;}
+
+/* ── 3. ENCABEZADO DEL INTERACTIVO ─────────────────────────────────────── */
+header.principal{background:var(--u);background:linear-gradient(135deg,var(--u) 0%,var(--u2) 100%);
+  color:#fff;padding:28px 32px;border-radius:14px;margin-bottom:22px;box-shadow:var(--sombra);}
+header.principal h1{margin:0 0 6px;font-size:26px;font-weight:700;color:#fff;}
+header.principal .meta{font-size:14px;margin:4px 0 0;color:#fff;}
+
+/* ── 4. BLOQUES DE TEXTO ───────────────────────────────────────────────── */
+.tarjeta{background:var(--papel);padding:20px 24px;border-radius:10px;
+  border-left:5px solid var(--u);margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.tarjeta h2{margin-top:0;color:var(--u);font-size:20px;}
+.tarjeta h3{font-size:16px;color:#263238;margin:16px 0 6px;}
+.caja-tip{background:var(--amb-bg);border-left:4px solid var(--amb-borde);padding:14px 18px;
+  margin:16px 0;border-radius:0 8px 8px 0;font-size:15px;}
+.caja-tip strong{color:var(--amb);}
+.caja-ok{background:var(--ok-bg);border-left:5px solid var(--ok);padding:14px 18px;
+  margin:16px 0;border-radius:0 8px 8px 0;}
+.caja-ok strong{color:var(--ok);}
+.caja-mal{background:var(--mal-bg);border-left:5px solid var(--mal);padding:14px 18px;
+  margin:16px 0;border-radius:0 8px 8px 0;}
+.caja-mal strong{color:var(--mal);}
+
+/* ── 5. PANEL DE CONTROLES ─────────────────────────────────────────────── */
+.panel{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+  padding:18px 22px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.panel h2{margin:0 0 12px;font-size:18px;color:var(--u);}
+.control{margin-bottom:16px;}
+.control > label{display:block;font-weight:600;font-size:15px;color:#263238;margin-bottom:6px;}
+.control .valor{float:right;font-weight:700;color:var(--u);font-variant-numeric:tabular-nums;}
+.control input[type=range]{width:100%;accent-color:var(--u);height:26px;}
+.control select,.control input[type=number],.control input[type=text]{
+  font-family:inherit;font-size:16px;padding:9px 14px;border-radius:8px;
+  border:1px solid #90a4ae;background:#fff;color:var(--texto);width:100%;max-width:420px;}
+.fila-botones{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+button{font-family:inherit;font-size:15px;font-weight:600;padding:10px 18px;border-radius:8px;
+  border:1px solid transparent;background:var(--u);color:#fff;cursor:pointer;}
+button:hover{background:var(--u2);}
+button.secundario{background:#fff;color:var(--u);border-color:var(--u);}
+button.secundario:hover{background:var(--u-bg);}
+
+/* ── 6. LIENZO / ESCENA ────────────────────────────────────────────────── */
+.escena{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+  padding:16px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow-x:auto;}
+
+/* ── 7. LECTURA DEL ESTADO (alternativa textual, siempre visible) ──────── */
+.lectura{background:var(--u-bg);border-left:5px solid var(--u);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin-bottom:22px;font-size:15px;}
+.lectura h2{margin:0 0 8px;font-size:17px;color:var(--u);}
+.lectura p{margin:6px 0;}
+.lectura .dato{font-weight:700;color:var(--u2);font-variant-numeric:tabular-nums;}
+
+/* ── 8. TABLAS (Ally: caption obligatorio y scope en todo th) ──────────── */
+.tabla-wrap{overflow-x:auto;margin-bottom:22px;}
+table.datos{width:100%;border-collapse:collapse;background:var(--papel);border-radius:10px;
+  overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:15px;}
+table.datos caption{caption-side:top;text-align:left;font-size:14px;color:var(--texto-sec);
+  padding:0 0 8px;font-style:italic;}
+table.datos th,table.datos td{padding:10px 12px;text-align:left;border-bottom:1px solid #eee;}
+table.datos thead th{background:#37474f;color:#fff;font-weight:600;font-size:13px;
+  text-transform:uppercase;letter-spacing:.4px;}
+table.datos tbody th{background:var(--u-bg);color:var(--u2);font-weight:700;}
+table.datos tr:last-child td{border-bottom:none;}
+
+/* ── 9. ACORDEÓN NATIVO ────────────────────────────────────────────────── */
+details.bloque{background:var(--papel);border-radius:var(--radio);margin-bottom:14px;
+  box-shadow:var(--sombra);border-left:5px solid var(--u);overflow:hidden;}
+details.bloque > summary{padding:14px 18px;cursor:pointer;list-style:none;display:flex;
+  gap:10px;align-items:center;background:var(--u-bg);font-weight:600;color:var(--u2);}
+details.bloque > summary::-webkit-details-marker{display:none;}
+details.bloque > summary .chevron{transition:transform .2s;flex-shrink:0;}
+details.bloque[open] > summary .chevron{transform:rotate(90deg);}
+details.bloque .cuerpo{padding:14px 20px 18px;}
+
+/* ── 10. PIE CON LICENCIA ──────────────────────────────────────────────── */
+footer.pie{padding:22px 4px;color:var(--texto-sec);font-size:13px;margin-top:20px;
+  border-top:1px solid #ddd;text-align:center;}
+footer.pie p{margin:5px 0;}
+
+/* ── 11. MOVIMIENTO REDUCIDO ───────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important;}
+}
+
+/* ── 12. IMPRESIÓN ─────────────────────────────────────────────────────── */
+@media print{
+  body{background:#fff;}
+  .panel,.escena{page-break-inside:avoid;}
+  details[open] .cuerpo{display:block;}
+}
+
+/* ── 13. NOMBRES RESERVADOS ────────────────────────────────────────────── */
+/* Estas clases pertenecen a la hoja unificada. No las reutilices como
+   clase local en un interactivo: el selector local se sumaría al de aquí y
+   descuadraría el componente. Reservadas:
+   contenedor · sr-only · principal · meta · tarjeta · caja-tip · caja-ok ·
+   caja-mal · panel · control · valor · fila-botones · secundario · escena ·
+   lectura · dato · tabla-wrap · datos · bloque · cuerpo · chevron · pie
+   Para rejillas de cifras usa .cifras, no .datos. */
+
+
+
+/* ── PROPIO DE ESTE INTERACTIVO ────────────────────────────────────────── */
+/* Tarjetas de tema del encabezado: abren su módulo al pulsarlas */
+.temas{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 12px;padding:0;}
+@media (max-width:900px){ .temas{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:520px){ .temas{grid-template-columns:1fr;} }
+.temas button.tema{display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  text-align:left;background:var(--papel);color:var(--texto);font-weight:400;
+  border:1px solid var(--linea);border-left:5px solid var(--u);border-radius:10px;
+  padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.05);cursor:pointer;}
+.temas button.tema:hover{background:var(--u-bg);}
+.temas button.tema[aria-expanded="true"]{background:var(--u-bg);
+  box-shadow:inset 0 0 0 2px var(--u);}
+.tema-n{width:24px;height:24px;border-radius:50%;background:var(--u);color:#fff;
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.tema-t{font-size:15px;font-weight:700;color:var(--u2);line-height:1.25;}
+.tema-s{font-size:13px;color:var(--texto-sec);line-height:1.35;}
+
+/* Cabecera de cada módulo plegable */
+.num-modulo{width:26px;height:26px;border-radius:50%;background:var(--u);color:#fff;
+  font-size:14px;font-weight:700;display:inline-flex;align-items:center;
+  justify-content:center;flex-shrink:0;}
+.titulo-modulo{font-size:18px;}
+
+/* Ayudas y rótulos */
+.ayuda{font-size:14px;color:var(--texto-sec);margin:4px 0 10px;}
+.extremos{display:flex;justify-content:space-between;font-size:13px;color:var(--texto-sec);margin:0;}
+.grupo-titulo{font-size:16px;color:var(--u2);margin:18px 0 8px;font-weight:700;}
+.grupo-titulo:first-of-type{margin-top:4px;}
+
+/* Lienzos */
+.lienzo{overflow-x:auto;}
+svg.pintura{display:block;margin:0 auto 14px;min-width:620px;max-width:100%;height:auto;
+  background:#fbfcff;border:1px solid var(--linea);border-radius:8px;}
+svg.pintura:last-child{margin-bottom:0;}
+
+/* Rejilla de cifras */
+.cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 22px;padding:0;list-style:none;}
+@media (max-width:760px){ .cifras{grid-template-columns:repeat(2,1fr);} }
+.cifras li{background:var(--u-bg);border-radius:8px;padding:10px 12px;}
+.cifras .rotulo{display:block;font-size:13px;color:var(--u2);}
+.cifras .cifra{display:block;font-size:19px;font-weight:700;color:var(--u2);
+  font-variant-numeric:tabular-nums;}
+.cifras .apunte{display:block;font-size:12px;color:var(--texto-sec);min-height:16px;}
+
+/* Retos */
+.reto{background:var(--papel);border:1px solid var(--linea);border-left:5px solid #0277bd;
+  border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.reto h3{margin:0 0 6px;font-size:16px;color:#01579b;}
+.reto p{margin:6px 0;font-size:15px;}
+.veredicto:empty{display:none;}
+.veredicto{margin-top:10px;font-size:15px;padding:12px 16px;border-radius:0 8px 8px 0;}
+.veredicto.bien{background:var(--ok-bg);border-left:5px solid var(--ok);}
+.veredicto.aun{background:var(--amb-bg);border-left:5px solid var(--amb-borde);}
+.veredicto strong.bien{color:var(--ok);}
+.veredicto strong.aun{color:var(--amb);}
+
+/* Enlace a otro interactivo */
+a.puente{display:flex;gap:14px;align-items:flex-start;background:var(--u-bg);
+  border:2px solid var(--u);border-left-width:6px;border-radius:10px;padding:14px 18px;
+  margin:14px 0;text-decoration:none;color:var(--u2);}
+a.puente:hover{background:#dfe3f3;}
+a.puente .icono{font-size:24px;line-height:1;flex-shrink:0;}
+a.puente .titulo{display:block;font-weight:700;font-size:16px;}
+a.puente .detalle{display:block;font-size:14px;color:#333;margin-top:3px;}
+
+/* Preguntas rápidas */
+.pregunta{border-top:1px solid var(--linea);padding-top:16px;margin-top:16px;}
+.pregunta:first-of-type{border-top:0;padding-top:0;margin-top:0;}
+.pregunta p.enunciado{font-weight:600;margin:0 0 10px;}
+.retro:empty{display:none;}
+.retro{margin-top:10px;}
+.marcador{font-size:15px;font-weight:700;color:var(--u2);font-variant-numeric:tabular-nums;
+  margin-top:16px;}
+
+/* Índice de enlaces directos */
+table.datos button{padding:6px 12px;font-size:13px;}
+code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
+  font-size:14px;white-space:nowrap;}
+</style>
+</head>
+<body class="u6">
+<div class="contenedor">
+
+<header class="principal">
+  <h1>Trabajo, potencia y energía mecánica</h1>
+  <p class="meta">Lección 6.2 · El trabajo, la energía y su conservación</p>
+  <p class="meta">Unidad 6 · Ciencias físicas II: fuerza, movimiento, energía y ondas · Spanish ASE Science</p>
+</header>
+
+<nav class="temas" aria-label="Temas de este interactivo">
+  <button type="button" class="tema" data-abre="trabajo" aria-controls="trabajo" aria-expanded="true">
+    <span class="tema-n" aria-hidden="true">1</span>
+    <span class="tema-t">El trabajo mecánico</span>
+    <span class="tema-s">W = F × d, y por qué sostener una maleta no es trabajo.</span>
+  </button>
+  <button type="button" class="tema" data-abre="potencia" aria-controls="potencia" aria-expanded="false">
+    <span class="tema-n" aria-hidden="true">2</span>
+    <span class="tema-t">La potencia</span>
+    <span class="tema-s">El mismo trabajo en distinto tiempo, comparado con aparatos reales.</span>
+  </button>
+  <button type="button" class="tema" data-abre="energia" aria-controls="energia" aria-expanded="false">
+    <span class="tema-n" aria-hidden="true">3</span>
+    <span class="tema-t">Las dos energías</span>
+    <span class="tema-s">Cinética y potencial, su suma y el cuadrado de la velocidad.</span>
+  </button>
+  <button type="button" class="tema" data-abre="preguntas" aria-controls="preguntas" aria-expanded="false">
+    <span class="tema-n" aria-hidden="true">4</span>
+    <span class="tema-t">Preguntas rápidas</span>
+    <span class="tema-s">Siete preguntas para repasar toda la lección.</span>
+  </button>
+</nav>
+
+<div class="fila-botones" style="margin-bottom:22px;">
+  <button type="button" class="secundario" id="btn-abrir-todo">Abrir todos los temas</button>
+  <button type="button" class="secundario" id="btn-cerrar-todo">Cerrar todos</button>
+</div>
+
+<div class="tarjeta">
+  <h2>Qué vas a hacer</h2>
+  <p>La Lección 6.1 respondía a qué hace que el movimiento cambie: la fuerza neta. Esta cambia de pregunta y se ocupa de <strong>cuánta energía cuesta</strong> mover algo, de <strong>con qué rapidez</strong> se gasta y de <strong>en qué formas</strong> se presenta.</p>
+  <p>Este interactivo tiene tres partes y un repaso final; las tarjetas de arriba abren cada una. En la primera verás el trabajo convertido en un área que puedes medir. En la segunda comprobarás que el mismo trabajo hecho deprisa o despacio cuesta lo mismo pero exige potencias muy distintas. En la tercera manejarás las dos energías mecánicas y el cuadrado que las complica.</p>
+  <div class="caja-tip">
+    <p><strong>La confusión que hay que deshacer:</strong> en física, trabajo no significa esfuerzo. Significa una fuerza que consigue <em>desplazar</em> algo en su misma dirección. Sostener una maleta pesada diez minutos cansa muchísimo y, sin embargo, el trabajo mecánico es exactamente cero. Lo verás en cuanto pongas la distancia en cero.</p>
+  </div>
+</div>
+
+<details class="bloque" data-modulo id="trabajo" open>
+  <summary>
+    <span class="chevron" aria-hidden="true">&#9654;</span>
+    <span class="num-modulo" aria-hidden="true">1</span>
+    <span class="titulo-modulo">El trabajo mecánico</span>
+  </summary>
+  <div class="cuerpo">
+
+    <div class="panel">
+      <h2>Controles</h2>
+      <div class="control">
+        <label for="t-fuerza">Fuerza aplicada <span class="valor" id="v-t-fuerza">50 N</span></label>
+        <input type="range" id="t-fuerza" min="0" max="200" step="5" value="50">
+        <p class="extremos"><span>0 N</span><span>200 N</span></p>
+      </div>
+      <div class="control">
+        <label for="t-dist">Distancia recorrida en la dirección de la fuerza <span class="valor" id="v-t-dist">4 m</span></label>
+        <input type="range" id="t-dist" min="0" max="10" step="0.5" value="4">
+        <p class="extremos"><span>0 m · no se mueve</span><span>10 m</span></p>
+      </div>
+      <p class="grupo-titulo">Situaciones</p>
+      <div class="fila-botones">
+        <button type="button" id="btn-t-animar">Ver el recorrido</button>
+        <button type="button" class="secundario" data-esc-t="carrito">Empujar un carrito</button>
+        <button type="button" class="secundario" data-esc-t="maleta">Sostener una maleta</button>
+        <button type="button" class="secundario" data-esc-t="pared">Empujar una pared</button>
+        <button type="button" class="secundario" data-esc-t="reiniciar">Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="escena">
+      <div class="lienzo">
+        <div id="lienzo-t-escena"></div>
+        <div id="lienzo-t-area"></div>
+      </div>
+      <p class="ayuda" style="text-align:center;margin:10px 0 0;">El rectángulo de abajo tiene la fuerza como altura y la distancia como base. Su área <em>es</em> el trabajo: por eso, sin distancia no hay área y el trabajo vale cero.</p>
+    </div>
+
+    <ul class="cifras">
+      <li><span class="rotulo">Fuerza (F)</span><span class="cifra" id="c-t-fuerza">—</span><span class="apunte">newtons</span></li>
+      <li><span class="rotulo">Distancia (d)</span><span class="cifra" id="c-t-dist">—</span><span class="apunte">metros</span></li>
+      <li><span class="rotulo">Trabajo (W)</span><span class="cifra" id="c-t-trabajo">—</span><span class="apunte">julios · 1 J = 1 N · m</span></li>
+      <li><span class="rotulo">Comparación</span><span class="cifra" id="c-t-comp">—</span><span class="apunte" id="c-t-comp-nota"></span></li>
+    </ul>
+
+    <div class="lectura" aria-live="polite">
+      <h2>Lectura de la escena</h2>
+      <p id="lectura-t-1"></p>
+      <p id="lectura-t-2"></p>
+    </div>
+
+    <h3 id="retos-trabajo" style="font-size:18px;color:var(--u2);margin:26px 0 12px;">Tres retos</h3>
+    <p class="ayuda">Mueve los controles hasta conseguir cada cosa y pulsa <em>Comprobar</em>.</p>
+
+    <div class="reto">
+      <h3>Reto 1 · Exactamente 300 julios con 60 newtons</h3>
+      <p>Deja la fuerza en 60 N y consigue que el trabajo sea justo de 300 J. Tendrás que despejar la distancia.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="t1">Comprobar</button></div>
+      <div class="veredicto" id="ver-t1"></div>
+    </div>
+
+    <div class="reto">
+      <h3>Reto 2 · Mucha fuerza y ningún trabajo</h3>
+      <p>Aplica una fuerza de 150 N o más y consigue que el trabajo mecánico sea cero. Es lo que ocurre al empujar una pared que no cede.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="t2">Comprobar</button></div>
+      <div class="veredicto" id="ver-t2"></div>
+    </div>
+
+    <div class="reto">
+      <h3>Reto 3 · Doblar el trabajo sin tocar la fuerza</h3>
+      <p>Deja la fuerza en 50 N, que es la de partida, y consigue que el trabajo pase de 200 J a 400 J o más.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="t3">Comprobar</button></div>
+      <div class="veredicto" id="ver-t3"></div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Tres cosas que el examen pregunta sobre el trabajo</h2>
+      <h3>Trabajo cero no es esfuerzo cero</h3>
+      <p>Sostener una maleta, empujar una pared o cargar una caja mientras caminas en llano dan trabajo mecánico cero, porque no hay desplazamiento en la dirección de la fuerza. El cansancio es real; el trabajo mecánico, no. La respuesta correcta suele parecer contraria al sentido común.</p>
+      <h3>La unidad sale sola</h3>
+      <p>Newtons multiplicados por metros son julios, por definición: 1 J = 1 N · m. Un resultado expresado en newtons o en metros está mal aunque el número sea correcto.</p>
+      <h3>Los tres despejes</h3>
+      <p>De W = F × d salen las otras dos formas según qué falte: F = W ÷ d y d = W ÷ F. Es el mismo procedimiento de la densidad en la Lección 5.2 y de F = m · a en la 6.1.</p>
+    </div>
+
+  </div>
+</details>
+
+<details class="bloque" data-modulo id="potencia">
+  <summary>
+    <span class="chevron" aria-hidden="true">&#9654;</span>
+    <span class="num-modulo" aria-hidden="true">2</span>
+    <span class="titulo-modulo">La potencia: el trabajo y el tiempo</span>
+  </summary>
+  <div class="cuerpo">
+
+    <div class="tarjeta">
+      <h2>El mismo trabajo, distinta rapidez</h2>
+      <p>Dos personas suben la misma caja a la misma altura, una en cinco segundos y la otra en veinte. Han realizado <strong>el mismo trabajo</strong>, porque la fuerza y la distancia son idénticas. Lo que las distingue es la rapidez con que lo hicieron, y eso es la <strong>potencia</strong>: <strong>P = W ÷ t</strong>, medida en vatios.</p>
+      <div class="caja-tip">
+        <p><strong>Una colisión de símbolos:</strong> la letra W significa dos cosas. Como magnitud es el trabajo, del inglés <em>work</em>; como unidad es el vatio. Se distinguen por el sitio: dentro de una fórmula es trabajo, acompañando a un número como unidad del resultado es vatio. Una bombilla de 12 W consume doce julios cada segundo.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Controles</h2>
+      <div class="control">
+        <label for="p-trabajo">Trabajo realizado <span class="valor" id="v-p-trabajo">600 J</span></label>
+        <input type="range" id="p-trabajo" min="100" max="5000" step="100" value="600">
+        <p class="extremos"><span>100 J</span><span>5000 J</span></p>
+      </div>
+      <div class="control">
+        <label for="p-tiempo">Tiempo empleado <span class="valor" id="v-p-tiempo">10 s</span></label>
+        <input type="range" id="p-tiempo" min="1" max="60" step="1" value="10">
+        <p class="extremos"><span>1 s</span><span>60 s</span></p>
+      </div>
+      <p class="grupo-titulo">Situaciones</p>
+      <div class="fila-botones">
+        <button type="button" class="secundario" data-esc-p="despacio">Subir la caja despacio</button>
+        <button type="button" class="secundario" data-esc-p="deprisa">Subir la misma caja deprisa</button>
+        <button type="button" class="secundario" data-esc-p="bombilla">Como una bombilla de 60 W</button>
+        <button type="button" class="secundario" data-esc-p="reiniciar">Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="escena">
+      <div class="lienzo">
+        <div id="lienzo-p-barras"></div>
+      </div>
+      <p class="ayuda" style="text-align:center;margin:10px 0 0;">Tu potencia, comparada con la de aparatos conocidos. El trabajo no aparece en esta gráfica: solo la rapidez con que se entrega.</p>
+    </div>
+
+    <ul class="cifras">
+      <li><span class="rotulo">Trabajo (W)</span><span class="cifra" id="c-p-trabajo">—</span><span class="apunte">julios</span></li>
+      <li><span class="rotulo">Tiempo (t)</span><span class="cifra" id="c-p-tiempo">—</span><span class="apunte">segundos</span></li>
+      <li><span class="rotulo">Potencia (P)</span><span class="cifra" id="c-p-potencia">—</span><span class="apunte">vatios · 1 W = 1 J/s</span></li>
+      <li><span class="rotulo">Se parece a</span><span class="cifra" id="c-p-parecido">—</span><span class="apunte" id="c-p-parecido-nota"></span></li>
+    </ul>
+
+    <div class="lectura" aria-live="polite">
+      <h2>Lectura de la comparación</h2>
+      <p id="lectura-p-1"></p>
+      <p id="lectura-p-2"></p>
+    </div>
+
+    <div class="tabla-wrap">
+      <table class="datos">
+        <caption>Potencias de referencia usadas en la gráfica, en vatios, con el trabajo que entrega cada una en un segundo.</caption>
+        <thead>
+          <tr><th scope="col">Aparato o situación</th><th scope="col">Potencia</th><th scope="col">Julios por segundo</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Bombilla LED</th><td>9 W</td><td>9 J</td></tr>
+          <tr><th scope="row">Bombilla incandescente</th><td>60 W</td><td>60 J</td></tr>
+          <tr><th scope="row">Persona subiendo escaleras</th><td>200 W</td><td>200 J</td></tr>
+          <tr><th scope="row">Horno de microondas</th><td>1000 W</td><td>1000 J</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="retos-potencia" style="font-size:18px;color:var(--u2);margin:26px 0 12px;">Dos retos</h3>
+
+    <div class="reto">
+      <h3>Reto 1 · Igualar una bombilla incandescente</h3>
+      <p>Consigue una potencia de 60 W, la de una bombilla corriente. Hay muchas combinaciones que lo logran: elige una.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="p1">Comprobar</button></div>
+      <div class="veredicto" id="ver-p1"></div>
+    </div>
+
+    <div class="reto">
+      <h3>Reto 2 · El mismo trabajo, mucha más potencia</h3>
+      <p>Pon el trabajo en 3000 J y consigue que la potencia supere los 1000 W. El trabajo no puede cambiar: lo único que tienes es el tiempo.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="p2">Comprobar</button></div>
+      <div class="veredicto" id="ver-p2"></div>
+    </div>
+
+    <div class="caja-tip">
+      <p><strong>Lo que hay que llevarse de aquí:</strong> el trabajo mide <em>cuánto</em> se hizo; la potencia, <em>en cuánto tiempo</em>. Subir una caja en la mitad de tiempo dobla la potencia y no cambia el trabajo ni un julio. Por eso dos motores pueden hacer exactamente lo mismo y costar precios muy distintos.</p>
+    </div>
+
+  </div>
+</details>
+
+<details class="bloque" data-modulo id="energia">
+  <summary>
+    <span class="chevron" aria-hidden="true">&#9654;</span>
+    <span class="num-modulo" aria-hidden="true">3</span>
+    <span class="titulo-modulo">Las dos energías mecánicas</span>
+  </summary>
+  <div class="cuerpo">
+
+    <div class="tarjeta">
+      <h2>Energía es capacidad de realizar trabajo</h2>
+      <p>Se mide en las mismas unidades que el trabajo, en julios, y eso no es casualidad: el trabajo es precisamente la manera de transferir energía de un cuerpo a otro. En esta lección interesan dos formas y su suma.</p>
+      <div class="tabla-wrap" style="margin:14px 0 0;">
+        <table class="datos">
+          <caption>Las dos formas de energía mecánica de la lección, con su fórmula y de qué depende cada una.</caption>
+          <thead>
+            <tr><th scope="col">Forma</th><th scope="col">Fórmula</th><th scope="col">De qué depende</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Energía cinética (Ec)</th><td>Ec = ½ · m · v²</td><td>De la masa y, sobre todo, de la velocidad, que va al cuadrado</td></tr>
+            <tr><th scope="row">Energía potencial (Ep)</th><td>Ep = m · g · h</td><td>De la masa y de la altura, con g = 9,8 m/s²</td></tr>
+            <tr><th scope="row">Energía mecánica (Em)</th><td>Em = Ec + Ep</td><td>De la suma de las dos anteriores</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Controles</h2>
+      <div class="control">
+        <label for="e-masa">Masa del cuerpo <span class="valor" id="v-e-masa">10 kg</span></label>
+        <input type="range" id="e-masa" min="1" max="50" step="1" value="10">
+        <p class="extremos"><span>1 kg</span><span>50 kg</span></p>
+      </div>
+      <div class="control">
+        <label for="e-vel">Velocidad <span class="valor" id="v-e-vel">5 m/s</span></label>
+        <input type="range" id="e-vel" min="0" max="20" step="0.5" value="5">
+        <p class="extremos"><span>0 m/s · quieto</span><span>20 m/s</span></p>
+      </div>
+      <div class="control">
+        <label for="e-alt">Altura sobre el suelo <span class="valor" id="v-e-alt">5 m</span></label>
+        <input type="range" id="e-alt" min="0" max="20" step="0.5" value="5">
+        <p class="extremos"><span>0 m · en el suelo</span><span>20 m</span></p>
+      </div>
+      <p class="grupo-titulo">Situaciones</p>
+      <div class="fila-botones">
+        <button type="button" class="secundario" data-esc-e="quieto">Quieto en lo alto</button>
+        <button type="button" class="secundario" data-esc-e="suelo">Rápido a ras de suelo</button>
+        <button type="button" class="secundario" data-esc-e="doble">Doblar la velocidad</button>
+        <button type="button" class="secundario" data-esc-e="reiniciar">Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="escena">
+      <div class="lienzo">
+        <div id="lienzo-e-escena"></div>
+        <div id="lienzo-e-barra"></div>
+        <div id="lienzo-e-curva"></div>
+      </div>
+      <p class="ayuda" style="text-align:center;margin:10px 0 0;">La curva no es una recta: al doblar la velocidad, la energía cinética se multiplica por cuatro, no por dos. Ese cuadrado es la trampa más repetida del examen.</p>
+    </div>
+
+    <ul class="cifras">
+      <li><span class="rotulo">Energía cinética (Ec)</span><span class="cifra" id="c-e-ec">—</span><span class="apunte" id="c-e-ec-nota"></span></li>
+      <li><span class="rotulo">Energía potencial (Ep)</span><span class="cifra" id="c-e-ep">—</span><span class="apunte" id="c-e-ep-nota"></span></li>
+      <li><span class="rotulo">Energía mecánica (Em)</span><span class="cifra" id="c-e-em">—</span><span class="apunte">la suma de las dos</span></li>
+      <li><span class="rotulo">Si doblas la velocidad</span><span class="cifra" id="c-e-doble">—</span><span class="apunte">sería la nueva Ec</span></li>
+    </ul>
+
+    <div class="lectura" aria-live="polite">
+      <h2>Lectura de la escena</h2>
+      <p id="lectura-e-1"></p>
+      <p id="lectura-e-2"></p>
+      <p id="lectura-e-3"></p>
+    </div>
+
+    <h3 id="retos-energia" style="font-size:18px;color:var(--u2);margin:26px 0 12px;">Tres retos</h3>
+
+    <div class="reto">
+      <h3>Reto 1 · Cuatro veces la energía</h3>
+      <p>Sin tocar la masa, consigue que la energía cinética sea cuatro veces la que tiene el cuerpo a 5 m/s. Piensa qué velocidad hace falta antes de mover el control.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="e1">Comprobar</button></div>
+      <div class="veredicto" id="ver-e1"></div>
+    </div>
+
+    <div class="reto">
+      <h3>Reto 2 · Las dos energías empatadas</h3>
+      <p>Consigue que la energía cinética y la potencial valgan prácticamente lo mismo, con las dos por encima de cero.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="e2">Comprobar</button></div>
+      <div class="veredicto" id="ver-e2"></div>
+    </div>
+
+    <div class="reto">
+      <h3>Reto 3 · Más de 2000 julios a ras de suelo</h3>
+      <p>Con el cuerpo a una altura de cero, consigue una energía mecánica total superior a 2000 J. Toda tendrá que ser cinética.</p>
+      <div class="fila-botones"><button type="button" class="secundario" data-reto="e3">Comprobar</button></div>
+      <div class="veredicto" id="ver-e3"></div>
+    </div>
+
+    <div class="tarjeta">
+      <h2>De aquí a la conservación de la energía</h2>
+      <p>Las dos energías no son independientes: en una caída, en un columpio o en una montaña rusa, la potencial se convierte en cinética y al revés, mientras la suma se mantiene. Eso es la <strong>conservación de la energía mecánica</strong>, y se ve mejor en movimiento que en una fórmula.</p>
+      <p>La suma solo se mantiene si no hay fricción. Cuando la hay, parte de la energía se va en forma de <strong>calor</strong>, y por eso una montaña rusa real nunca vuelve a subir tan alto como empezó. Esa afirmación quedó anunciada en la Lección 6.1, al hablar de la fricción, y aquí se cierra.</p>
+
+      <a class="puente" href="https://zhemaria.github.io/fisica/mont_rusa" target="_blank" rel="noopener">
+        <span class="icono" aria-hidden="true">🎢</span>
+        <span>
+          <span class="titulo">Montaña rusa: cinética y potencial <span aria-hidden="true">›</span></span>
+          <span class="detalle">Sigue el intercambio entre las dos energías a lo largo del recorrido y comprueba que la suma se mantiene. Se abre en una pestaña nueva.</span>
+        </span>
+      </a>
+
+      <a class="puente" href="https://zhemaria.github.io/fisica/pendulo" target="_blank" rel="noopener">
+        <span class="icono" aria-hidden="true">⏱️</span>
+        <span>
+          <span class="titulo">Péndulo: la energía que se escapa como calor <span aria-hidden="true">›</span></span>
+          <span class="detalle">Observa por qué cada oscilación llega algo más baja que la anterior. Se abre en una pestaña nueva.</span>
+        </span>
+      </a>
+    </div>
+
+  </div>
+</details>
+
+<details class="bloque" data-modulo id="preguntas">
+  <summary>
+    <span class="chevron" aria-hidden="true">&#9654;</span>
+    <span class="num-modulo" aria-hidden="true">4</span>
+    <span class="titulo-modulo">Preguntas rápidas</span>
+  </summary>
+  <div class="cuerpo">
+
+    <div class="tarjeta">
+
+      <div class="pregunta" data-ok="c" data-expl="No hay desplazamiento en la dirección de la fuerza, así que d = 0 y W = F × 0 = 0. El cansancio es real, pero el trabajo mecánico no.">
+        <p class="enunciado">1. Una persona sostiene una maleta pesada durante diez minutos sin moverse. El trabajo mecánico que realiza es:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">Muy grande, porque la maleta pesa</button>
+          <button type="button" class="secundario" data-op="b">Igual al peso de la maleta</button>
+          <button type="button" class="secundario" data-op="c">Cero, porque no hay desplazamiento</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <div class="pregunta" data-ok="b" data-expl="W = F × d = 25 N × 4 m = 100 J. Newtons por metros son julios, por definición.">
+        <p class="enunciado">2. Se empuja un carrito con 25 N a lo largo de 4 metros. El trabajo realizado es:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">6,25 J</button>
+          <button type="button" class="secundario" data-op="b">100 J</button>
+          <button type="button" class="secundario" data-op="c">100 N</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <div class="pregunta" data-ok="a" data-expl="P = W ÷ t = 600 J ÷ 30 s = 20 W. El motor entrega veinte julios cada segundo.">
+        <p class="enunciado">3. Un motor realiza 600 J de trabajo en 30 segundos. Su potencia es:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">20 W</button>
+          <button type="button" class="secundario" data-op="b">18 000 W</button>
+          <button type="button" class="secundario" data-op="c">0,05 W</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <div class="pregunta" data-ok="b" data-expl="La fuerza y la distancia son las mismas, así que el trabajo también. Lo que cambia es la potencia, que se dobla al emplear la mitad de tiempo.">
+        <p class="enunciado">4. Dos personas suben la misma caja a la misma altura, una en 5 s y la otra en 20 s. Comparando ambas:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">La rápida realiza más trabajo</button>
+          <button type="button" class="secundario" data-op="b">Realizan el mismo trabajo, pero con distinta potencia</button>
+          <button type="button" class="secundario" data-op="c">La lenta desarrolla más potencia</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <div class="pregunta" data-ok="c" data-expl="En Ec = ½ · m · v² la velocidad va al cuadrado: al doblarla, la energía cinética se multiplica por 2² = 4. Es la razón por la que la distancia de frenado crece tan deprisa con la velocidad.">
+        <p class="enunciado">5. Un automóvil dobla su velocidad sin cambiar de masa. Su energía cinética:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">Se dobla</button>
+          <button type="button" class="secundario" data-op="b">No cambia</button>
+          <button type="button" class="secundario" data-op="c">Se multiplica por cuatro</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <div class="pregunta" data-ok="a" data-expl="Ep = m · g · h = 2 kg × 9,8 m/s² × 10 m = 196 J. La altura se mide desde el nivel que se tome como referencia, aquí el suelo.">
+        <p class="enunciado">6. Un objeto de 2 kg está a 10 m de altura. Su energía potencial, con g = 9,8 m/s², es:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">196 J</button>
+          <button type="button" class="secundario" data-op="b">20 J</button>
+          <button type="button" class="secundario" data-op="c">98 J</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <div class="pregunta" data-ok="b" data-expl="La energía no desaparece: la fricción la convierte en calor. Por eso una montaña rusa real nunca vuelve a subir tan alto como empezó.">
+        <p class="enunciado">7. Una montaña rusa real no vuelve a alcanzar la altura de partida. La energía que falta:</p>
+        <div class="fila-botones">
+          <button type="button" class="secundario" data-op="a">Se ha destruido</button>
+          <button type="button" class="secundario" data-op="b">Se ha convertido en calor por la fricción</button>
+          <button type="button" class="secundario" data-op="c">Se ha quedado guardada en la masa del vagón</button>
+        </div>
+        <div class="retro"></div>
+      </div>
+
+      <p class="marcador" id="marcador">Aciertos a la primera: 0 de 7</p>
+    </div>
+
+  </div>
+</details>
+
+<details class="bloque" id="enlaces">
+  <summary>
+    <span class="chevron" aria-hidden="true">&#9654;</span>
+    <span class="titulo-modulo">Enlaces directos a cada parte</span>
+  </summary>
+  <div class="cuerpo">
+    <p>Añadiendo un ancla al final de la dirección, el interactivo se abre ya colocado en esa parte: el módulo se despliega solo y la página baja hasta él. Sirve para enlazar desde Brightspace al terminar cada segmento de la clase, sin que el estudiante tenga que buscar.</p>
+    <p class="ayuda">Ejemplo: <code>trabajo_potencia_energia.html#potencia</code></p>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <caption>Anclas disponibles en este archivo, con la parte a la que lleva cada una.</caption>
+        <thead>
+          <tr><th scope="col">Parte</th><th scope="col">Ancla</th><th scope="col">Qué encuentra el estudiante</th><th scope="col">Enlace</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Módulo 1 · El trabajo mecánico</th><td><code>#trabajo</code></td><td>La escena, el rectángulo del área y W = F × d.</td><td><button type="button" class="secundario" data-copiar="trabajo">Copiar enlace</button></td></tr>
+          <tr><th scope="row">Los retos del trabajo</th><td><code>#retos-trabajo</code></td><td>Directamente en los tres retos del módulo 1.</td><td><button type="button" class="secundario" data-copiar="retos-trabajo">Copiar enlace</button></td></tr>
+          <tr><th scope="row">Módulo 2 · La potencia</th><td><code>#potencia</code></td><td>P = W ÷ t y la comparación con aparatos reales.</td><td><button type="button" class="secundario" data-copiar="potencia">Copiar enlace</button></td></tr>
+          <tr><th scope="row">Los retos de la potencia</th><td><code>#retos-potencia</code></td><td>Directamente en los dos retos del módulo 2.</td><td><button type="button" class="secundario" data-copiar="retos-potencia">Copiar enlace</button></td></tr>
+          <tr><th scope="row">Módulo 3 · Las dos energías</th><td><code>#energia</code></td><td>Ec, Ep, su suma y la curva del cuadrado.</td><td><button type="button" class="secundario" data-copiar="energia">Copiar enlace</button></td></tr>
+          <tr><th scope="row">Los retos de la energía</th><td><code>#retos-energia</code></td><td>Directamente en los tres retos del módulo 3.</td><td><button type="button" class="secundario" data-copiar="retos-energia">Copiar enlace</button></td></tr>
+          <tr><th scope="row">Módulo 4 · Preguntas rápidas</th><td><code>#preguntas</code></td><td>Las siete preguntas de repaso.</td><td><button type="button" class="secundario" data-copiar="preguntas">Copiar enlace</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ayuda">El botón copia la dirección completa al portapapeles. Si el archivo está abierto desde el disco, la dirección copiada será local; una vez publicado en el sitio, será la definitiva.</p>
+  </div>
+</details>
+
+<footer class="pie">
+  <p>Trabajo, potencia y energía mecánica · Lección 6.2 · Spanish ASE Science</p>
+  <p>José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago</p>
+  <p>© 2026. Esta obra está licenciada bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</a>.</p>
+</footer>
+
+</div>
+<script>
+"use strict";
+
+/* ===========================================================================
+   NAVEGACIÓN POR TARJETAS Y ENLACES DIRECTOS
+   Cada tarjeta del encabezado abre su módulo y cierra los demás. Además, la
+   dirección admite un ancla al final: al abrir el archivo con #escala, por
+   ejemplo, ese módulo se despliega solo y la página baja hasta él. Eso
+   permite enlazar desde Brightspace al punto exacto de la lección.
+   ========================================================================= */
+var tarjetas = document.querySelectorAll("button.tema");
+var modulos  = document.querySelectorAll("details.bloque[data-modulo]");
+
+function sincronizarTemas(){
+  var j;
+  for (j = 0; j < tarjetas.length; j++){
+    var destino = document.getElementById(tarjetas[j].getAttribute("data-abre"));
+    tarjetas[j].setAttribute("aria-expanded", destino && destino.open ? "true" : "false");
+  }
+}
+
+function bloqueQueContiene(nodo){
+  while (nodo && nodo !== document.body){
+    if (nodo.tagName === "DETAILS") return nodo;
+    nodo = nodo.parentNode;
+  }
+  return null;
+}
+
+function sinMovimiento(){
+  return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+/* Abre el módulo que contiene el destino, cierra los demás y baja hasta él.
+   Devuelve false si el ancla no corresponde a nada de este archivo. */
+function irA(id, desplazar){
+  var destino = document.getElementById(id);
+  if (!destino) return false;
+  var suyo = bloqueQueContiene(destino), j;
+  for (j = 0; j < modulos.length; j++){
+    modulos[j].open = (modulos[j] === suyo);
+  }
+  if (suyo && !suyo.hasAttribute("data-modulo")) suyo.open = true;
+  sincronizarTemas();
+  if (desplazar){
+    destino.scrollIntoView({behavior: sinMovimiento() ? "auto" : "smooth", block: "start"});
+  }
+  /* el foco va al destino para que un lector de pantalla siga el salto */
+  if (!destino.hasAttribute("tabindex")) destino.setAttribute("tabindex", "-1");
+  destino.focus({preventScroll: true});
+  return true;
+}
+
+function abrirTodos(abierto){
+  var j;
+  for (j = 0; j < modulos.length; j++){ modulos[j].open = abierto; }
+  sincronizarTemas();
+}
+
+(function(){
+  var i;
+  for (i = 0; i < tarjetas.length; i++){
+    tarjetas[i].addEventListener("click", function(){
+      var id = this.getAttribute("data-abre");
+      irA(id, true);
+      /* la dirección muestra el ancla, lista para copiar y pegar */
+      if (window.history && window.history.replaceState){
+        window.history.replaceState(null, "", "#" + id);
+      }
+    });
+  }
+  for (i = 0; i < modulos.length; i++){ modulos[i].addEventListener("toggle", sincronizarTemas); }
+  document.getElementById("btn-abrir-todo").addEventListener("click", function(){ abrirTodos(true); });
+  document.getElementById("btn-cerrar-todo").addEventListener("click", function(){ abrirTodos(false); });
+
+  /* ancla al cargar y ancla al cambiar dentro de la misma página */
+  function atender(){
+    var h = window.location.hash.replace("#", "");
+    if (h) irA(h, true);
+  }
+  window.addEventListener("hashchange", atender);
+  sincronizarTemas();
+  if (window.location.hash) window.setTimeout(atender, 60);
+})();
+
+/* ── Botones de copiar enlace del índice final ─────────────────────────── */
+(function(){
+  var botones = document.querySelectorAll("button[data-copiar]"), i;
+  for (i = 0; i < botones.length; i++){
+    botones[i].addEventListener("click", function(){
+      var boton = this;
+      var url = window.location.href.split("#")[0] + "#" + boton.getAttribute("data-copiar");
+      function avisar(texto){
+        var previo = boton.textContent;
+        boton.textContent = texto;
+        window.setTimeout(function(){ boton.textContent = previo; }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(function(){ avisar("Copiado"); },
+                                                function(){ avisar("No se pudo"); });
+      } else {
+        avisar("No se pudo");
+      }
+    });
+  }
+})();
+
+/* ===========================================================================
+   UTILIDADES COMUNES
+   ========================================================================= */
+var G = 9.8;
+
+/* Números a la española: coma decimal y espacio fino como separador de miles. */
+function numero(x, dec){
+  var s = Math.abs(x).toFixed(dec);
+  var partes = s.split(".");
+  var ent = partes[0], r = "", i, c = 0;
+  for (i = ent.length - 1; i >= 0; i--){
+    r = ent.charAt(i) + r;
+    c++;
+    if (c % 3 === 0 && i > 0) r = "\u202f" + r;
+  }
+  if (partes.length > 1) r = r + "," + partes[1];
+  return (x < 0 ? "−" : "") + r;
+}
+
+function flecha(x1, y, largo, color, ancho){
+  var x2 = x1 + largo, p = largo > 0 ? 1 : -1;
+  return '<line x1="' + x1 + '" y1="' + y + '" x2="' + (x2 - p * 11) + '" y2="' + y +
+         '" stroke="' + color + '" stroke-width="' + ancho + '"/>' +
+         '<polygon points="' + (x2 - p * 13) + ',' + (y - 7) + ' ' + x2 + ',' + y + ' ' +
+         (x2 - p * 13) + ',' + (y + 7) + '" fill="' + color + '"/>';
+}
+
+function rotulo(x, y, texto, color, anclaje, tam){
+  return '<text x="' + x + '" y="' + y + '" font-family="Segoe UI, sans-serif" font-size="' +
+         (tam || 13) + '" font-weight="700" fill="' + color + '" text-anchor="' + anclaje +
+         '">' + texto + '</text>';
+}
+
+function veredicto(id, bien, titulo, texto){
+  var caja = document.getElementById(id);
+  caja.className = "veredicto " + (bien ? "bien" : "aun");
+  caja.innerHTML = '<p><strong class="' + (bien ? "bien" : "aun") + '">' + titulo + '</strong> ' + texto + '</p>';
+}
+
+function reducido(){
+  return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+/* ===========================================================================
+   MÓDULO 1 · EL TRABAJO MECÁNICO
+   El trabajo es el área de un rectángulo de base d y altura F. Esa lectura
+   geométrica es la que explica sin cuentas por qué, sin desplazamiento, el
+   trabajo vale cero por mucha fuerza que se aplique.
+   ========================================================================= */
+var ctrlT = {f:50, d:4};
+var animT = null;
+
+function pintarEscenaTrabajo(fraccion){
+  var suelo = 128, alto = 48, ancho = 60, arriba = suelo - alto;
+  var XI = 130, esc = 44;                      /* 44 píxeles por metro */
+  var xFin = XI + ctrlT.d * esc;
+  var cx = XI + ctrlT.d * esc * fraccion;
+  var s = '';
+
+  s += '<rect x="0" y="' + suelo + '" width="700" height="58" fill="#eceff1"/>';
+  s += '<line x1="0" y1="' + suelo + '" x2="700" y2="' + suelo + '" stroke="#546e7a" stroke-width="3"/>';
+
+  if (ctrlT.d > 0){
+    s += '<rect x="' + (xFin - ancho / 2) + '" y="' + arriba + '" width="' + ancho + '" height="' + alto +
+         '" rx="6" fill="none" stroke="#90a4ae" stroke-width="2" stroke-dasharray="6 5"/>';
+    /* cota de la distancia */
+    s += '<line x1="' + XI + '" y1="' + (suelo + 24) + '" x2="' + xFin + '" y2="' + (suelo + 24) +
+         '" stroke="#546e7a" stroke-width="2"/>';
+    s += '<line x1="' + XI + '" y1="' + (suelo + 16) + '" x2="' + XI + '" y2="' + (suelo + 32) + '" stroke="#546e7a" stroke-width="2"/>';
+    s += '<line x1="' + xFin + '" y1="' + (suelo + 16) + '" x2="' + xFin + '" y2="' + (suelo + 32) + '" stroke="#546e7a" stroke-width="2"/>';
+    s += rotulo((XI + xFin) / 2, suelo + 44, "d = " + numero(ctrlT.d, 1) + " m", "#37474f", "middle");
+  } else {
+    s += rotulo(XI + 60, suelo + 34, "d = 0 m · la caja no se mueve", "#5c3900", "middle");
+  }
+
+  s += '<rect x="' + (cx - ancho / 2) + '" y="' + arriba + '" width="' + ancho + '" height="' + alto +
+       '" rx="6" fill="#dbe2f7" stroke="#14265e" stroke-width="3"/>';
+
+  if (ctrlT.f > 0){
+    var largo = 28 + 92 * (ctrlT.f / 200);
+    s += flecha(cx + ancho / 2, arriba + alto / 2, largo, "#1e3a8a", 5);
+    s += rotulo(cx + ancho / 2 + largo / 2, arriba - 10, "F = " + ctrlT.f + " N", "#14265e", "middle");
+  }
+
+  s += '<text x="16" y="28" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#14265e">' +
+       'W = F × d = ' + ctrlT.f + ' × ' + numero(ctrlT.d, 1) + ' = ' + numero(ctrlT.f * ctrlT.d, 0) + ' J</text>';
+
+  var etiqueta = "Una caja recibe una fuerza de " + ctrlT.f + " newtons hacia la derecha y se desplaza " +
+    numero(ctrlT.d, 1) + " metros en esa misma dirección. El trabajo realizado es de " +
+    numero(ctrlT.f * ctrlT.d, 0) + " julios.";
+  if (ctrlT.d === 0){
+    etiqueta = "Una caja recibe una fuerza de " + ctrlT.f + " newtons pero no se desplaza. " +
+      "Al ser la distancia cero, el trabajo mecánico es cero.";
+  }
+
+  document.getElementById("lienzo-t-escena").innerHTML =
+    '<svg class="pintura" viewBox="0 0 700 186" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+function pintarAreaTrabajo(){
+  var L = 70, R = 30, T = 30, B = 46, AN = 660, AL = 280;
+  var x0 = L, x1 = AN - R, y0 = AL - B, y1 = T;
+  var i, s = '';
+  function ex(d){ return x0 + (d / 10) * (x1 - x0); }
+  function ey(f){ return y0 - (f / 200) * (y0 - y1); }
+
+  for (i = 0; i <= 10; i += 2){
+    s += '<line x1="' + ex(i) + '" y1="' + y1 + '" x2="' + ex(i) + '" y2="' + y0 + '" stroke="#eceff1" stroke-width="1"/>';
+    s += '<text x="' + ex(i) + '" y="' + (y0 + 20) + '" font-family="Segoe UI, sans-serif" font-size="12" fill="#555" text-anchor="middle">' + i + '</text>';
+  }
+  for (i = 0; i <= 200; i += 50){
+    s += '<line x1="' + x0 + '" y1="' + ey(i) + '" x2="' + x1 + '" y2="' + ey(i) + '" stroke="#eceff1" stroke-width="1"/>';
+    s += '<text x="' + (x0 - 10) + '" y="' + (ey(i) + 4) + '" font-family="Segoe UI, sans-serif" font-size="12" fill="#555" text-anchor="end">' + i + '</text>';
+  }
+
+  if (ctrlT.d > 0 && ctrlT.f > 0){
+    s += '<rect x="' + ex(0) + '" y="' + ey(ctrlT.f) + '" width="' + (ex(ctrlT.d) - ex(0)) +
+         '" height="' + (ey(0) - ey(ctrlT.f)) + '" fill="#1e3a8a" fill-opacity="0.22" stroke="#1e3a8a" stroke-width="3"/>';
+    var cxr = (ex(0) + ex(ctrlT.d)) / 2, cyr = (ey(0) + ey(ctrlT.f)) / 2;
+    if (ex(ctrlT.d) - ex(0) > 110 && ey(0) - ey(ctrlT.f) > 40){
+      s += rotulo(cxr, cyr - 4, "área = trabajo", "#14265e", "middle", 14);
+      s += rotulo(cxr, cyr + 16, numero(ctrlT.f * ctrlT.d, 0) + " J", "#14265e", "middle", 16);
+    } else {
+      s += rotulo(ex(ctrlT.d) + 10, ey(ctrlT.f) - 8, numero(ctrlT.f * ctrlT.d, 0) + " J", "#14265e", "start", 14);
+    }
+  } else if (ctrlT.f > 0){
+    s += '<line x1="' + ex(0) + '" y1="' + ey(0) + '" x2="' + ex(0) + '" y2="' + ey(ctrlT.f) +
+         '" stroke="#b45309" stroke-width="5"/>';
+    s += rotulo(ex(0) + 14, ey(ctrlT.f) - 10, "sin base no hay área: W = 0 J", "#5c3900", "start", 14);
+  } else {
+    s += rotulo((x0 + x1) / 2, (y0 + y1) / 2, "sin fuerza no hay trabajo: W = 0 J", "#5c3900", "middle", 14);
+  }
+
+  s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '" stroke="#222" stroke-width="2"/>';
+  s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + y1 + '" stroke="#222" stroke-width="2"/>';
+  s += rotulo((x0 + x1) / 2, AL - 12, "Distancia (m)", "#222", "middle");
+  s += '<text x="18" y="' + ((y0 + y1) / 2) + '" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#222" transform="rotate(-90 18 ' + ((y0 + y1) / 2) + ')" text-anchor="middle">Fuerza (N)</text>';
+
+  var etiqueta = "Gráfica de fuerza frente a distancia. El rectángulo sombreado mide " + ctrlT.f +
+    " newtons de alto y " + numero(ctrlT.d, 1) + " metros de ancho, de modo que su área vale " +
+    numero(ctrlT.f * ctrlT.d, 0) + " julios, que es el trabajo realizado.";
+
+  document.getElementById("lienzo-t-area").innerHTML =
+    '<svg class="pintura" viewBox="0 0 ' + AN + ' ' + AL + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+function actualizarTrabajo(){
+  if (animT){ cancelAnimationFrame(animT); animT = null;
+              document.getElementById("btn-t-animar").textContent = "Ver el recorrido"; }
+  var W = ctrlT.f * ctrlT.d;
+  pintarEscenaTrabajo(0);
+  pintarAreaTrabajo();
+
+  document.getElementById("c-t-fuerza").textContent  = ctrlT.f + " N";
+  document.getElementById("c-t-dist").textContent    = numero(ctrlT.d, 1) + " m";
+  document.getElementById("c-t-trabajo").textContent = numero(W, 0) + " J";
+  document.getElementById("c-t-comp").textContent    = numero(W / G, 1) + " m";
+  document.getElementById("c-t-comp-nota").textContent = "altura a la que subiría 1 kg";
+
+  var d = function(t){ return '<span class="dato">' + t + '</span>'; };
+  var l1, l2;
+  if (ctrlT.f === 0){
+    l1 = "Sin fuerza no hay nada que analizar: el trabajo es " + d("0 J") + " aunque la caja se mueva sola.";
+    l2 = "Para que haya trabajo hacen falta las dos cosas a la vez, una fuerza y un desplazamiento en su dirección.";
+  } else if (ctrlT.d === 0){
+    l1 = "Aplicas " + d(ctrlT.f + " N") + " y la caja no se mueve ni un centímetro. Como d = 0, el trabajo es " +
+         d("0 J") + ": W = " + ctrlT.f + " × 0 = 0.";
+    l2 = "El rectángulo de la gráfica se ha quedado sin base, así que no encierra área. Puedes cansarte muchísimo empujando una pared y no realizar ningún trabajo mecánico.";
+  } else {
+    l1 = "Aplicas " + d(ctrlT.f + " N") + " y la caja recorre " + d(numero(ctrlT.d, 1) + " m") +
+         " en la dirección de esa fuerza, de modo que el trabajo es " + d(numero(W, 0) + " J") +
+         ": W = " + ctrlT.f + " × " + numero(ctrlT.d, 1) + ".";
+    l2 = "Con esa misma energía podrías elevar un kilogramo hasta " + d(numero(W / G, 1) + " m") +
+         " de altura. Julios de trabajo y julios de energía son exactamente lo mismo, y esa es la idea que abre el tema 3.";
+  }
+  document.getElementById("lectura-t-1").innerHTML = l1;
+  document.getElementById("lectura-t-2").innerHTML = l2;
+}
+
+(function(){
+  var f = document.getElementById("t-fuerza"), d = document.getElementById("t-dist");
+  function leer(){
+    ctrlT.f = parseInt(f.value, 10);
+    ctrlT.d = parseFloat(d.value);
+    document.getElementById("v-t-fuerza").textContent = ctrlT.f + " N";
+    document.getElementById("v-t-dist").textContent = numero(ctrlT.d, 1) + " m";
+    actualizarTrabajo();
+  }
+  function poner(nf, nd){ f.value = nf; d.value = nd; leer(); }
+  f.addEventListener("input", leer);
+  d.addEventListener("input", leer);
+
+  var escenarios = document.querySelectorAll("button[data-esc-t]"), i;
+  for (i = 0; i < escenarios.length; i++){
+    escenarios[i].addEventListener("click", function(){
+      var e = this.getAttribute("data-esc-t");
+      if (e === "carrito")   poner(25, 4);
+      if (e === "maleta")    poner(80, 0);
+      if (e === "pared")     poner(200, 0);
+      if (e === "reiniciar") poner(50, 4);
+    });
+  }
+
+  document.getElementById("btn-t-animar").addEventListener("click", function(){
+    var boton = this;
+    if (animT){ cancelAnimationFrame(animT); animT = null; boton.textContent = "Ver el recorrido"; pintarEscenaTrabajo(0); return; }
+    if (ctrlT.d === 0 || reducido()){ pintarEscenaTrabajo(1); return; }
+    var inicio = null;
+    boton.textContent = "Detener";
+    function paso(marca){
+      if (inicio === null) inicio = marca;
+      var fr = (marca - inicio) / 2200;
+      if (fr >= 1){ pintarEscenaTrabajo(1); animT = null; boton.textContent = "Ver el recorrido"; return; }
+      pintarEscenaTrabajo(fr);
+      animT = requestAnimationFrame(paso);
+    }
+    animT = requestAnimationFrame(paso);
+  });
+
+  leer();
+})();
+
+(function(){
+  var botones = document.querySelectorAll('button[data-reto^="t"]'), i;
+  for (i = 0; i < botones.length; i++){
+    botones[i].addEventListener("click", function(){
+      var n = this.getAttribute("data-reto"), W = ctrlT.f * ctrlT.d;
+
+      if (n === "t1"){
+        if (ctrlT.f === 60 && Math.abs(W - 300) < 0.01){
+          veredicto("ver-t1", true, "Conseguido.",
+            "Con 60 N y 5 m el trabajo es exactamente 300 J. La distancia sale del despeje d = W ÷ F = 300 ÷ 60 = 5 m, que es el mismo procedimiento de todos los despejes de la unidad.");
+        } else if (ctrlT.f !== 60){
+          veredicto("ver-t1", false, "Todavía no.", "La fuerza tiene que quedarse en 60 N. Ahora va por " + ctrlT.f + " N.");
+        } else {
+          veredicto("ver-t1", false, "Todavía no.",
+            "El trabajo va por " + numero(W, 0) + " J. Despeja la distancia: d = W ÷ F = 300 ÷ 60.");
+        }
+        return;
+      }
+
+      if (n === "t2"){
+        if (ctrlT.f >= 150 && ctrlT.d === 0){
+          veredicto("ver-t2", true, "Conseguido.",
+            "Empujas con " + ctrlT.f + " N y el trabajo es de 0 J, porque la caja no se desplaza. Fíjate en la gráfica: el rectángulo se quedó sin base y por eso no encierra área.");
+        } else if (ctrlT.f < 150){
+          veredicto("ver-t2", false, "Todavía no.", "Hace falta una fuerza de 150 N o más. Ahora va por " + ctrlT.f + " N.");
+        } else {
+          veredicto("ver-t2", false, "Todavía no.",
+            "La caja se está desplazando " + numero(ctrlT.d, 1) + " m, así que sí hay trabajo. Pon la distancia en cero.");
+        }
+        return;
+      }
+
+      if (n === "t3"){
+        if (ctrlT.f === 50 && W >= 400){
+          veredicto("ver-t3", true, "Conseguido.",
+            "Con la misma fuerza de 50 N y " + numero(ctrlT.d, 1) + " m el trabajo es de " + numero(W, 0) +
+            " J. Doblar la distancia dobla el trabajo: en W = F × d las dos magnitudes están multiplicando, sin cuadrados ni divisiones.");
+        } else if (ctrlT.f !== 50){
+          veredicto("ver-t3", false, "Has cambiado lo que no debías.", "Devuelve la fuerza a 50 N y mueve solo la distancia.");
+        } else {
+          veredicto("ver-t3", false, "Todavía no.",
+            "El trabajo va por " + numero(W, 0) + " J y hace falta llegar a 400 J. Con 50 N necesitas 8 m.");
+        }
+      }
+    });
+  }
+})();
+
+/* ===========================================================================
+   MÓDULO 2 · LA POTENCIA
+   ========================================================================= */
+var ctrlP = {w:600, t:10};
+var REFERENCIAS = [
+  {n:"Bombilla LED", p:9},
+  {n:"Bombilla incandescente", p:60},
+  {n:"Persona subiendo escaleras", p:200},
+  {n:"Horno de microondas", p:1000}
+];
+
+function pintarBarrasPotencia(){
+  var P = ctrlP.w / ctrlP.t;
+  var L = 230, R = 70, T = 24, AN = 660, ALTO_B = 30, HUECO = 14;
+  var filas = REFERENCIAS.length + 1;
+  var AL = T + filas * (ALTO_B + HUECO) + 30;
+  var tope = Math.max(P, 1000) * 1.08;
+  var i, s = '', y;
+
+  function ancho(v){ return (v / tope) * (AN - L - R); }
+
+  var lista = [{n:"Tu potencia", p:P, tuya:true}];
+  for (i = 0; i < REFERENCIAS.length; i++){ lista.push(REFERENCIAS[i]); }
+
+  for (i = 0; i < lista.length; i++){
+    y = T + i * (ALTO_B + HUECO);
+    var w = Math.max(ancho(lista[i].p), 2);
+    s += '<rect x="' + L + '" y="' + y + '" width="' + w + '" height="' + ALTO_B + '" rx="4" fill="' +
+         (lista[i].tuya ? "#1e3a8a" : "#90a4ae") + '"/>';
+    s += '<text x="' + (L - 12) + '" y="' + (y + 20) + '" font-family="Segoe UI, sans-serif" font-size="13" ' +
+         'font-weight="' + (lista[i].tuya ? "700" : "400") + '" fill="#263238" text-anchor="end">' + lista[i].n + '</text>';
+    s += '<text x="' + (L + w + 10) + '" y="' + (y + 20) + '" font-family="Segoe UI, sans-serif" font-size="13" ' +
+         'font-weight="700" fill="' + (lista[i].tuya ? "#14265e" : "#546e7a") + '">' + numero(lista[i].p, 0) + ' W</text>';
+  }
+  s += '<line x1="' + L + '" y1="' + (T - 6) + '" x2="' + L + '" y2="' + (T + filas * (ALTO_B + HUECO) - HUECO + 6) +
+       '" stroke="#222" stroke-width="2"/>';
+
+  var etiqueta = "Gráfica de barras horizontales. Tu potencia es de " + numero(P, 0) +
+    " vatios, frente a los nueve de una bombilla LED, los sesenta de una bombilla incandescente, " +
+    "los doscientos de una persona subiendo escaleras y los mil de un horno de microondas.";
+
+  document.getElementById("lienzo-p-barras").innerHTML =
+    '<svg class="pintura" viewBox="0 0 ' + AN + ' ' + AL + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+function actualizarPotencia(){
+  var P = ctrlP.w / ctrlP.t;
+  pintarBarrasPotencia();
+
+  document.getElementById("c-p-trabajo").textContent  = numero(ctrlP.w, 0) + " J";
+  document.getElementById("c-p-tiempo").textContent   = ctrlP.t + " s";
+  document.getElementById("c-p-potencia").textContent = numero(P, 1) + " W";
+
+  var cerca = REFERENCIAS[0], i, mejor = Infinity;
+  for (i = 0; i < REFERENCIAS.length; i++){
+    var razon = P > REFERENCIAS[i].p ? P / REFERENCIAS[i].p : REFERENCIAS[i].p / P;
+    if (razon < mejor){ mejor = razon; cerca = REFERENCIAS[i]; }
+  }
+  document.getElementById("c-p-parecido").textContent = cerca.n;
+  document.getElementById("c-p-parecido-nota").textContent =
+    P >= cerca.p ? numero(P / cerca.p, 1) + " veces esa potencia" : "el " + numero((P / cerca.p) * 100, 0) + " % de esa potencia";
+
+  var d = function(t){ return '<span class="dato">' + t + '</span>'; };
+  document.getElementById("lectura-p-1").innerHTML =
+    "Entregas " + d(numero(ctrlP.w, 0) + " J") + " en " + d(ctrlP.t + " s") + ", de modo que la potencia es " +
+    d(numero(P, 1) + " W") + ": P = W ÷ t = " + numero(ctrlP.w, 0) + " ÷ " + ctrlP.t + ". Cada segundo entregas " +
+    d(numero(P, 1) + " julios") + ".";
+  document.getElementById("lectura-p-2").innerHTML =
+    "Si hicieras ese mismo trabajo en la mitad de tiempo, es decir en " + d(numero(ctrlP.t / 2, 1) + " s") +
+    ", la potencia sería " + d(numero(P * 2, 1) + " W") +
+    ", el doble. El trabajo, en cambio, seguiría siendo exactamente el mismo: " + d(numero(ctrlP.w, 0) + " J") + ".";
+}
+
+(function(){
+  var w = document.getElementById("p-trabajo"), t = document.getElementById("p-tiempo");
+  function leer(){
+    ctrlP.w = parseInt(w.value, 10);
+    ctrlP.t = parseInt(t.value, 10);
+    document.getElementById("v-p-trabajo").textContent = numero(ctrlP.w, 0) + " J";
+    document.getElementById("v-p-tiempo").textContent = ctrlP.t + " s";
+    actualizarPotencia();
+  }
+  function poner(nw, nt){ w.value = nw; t.value = nt; leer(); }
+  w.addEventListener("input", leer);
+  t.addEventListener("input", leer);
+
+  var escenarios = document.querySelectorAll("button[data-esc-p]"), i;
+  for (i = 0; i < escenarios.length; i++){
+    escenarios[i].addEventListener("click", function(){
+      var e = this.getAttribute("data-esc-p");
+      if (e === "despacio")  poner(2400, 20);
+      if (e === "deprisa")   poner(2400, 5);
+      if (e === "bombilla")  poner(600, 10);
+      if (e === "reiniciar") poner(600, 10);
+    });
+  }
+  leer();
+})();
+
+(function(){
+  var botones = document.querySelectorAll('button[data-reto^="p"]'), i;
+  for (i = 0; i < botones.length; i++){
+    botones[i].addEventListener("click", function(){
+      var n = this.getAttribute("data-reto"), P = ctrlP.w / ctrlP.t;
+
+      if (n === "p1"){
+        if (Math.abs(P - 60) < 1.5){
+          veredicto("ver-p1", true, "Conseguido.",
+            "Con " + numero(ctrlP.w, 0) + " J en " + ctrlP.t + " s la potencia es de " + numero(P, 1) +
+            " W, la de una bombilla corriente. Fíjate en que hay muchas parejas de trabajo y tiempo que dan la misma potencia: lo que importa es la división, no cada número por separado.");
+        } else {
+          veredicto("ver-p1", false, "Todavía no.",
+            "La potencia va por " + numero(P, 1) + " W. Si es demasiado alta, alarga el tiempo o baja el trabajo; si es baja, haz lo contrario.");
+        }
+        return;
+      }
+
+      if (n === "p2"){
+        if (ctrlP.w === 3000 && P > 1000){
+          veredicto("ver-p2", true, "Conseguido.",
+            "Los mismos 3000 J entregados en " + ctrlP.t + " s dan " + numero(P, 1) +
+            " W. El trabajo no ha cambiado ni un julio: lo único que cambió fue la rapidez, y eso es exactamente lo que mide la potencia.");
+        } else if (ctrlP.w !== 3000){
+          veredicto("ver-p2", false, "Todavía no.", "El trabajo debe quedarse en 3000 J. Ahora va por " + numero(ctrlP.w, 0) + " J.");
+        } else {
+          veredicto("ver-p2", false, "Todavía no.",
+            "La potencia va por " + numero(P, 1) + " W. Para pasar de 1000 W con 3000 J necesitas menos de 3 segundos.");
+        }
+      }
+    });
+  }
+})();
+
+/* ===========================================================================
+   MÓDULO 3 · LAS DOS ENERGÍAS MECÁNICAS
+   ========================================================================= */
+var ctrlE = {m:10, v:5, h:5};
+
+function cinetica(m, v){ return 0.5 * m * v * v; }
+function potencial(m, h){ return m * G * h; }
+
+function pintarEscenaEnergia(){
+  var suelo = 196, AL = 230, s = '';
+  var cx = 210, r = 22;
+  var esc = 150 / 20;                       /* 20 m de altura ocupan 150 píxeles */
+  var cy = suelo - r - ctrlE.h * esc;
+
+  s += '<rect x="0" y="' + suelo + '" width="700" height="34" fill="#eceff1"/>';
+  s += '<line x1="0" y1="' + suelo + '" x2="700" y2="' + suelo + '" stroke="#546e7a" stroke-width="3"/>';
+
+  if (ctrlE.h > 0){
+    s += '<line x1="' + (cx - 70) + '" y1="' + cy + '" x2="' + (cx - 70) + '" y2="' + suelo +
+         '" stroke="#546e7a" stroke-width="2" stroke-dasharray="5 4"/>';
+    s += '<line x1="' + (cx - 78) + '" y1="' + cy + '" x2="' + (cx - 62) + '" y2="' + cy + '" stroke="#546e7a" stroke-width="2"/>';
+    s += rotulo(cx - 84, (cy + suelo) / 2, "h = " + numero(ctrlE.h, 1) + " m", "#37474f", "end");
+  } else {
+    s += rotulo(cx - 84, suelo - 10, "h = 0 m", "#37474f", "end");
+  }
+
+  s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#dbe2f7" stroke="#14265e" stroke-width="3"/>';
+  s += rotulo(cx, cy + 5, ctrlE.m + " kg", "#14265e", "middle", 12);
+
+  if (ctrlE.v > 0){
+    var largo = 26 + 84 * (ctrlE.v / 20);
+    s += flecha(cx + r, cy, largo, "#0277bd", 5);
+    s += rotulo(cx + r + largo + 10, cy + 5, "v = " + numero(ctrlE.v, 1) + " m/s", "#01579b", "start");
+  } else {
+    s += rotulo(cx + r + 16, cy + 5, "v = 0 · quieto", "#546e7a", "start");
+  }
+
+  s += '<text x="420" y="40" font-family="Segoe UI, sans-serif" font-size="14" fill="#263238">Ec = ½ · m · v² = ' +
+       numero(cinetica(ctrlE.m, ctrlE.v), 0) + ' J</text>';
+  s += '<text x="420" y="66" font-family="Segoe UI, sans-serif" font-size="14" fill="#263238">Ep = m · g · h = ' +
+       numero(potencial(ctrlE.m, ctrlE.h), 0) + ' J</text>';
+  s += '<text x="420" y="94" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700" fill="#14265e">Em = ' +
+       numero(cinetica(ctrlE.m, ctrlE.v) + potencial(ctrlE.m, ctrlE.h), 0) + ' J</text>';
+
+  var etiqueta = "Un cuerpo de " + ctrlE.m + " kilogramos se encuentra a " + numero(ctrlE.h, 1) +
+    " metros de altura moviéndose a " + numero(ctrlE.v, 1) + " metros por segundo. Su energía cinética es de " +
+    numero(cinetica(ctrlE.m, ctrlE.v), 0) + " julios y su energía potencial, de " +
+    numero(potencial(ctrlE.m, ctrlE.h), 0) + " julios.";
+
+  document.getElementById("lienzo-e-escena").innerHTML =
+    '<svg class="pintura" viewBox="0 0 700 ' + AL + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+function pintarBarraEnergia(){
+  var Ec = cinetica(ctrlE.m, ctrlE.v), Ep = potencial(ctrlE.m, ctrlE.h), Em = Ec + Ep;
+  var L = 20, R = 20, AN = 660, AL = 110, y = 38, alto = 40;
+  var util = AN - L - R, s = '';
+
+  if (Em <= 0){
+    s += rotulo(AN / 2, y + 26, "Sin velocidad y sin altura no hay energía mecánica: Em = 0 J", "#5c3900", "middle", 14);
+  } else {
+    var wc = (Ec / Em) * util, wp = (Ep / Em) * util;
+    s += '<rect x="' + L + '" y="' + y + '" width="' + util + '" height="' + alto + '" rx="6" fill="#eceff1"/>';
+    if (wc > 0) s += '<rect x="' + L + '" y="' + y + '" width="' + wc + '" height="' + alto + '" fill="#0277bd"/>';
+    if (wp > 0) s += '<rect x="' + (L + wc) + '" y="' + y + '" width="' + wp + '" height="' + alto + '" fill="#33691e"/>';
+    s += '<rect x="' + L + '" y="' + y + '" width="' + util + '" height="' + alto + '" rx="6" fill="none" stroke="#546e7a" stroke-width="2"/>';
+    if (wc > 150) s += rotulo(L + wc / 2, y + 26, "Cinética " + numero(Ec, 0) + " J (" + numero((Ec / Em) * 100, 0) + " %)", "#ffffff", "middle", 14);
+    if (wp > 150) s += rotulo(L + wc + wp / 2, y + 26, "Potencial " + numero(Ep, 0) + " J (" + numero((Ep / Em) * 100, 0) + " %)", "#ffffff", "middle", 14);
+    s += rotulo(L, y - 10, "Reparto de la energía mecánica total: " + numero(Em, 0) + " J", "#14265e", "start", 14);
+    if (wc <= 150 && wc > 0) s += rotulo(L, y + alto + 20, "Cinética " + numero(Ec, 0) + " J", "#01579b", "start");
+    if (wp <= 150 && wp > 0) s += rotulo(L + util, y + alto + 20, "Potencial " + numero(Ep, 0) + " J", "#33691e", "end");
+  }
+
+  var etiqueta = "Barra que reparte la energía mecánica total, " + numero(Em, 0) + " julios, entre su parte cinética, " +
+    numero(Ec, 0) + " julios, y su parte potencial, " + numero(Ep, 0) + " julios.";
+
+  document.getElementById("lienzo-e-barra").innerHTML =
+    '<svg class="pintura" viewBox="0 0 ' + AN + ' ' + AL + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+function pintarCurvaEnergia(){
+  var L = 76, R = 28, T = 28, B = 46, AN = 660, AL = 260;
+  var x0 = L, x1 = AN - R, y0 = AL - B, y1 = T;
+  var maxEc = cinetica(ctrlE.m, 20);
+  var i, s = '', pts = "";
+  function ex(v){ return x0 + (v / 20) * (x1 - x0); }
+  function ey(e){ return y0 - (maxEc > 0 ? (e / maxEc) : 0) * (y0 - y1); }
+
+  for (i = 0; i <= 20; i += 5){
+    s += '<line x1="' + ex(i) + '" y1="' + y1 + '" x2="' + ex(i) + '" y2="' + y0 + '" stroke="#eceff1" stroke-width="1"/>';
+    s += '<text x="' + ex(i) + '" y="' + (y0 + 20) + '" font-family="Segoe UI, sans-serif" font-size="12" fill="#555" text-anchor="middle">' + i + '</text>';
+  }
+  for (i = 0; i <= 4; i++){
+    var e = maxEc * i / 4;
+    s += '<line x1="' + x0 + '" y1="' + ey(e) + '" x2="' + x1 + '" y2="' + ey(e) + '" stroke="#eceff1" stroke-width="1"/>';
+    s += '<text x="' + (x0 - 10) + '" y="' + (ey(e) + 4) + '" font-family="Segoe UI, sans-serif" font-size="12" fill="#555" text-anchor="end">' + numero(e, 0) + '</text>';
+  }
+  for (i = 0; i <= 80; i++){
+    var v = i / 4;
+    pts += ex(v) + "," + ey(cinetica(ctrlE.m, v)) + " ";
+  }
+  s += '<polyline points="' + pts + '" fill="none" stroke="#0277bd" stroke-width="4"/>';
+
+  var Ec = cinetica(ctrlE.m, ctrlE.v);
+  s += '<line x1="' + ex(ctrlE.v) + '" y1="' + y0 + '" x2="' + ex(ctrlE.v) + '" y2="' + ey(Ec) + '" stroke="#90a4ae" stroke-width="2" stroke-dasharray="5 4"/>';
+  s += '<circle cx="' + ex(ctrlE.v) + '" cy="' + ey(Ec) + '" r="7" fill="#01579b"/>';
+  var haciaIzq = ctrlE.v >= 3;
+  s += rotulo(ex(ctrlE.v) + (haciaIzq ? -12 : 12), ey(Ec) - 18,
+              numero(ctrlE.v, 1) + " m/s · " + numero(Ec, 0) + " J", "#01579b", haciaIzq ? "end" : "start");
+
+  s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '" stroke="#222" stroke-width="2"/>';
+  s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + y1 + '" stroke="#222" stroke-width="2"/>';
+  s += rotulo((x0 + x1) / 2, AL - 12, "Velocidad (m/s)", "#222", "middle");
+  s += '<text x="20" y="' + ((y0 + y1) / 2) + '" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#222" transform="rotate(-90 20 ' + ((y0 + y1) / 2) + ')" text-anchor="middle">Energía cinética (J)</text>';
+
+  var etiqueta = "Curva de la energía cinética frente a la velocidad para una masa de " + ctrlE.m +
+    " kilogramos. No es una recta sino una parábola: la energía crece con el cuadrado de la velocidad. " +
+    "El punto marcado corresponde a " + numero(ctrlE.v, 1) + " metros por segundo y " + numero(Ec, 0) + " julios.";
+
+  document.getElementById("lienzo-e-curva").innerHTML =
+    '<svg class="pintura" viewBox="0 0 ' + AN + ' ' + AL + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+function actualizarEnergia(){
+  var Ec = cinetica(ctrlE.m, ctrlE.v), Ep = potencial(ctrlE.m, ctrlE.h), Em = Ec + Ep;
+  pintarEscenaEnergia();
+  pintarBarraEnergia();
+  pintarCurvaEnergia();
+
+  document.getElementById("c-e-ec").textContent = numero(Ec, 0) + " J";
+  document.getElementById("c-e-ep").textContent = numero(Ep, 0) + " J";
+  document.getElementById("c-e-em").textContent = numero(Em, 0) + " J";
+  document.getElementById("c-e-doble").textContent = numero(cinetica(ctrlE.m, ctrlE.v * 2), 0) + " J";
+  document.getElementById("c-e-ec-nota").textContent = Em > 0 ? numero((Ec / Em) * 100, 0) + " % del total" : "sin energía";
+  document.getElementById("c-e-ep-nota").textContent = Em > 0 ? numero((Ep / Em) * 100, 0) + " % del total" : "sin energía";
+
+  var d = function(t){ return '<span class="dato">' + t + '</span>'; };
+  document.getElementById("lectura-e-1").innerHTML =
+    "Un cuerpo de " + d(ctrlE.m + " kg") + " que se mueve a " + d(numero(ctrlE.v, 1) + " m/s") +
+    " tiene una energía cinética de " + d(numero(Ec, 0) + " J") + ": Ec = ½ × " + ctrlE.m + " × " +
+    numero(ctrlE.v, 1) + "².";
+  document.getElementById("lectura-e-2").innerHTML =
+    "A " + d(numero(ctrlE.h, 1) + " m") + " de altura, su energía potencial es de " + d(numero(Ep, 0) + " J") +
+    ": Ep = " + ctrlE.m + " × 9,8 × " + numero(ctrlE.h, 1) + ". Entre las dos suman una energía mecánica de " +
+    d(numero(Em, 0) + " J") + ".";
+  document.getElementById("lectura-e-3").innerHTML =
+    "Si la velocidad pasara de " + d(numero(ctrlE.v, 1) + " m/s") + " a " + d(numero(ctrlE.v * 2, 1) + " m/s") +
+    ", la energía cinética no se doblaría: pasaría a " + d(numero(cinetica(ctrlE.m, ctrlE.v * 2), 0) + " J") +
+    ", cuatro veces más. La altura, en cambio, sí es proporcional: al doblarla, la potencial se dobla y punto.";
+}
+
+(function(){
+  var m = document.getElementById("e-masa"), v = document.getElementById("e-vel"), h = document.getElementById("e-alt");
+  function leer(){
+    ctrlE.m = parseInt(m.value, 10);
+    ctrlE.v = parseFloat(v.value);
+    ctrlE.h = parseFloat(h.value);
+    document.getElementById("v-e-masa").textContent = ctrlE.m + " kg";
+    document.getElementById("v-e-vel").textContent = numero(ctrlE.v, 1) + " m/s";
+    document.getElementById("v-e-alt").textContent = numero(ctrlE.h, 1) + " m";
+    actualizarEnergia();
+  }
+  function poner(nm, nv, nh){ m.value = nm; v.value = nv; h.value = nh; leer(); }
+  m.addEventListener("input", leer);
+  v.addEventListener("input", leer);
+  h.addEventListener("input", leer);
+
+  var escenarios = document.querySelectorAll("button[data-esc-e]"), i;
+  for (i = 0; i < escenarios.length; i++){
+    escenarios[i].addEventListener("click", function(){
+      var e = this.getAttribute("data-esc-e");
+      if (e === "quieto")    poner(10, 0, 15);
+      if (e === "suelo")     poner(10, 15, 0);
+      if (e === "doble")     poner(10, 10, 5);
+      if (e === "reiniciar") poner(10, 5, 5);
+    });
+  }
+  leer();
+})();
+
+(function(){
+  var botones = document.querySelectorAll('button[data-reto^="e"]'), i;
+  for (i = 0; i < botones.length; i++){
+    botones[i].addEventListener("click", function(){
+      var n = this.getAttribute("data-reto");
+      var Ec = cinetica(ctrlE.m, ctrlE.v), Ep = potencial(ctrlE.m, ctrlE.h), Em = Ec + Ep;
+
+      if (n === "e1"){
+        if (Math.abs(ctrlE.v - 10) < 0.01){
+          veredicto("ver-e1", true, "Conseguido.",
+            "A 5 m/s el cuerpo tenía " + numero(cinetica(ctrlE.m, 5), 0) + " J y a 10 m/s tiene " + numero(Ec, 0) +
+            " J, cuatro veces más. Doblar la velocidad multiplica por 2² = 4, porque la v está al cuadrado.");
+        } else {
+          veredicto("ver-e1", false, "Todavía no.",
+            "Vas por " + numero(ctrlE.v, 1) + " m/s, con " + numero(Ec, 0) + " J. Para cuadruplicar la energía no hace falta cuadruplicar la velocidad: basta con doblarla.");
+        }
+        return;
+      }
+
+      if (n === "e2"){
+        if (Ec > 0 && Ep > 0 && Math.abs(Ec - Ep) <= 0.05 * Math.max(Ec, Ep)){
+          veredicto("ver-e2", true, "Conseguido.",
+            "Cinética " + numero(Ec, 0) + " J y potencial " + numero(Ep, 0) +
+            " J: prácticamente la mitad y la mitad. Es el punto en que una montaña rusa lleva ya convertida la mitad de la altura en movimiento.");
+        } else if (Ec === 0 || Ep === 0){
+          veredicto("ver-e2", false, "Todavía no.",
+            "Una de las dos vale cero. Hace falta que el cuerpo esté a la vez en movimiento y por encima del suelo.");
+        } else {
+          veredicto("ver-e2", false, "Todavía no.",
+            "Ahora son " + numero(Ec, 0) + " J de cinética frente a " + numero(Ep, 0) +
+            " J de potencial. Sube o baja la que vaya más corta hasta que se igualen.");
+        }
+        return;
+      }
+
+      if (n === "e3"){
+        if (ctrlE.h === 0 && Em > 2000){
+          veredicto("ver-e3", true, "Conseguido.",
+            "A ras de suelo la potencial es cero, así que los " + numero(Em, 0) +
+            " J son todos cinéticos. Un cuerpo pegado al suelo puede llevar muchísima energía: lo que la da es la velocidad, no la altura.");
+        } else if (ctrlE.h !== 0){
+          veredicto("ver-e3", false, "Todavía no.",
+            "La altura tiene que ser cero y va por " + numero(ctrlE.h, 1) + " m.");
+        } else {
+          veredicto("ver-e3", false, "Todavía no.",
+            "La energía va por " + numero(Em, 0) + " J y hacen falta más de 2000. Sube la masa, la velocidad o las dos.");
+        }
+      }
+    });
+  }
+})();
+
+/* ===========================================================================
+   PREGUNTAS RÁPIDAS
+   ========================================================================= */
+(function(){
+  var preguntas = document.querySelectorAll(".pregunta"), i, j;
+  var aciertos = 0, total = preguntas.length;
+  var marcador = document.getElementById("marcador");
+  marcador.textContent = "Aciertos a la primera: 0 de " + total;
+
+  for (i = 0; i < preguntas.length; i++){
+    (function(p){
+      var ok = p.getAttribute("data-ok");
+      var expl = p.getAttribute("data-expl");
+      var caja = p.querySelector(".retro");
+      var botones = p.querySelectorAll("button[data-op]");
+      var fallado = false;
+      for (j = 0; j < botones.length; j++){
+        botones[j].addEventListener("click", function(){
+          if (this.getAttribute("data-op") === ok){
+            caja.innerHTML = '<div class="caja-ok"><p><strong>Correcto.</strong> ' + expl + '</p></div>';
+            var k;
+            for (k = 0; k < botones.length; k++){ botones[k].disabled = true; }
+            this.style.background = "#1b5e20";
+            this.style.color = "#ffffff";
+            this.style.borderColor = "#1b5e20";
+            if (!fallado){
+              aciertos++;
+              marcador.textContent = "Aciertos a la primera: " + aciertos + " de " + total;
+            }
+          } else {
+            fallado = true;
+            caja.innerHTML = '<div class="caja-mal"><p><strong>No es esa.</strong> Vuelve a leer el enunciado y prueba con otra opción.</p></div>';
+          }
+        });
+      }
+    })(preguntas[i]);
+  }
+})();
+</script>
+</body>
+</html>
