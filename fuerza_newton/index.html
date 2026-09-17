@@ -1,1 +1,1331 @@
+<!doctype html>
+<!--
+  Fuerza neta, las leyes de Newton y la fricción (Lección 6.1) · Spanish ASE Science
+  © 2026 José M. Fernández, ABE/ASE Math Master Teacher,
+  Harry S. Truman College — City Colleges of Chicago.
+  Licencia: Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0
+  Internacional (CC BY-NC-SA 4.0) — https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fuerza neta, las leyes de Newton y la fricción</title>
+<meta name="description" content="Banco de fuerzas con fricción, gráfica de velocidad frente a tiempo y clasificador de las tres leyes de Newton para la Lección 6.1.">
+<meta name="author" content="José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago">
+<meta name="license" content="CC BY-NC-SA 4.0">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">
+<style>
+@charset "utf-8";
+/* ============================================================================
+   Estilos unificados de los interactivos · Spanish ASE Science
+   José M. Fernández, ABE/ASE Math Master Teacher,
+   Harry S. Truman College — City Colleges of Chicago
+   © 2026 · CC BY-NC-SA 4.0
+   https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
+   ----------------------------------------------------------------------------
+   CÓMO SE USA
+   Este bloque se copia completo dentro de <style> en cada interactivo, para que
+   el archivo siga siendo autónomo. La clase de unidad va en el <body>:
+       <body class="u4">   → Unidad 4, verde oliva
+   Unidades: u1 verde azulado · u2 gris pizarra · u3 verde · u4 verde oliva
+             u5 rojo anaranjado · u6 azul índigo · u7 violeta · u8 azul
+   Todos los colores de acento cumplen 4,5:1 sobre blanco y admiten texto
+   blanco encima. El ámbar de los avisos usa #5c3900 (10,29:1).
+   ========================================================================== */
 
+/* ── 1. PALETA POR UNIDAD ──────────────────────────────────────────────── */
+:root{
+  --u:#37474f; --u2:#263238; --u-bg:#eceff1;   /* valor por defecto */
+  --texto:#222; --texto-sec:#555; --linea:#e0e0e0;
+  --pagina:#f5f7fa; --papel:#ffffff;
+  --amb:#5c3900; --amb-bg:#fff8e1; --amb-borde:#b45309;
+  --ok:#1b5e20; --ok-bg:#e8f5e9; --mal:#7f1d1d; --mal-bg:#fbe9e7;
+  --radio:12px; --sombra:0 2px 8px rgba(0,0,0,.07);
+}
+body.u1{--u:#00695c;--u2:#004d40;--u-bg:#e0f2f1;}
+body.u2{--u:#37474f;--u2:#263238;--u-bg:#eceff1;}
+body.u3{--u:#1b5e20;--u2:#0f3d13;--u-bg:#e8f5e9;}
+body.u4{--u:#33691e;--u2:#1f4211;--u-bg:#f1f8e9;}
+body.u5{--u:#bf360c;--u2:#8c2708;--u-bg:#fbe9e7;}
+body.u6{--u:#1e3a8a;--u2:#142a63;--u-bg:#e8eaf6;}
+body.u7{--u:#5b21b6;--u2:#40157f;--u-bg:#ede7f6;}
+body.u8{--u:#0d47a1;--u2:#093271;--u-bg:#e3f2fd;}
+
+/* ── 2. BASE ───────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;margin:0;background:var(--pagina);
+  color:var(--texto);line-height:1.55;font-size:16px;}
+.contenedor{max-width:1100px;margin:0 auto;padding:24px;}
+a{color:#0b3d91;}
+h1,h2,h3{line-height:1.3;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+:focus-visible{outline:3px solid var(--u);outline-offset:2px;}
+
+/* ── 3. ENCABEZADO DEL INTERACTIVO ─────────────────────────────────────── */
+header.principal{background:var(--u);background:linear-gradient(135deg,var(--u) 0%,var(--u2) 100%);
+  color:#fff;padding:28px 32px;border-radius:14px;margin-bottom:22px;box-shadow:var(--sombra);}
+header.principal h1{margin:0 0 6px;font-size:26px;font-weight:700;color:#fff;}
+header.principal .meta{font-size:14px;margin:4px 0 0;color:#fff;}
+
+/* ── 4. BLOQUES DE TEXTO ───────────────────────────────────────────────── */
+.tarjeta{background:var(--papel);padding:20px 24px;border-radius:10px;
+  border-left:5px solid var(--u);margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.tarjeta h2{margin-top:0;color:var(--u);font-size:20px;}
+.tarjeta h3{font-size:16px;color:#263238;margin:16px 0 6px;}
+.caja-tip{background:var(--amb-bg);border-left:4px solid var(--amb-borde);padding:14px 18px;
+  margin:16px 0;border-radius:0 8px 8px 0;font-size:15px;}
+.caja-tip strong{color:var(--amb);}
+.caja-ok{background:var(--ok-bg);border-left:5px solid var(--ok);padding:14px 18px;
+  margin:16px 0;border-radius:0 8px 8px 0;}
+.caja-ok strong{color:var(--ok);}
+.caja-mal{background:var(--mal-bg);border-left:5px solid var(--mal);padding:14px 18px;
+  margin:16px 0;border-radius:0 8px 8px 0;}
+.caja-mal strong{color:var(--mal);}
+
+/* ── 5. PANEL DE CONTROLES ─────────────────────────────────────────────── */
+.panel{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+  padding:18px 22px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.panel h2{margin:0 0 12px;font-size:18px;color:var(--u);}
+.control{margin-bottom:16px;}
+.control > label{display:block;font-weight:600;font-size:15px;color:#263238;margin-bottom:6px;}
+.control .valor{float:right;font-weight:700;color:var(--u);font-variant-numeric:tabular-nums;}
+.control input[type=range]{width:100%;accent-color:var(--u);height:26px;}
+.control select,.control input[type=number],.control input[type=text]{
+  font-family:inherit;font-size:16px;padding:9px 14px;border-radius:8px;
+  border:1px solid #90a4ae;background:#fff;color:var(--texto);width:100%;max-width:420px;}
+.fila-botones{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+button{font-family:inherit;font-size:15px;font-weight:600;padding:10px 18px;border-radius:8px;
+  border:1px solid transparent;background:var(--u);color:#fff;cursor:pointer;}
+button:hover{background:var(--u2);}
+button.secundario{background:#fff;color:var(--u);border-color:var(--u);}
+button.secundario:hover{background:var(--u-bg);}
+
+/* ── 6. LIENZO / ESCENA ────────────────────────────────────────────────── */
+.escena{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+  padding:16px;margin-bottom:22px;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow-x:auto;}
+
+/* ── 7. LECTURA DEL ESTADO (alternativa textual, siempre visible) ──────── */
+.lectura{background:var(--u-bg);border-left:5px solid var(--u);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin-bottom:22px;font-size:15px;}
+.lectura h2{margin:0 0 8px;font-size:17px;color:var(--u);}
+.lectura p{margin:6px 0;}
+.lectura .dato{font-weight:700;color:var(--u2);font-variant-numeric:tabular-nums;}
+
+/* ── 8. TABLAS (Ally: caption obligatorio y scope en todo th) ──────────── */
+.tabla-wrap{overflow-x:auto;margin-bottom:22px;}
+table.datos{width:100%;border-collapse:collapse;background:var(--papel);border-radius:10px;
+  overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:15px;}
+table.datos caption{caption-side:top;text-align:left;font-size:14px;color:var(--texto-sec);
+  padding:0 0 8px;font-style:italic;}
+table.datos th,table.datos td{padding:10px 12px;text-align:left;border-bottom:1px solid #eee;}
+table.datos thead th{background:#37474f;color:#fff;font-weight:600;font-size:13px;
+  text-transform:uppercase;letter-spacing:.4px;}
+table.datos tbody th{background:var(--u-bg);color:var(--u2);font-weight:700;}
+table.datos tr:last-child td{border-bottom:none;}
+
+/* ── 9. ACORDEÓN NATIVO ────────────────────────────────────────────────── */
+details.bloque{background:var(--papel);border-radius:var(--radio);margin-bottom:14px;
+  box-shadow:var(--sombra);border-left:5px solid var(--u);overflow:hidden;}
+details.bloque > summary{padding:14px 18px;cursor:pointer;list-style:none;display:flex;
+  gap:10px;align-items:center;background:var(--u-bg);font-weight:600;color:var(--u2);}
+details.bloque > summary::-webkit-details-marker{display:none;}
+details.bloque > summary .chevron{transition:transform .2s;flex-shrink:0;}
+details.bloque[open] > summary .chevron{transform:rotate(90deg);}
+details.bloque .cuerpo{padding:14px 20px 18px;}
+
+/* ── 10. PIE CON LICENCIA ──────────────────────────────────────────────── */
+footer.pie{padding:22px 4px;color:var(--texto-sec);font-size:13px;margin-top:20px;
+  border-top:1px solid #ddd;text-align:center;}
+footer.pie p{margin:5px 0;}
+
+/* ── 11. MOVIMIENTO REDUCIDO ───────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important;}
+}
+
+/* ── 12. IMPRESIÓN ─────────────────────────────────────────────────────── */
+@media print{
+  body{background:#fff;}
+  .panel,.escena{page-break-inside:avoid;}
+  details[open] .cuerpo{display:block;}
+}
+
+/* ── 13. NOMBRES RESERVADOS ────────────────────────────────────────────── */
+/* Estas clases pertenecen a la hoja unificada. No las reutilices como
+   clase local en un interactivo: el selector local se sumaría al de aquí y
+   descuadraría el componente. Reservadas:
+   contenedor · sr-only · principal · meta · tarjeta · caja-tip · caja-ok ·
+   caja-mal · panel · control · valor · fila-botones · secundario · escena ·
+   lectura · dato · tabla-wrap · datos · bloque · cuerpo · chevron · pie
+   Para rejillas de cifras usa .cifras, no .datos. */
+
+
+/* ── PROPIO DE ESTE INTERACTIVO ────────────────────────────────────────── */
+h2.modulo{font-size:22px;color:var(--u2);margin:34px 0 14px;padding-bottom:6px;
+  border-bottom:3px solid var(--u-bg);}
+.dos{display:grid;grid-template-columns:330px 1fr;gap:20px;align-items:start;}
+@media (max-width:900px){ .dos{grid-template-columns:1fr;} }
+.ayuda{font-size:14px;color:var(--texto-sec);margin:4px 0 10px;}
+.extremos{display:flex;justify-content:space-between;font-size:13px;color:var(--texto-sec);margin:0;}
+.grupo-titulo{font-size:16px;color:var(--u2);margin:18px 0 8px;font-weight:700;}
+.grupo-titulo:first-of-type{margin-top:4px;}
+
+/* Escena del banco y gráfica */
+.lienzo{overflow-x:auto;}
+svg.banco,svg.grafica{display:block;margin:0 auto;min-width:640px;max-width:100%;height:auto;
+  background:#fbfcff;border:1px solid var(--linea);border-radius:8px;}
+svg.banco{margin-bottom:14px;}
+
+/* Rejilla de cifras del estado actual */
+.cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 4px;padding:0;list-style:none;}
+@media (max-width:640px){ .cifras{grid-template-columns:repeat(2,1fr);} }
+.cifras li{background:var(--u-bg);border-radius:8px;padding:10px 12px;}
+.cifras .rotulo{display:block;font-size:13px;color:var(--u2);}
+.cifras .cifra{display:block;font-size:20px;font-weight:700;color:var(--u2);
+  font-variant-numeric:tabular-nums;}
+
+/* Interruptor de peso y normal */
+.casilla{display:flex;gap:10px;align-items:flex-start;background:var(--u-bg);
+  border-radius:8px;padding:10px 12px;margin-top:10px;}
+.casilla input{width:20px;height:20px;accent-color:var(--u);margin-top:2px;flex-shrink:0;}
+.casilla span{font-size:14px;}
+
+/* Retos */
+.reto{background:var(--papel);border:1px solid var(--linea);border-left:5px solid #0277bd;
+  border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.reto h3{margin:0 0 6px;font-size:16px;color:#01579b;}
+.reto p{margin:6px 0;font-size:15px;}
+.veredicto:empty{display:none;}
+.veredicto{margin-top:10px;font-size:15px;padding:12px 16px;border-radius:0 8px 8px 0;}
+.veredicto.bien{background:var(--ok-bg);border-left:5px solid var(--ok);}
+.veredicto.aun{background:var(--amb-bg);border-left:5px solid var(--amb-borde);}
+.veredicto strong.bien{color:var(--ok);}
+.veredicto strong.aun{color:var(--amb);}
+
+/* Tabla de decisión de las tres leyes */
+table.decision{width:100%;border-collapse:collapse;background:var(--papel);font-size:14px;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);border-radius:10px;overflow:hidden;}
+table.decision caption{caption-side:top;text-align:left;font-size:14px;color:var(--texto-sec);
+  padding:0 0 8px;font-style:italic;}
+table.decision th,table.decision td{border:1px solid #cfd8dc;padding:9px 11px;text-align:left;}
+table.decision thead th{background:#37474f;color:#fff;font-size:13px;}
+table.decision tbody th{background:var(--u-bg);color:var(--u2);}
+table.decision tr.marcada td,table.decision tr.marcada th{background:#fff59d;color:#4a2d00;
+  font-weight:700;outline:3px solid #b45309;outline-offset:-3px;}
+
+/* Clasificador de casos */
+.caso{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+  padding:18px 22px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.caso .contador{font-size:13px;color:var(--texto-sec);margin:0 0 6px;}
+.caso p.enunciado-caso{font-size:17px;margin:0 0 14px;}
+.eleccion{margin-bottom:14px;}
+.eleccion p.pide{font-weight:700;margin:0 0 8px;font-size:15px;color:#263238;}
+button.opcion{background:#fff;color:var(--texto);border:1px solid #90a4ae;font-weight:600;}
+button.opcion:hover{background:var(--u-bg);border-color:var(--u);}
+button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:var(--u2);}
+.segunda{border-top:1px dashed #b0bec5;padding-top:14px;margin-top:4px;}
+.marcador{font-size:15px;font-weight:700;color:var(--u2);font-variant-numeric:tabular-nums;}
+
+/* Preguntas rápidas */
+.pregunta{border-top:1px solid var(--linea);padding-top:16px;margin-top:16px;}
+.pregunta:first-of-type{border-top:0;padding-top:0;margin-top:0;}
+.pregunta p.enunciado{font-weight:600;margin:0 0 10px;}
+.retro:empty{display:none;}
+.retro{margin-top:10px;}
+</style>
+</head>
+<body class="u6">
+<div class="contenedor">
+
+<header class="principal">
+  <h1>Fuerza neta, las leyes de Newton y la fricción</h1>
+  <p class="meta">Lección 6.1 · Las leyes de Newton, fuerza y fricción</p>
+  <p class="meta">Unidad 6 · Ciencias físicas II: fuerza, movimiento, energía y ondas · Spanish ASE Science</p>
+</header>
+
+<div class="tarjeta">
+  <h2>Qué vas a hacer</h2>
+  <p>Este interactivo tiene tres partes. En la primera empujas una caja sobre distintas superficies y observas qué le ocurre a su velocidad. En la segunda clasificas situaciones cotidianas según la ley de Newton que las explica, con solo dos preguntas. En la tercera decides cuándo la fricción estorba y cuándo resulta imprescindible.</p>
+  <p>Las tres partes miran lo mismo desde ángulos distintos: el movimiento de un objeto no cambia por sí solo, y cuando cambia siempre hay una fuerza neta detrás.</p>
+  <div class="caja-tip">
+    <p><strong>La confusión que hay que deshacer:</strong> fuerza neta cero no significa que el objeto esté quieto. Significa que su movimiento <em>no cambia</em>. Un camión a velocidad constante por una autopista tiene fuerza neta cero y está en pleno movimiento. Lo verás en el banco de fuerzas en cuanto el empuje iguale a la fricción.</p>
+  </div>
+</div>
+
+<h2 class="modulo">1 · El banco de fuerzas</h2>
+
+<div class="dos">
+
+  <div class="panel">
+    <h2>Controles</h2>
+
+    <p class="grupo-titulo">La caja</p>
+    <div class="control">
+      <label for="masa">Masa <span class="valor" id="v-masa">20 kg</span></label>
+      <input type="range" id="masa" min="5" max="100" step="5" value="20">
+      <p class="extremos"><span>5 kg</span><span>100 kg</span></p>
+    </div>
+    <div class="control">
+      <label for="v0">Velocidad inicial <span class="valor" id="v-v0">0 m/s</span></label>
+      <input type="range" id="v0" min="0" max="20" step="1" value="0">
+      <p class="extremos"><span>Parada</span><span>20 m/s</span></p>
+    </div>
+
+    <p class="grupo-titulo">Las fuerzas que aplicas</p>
+    <p class="ayuda">Van en sentidos opuestos, así que se restan.</p>
+    <div class="control">
+      <label for="der">Empuje hacia la derecha <span class="valor" id="v-der">80 N</span></label>
+      <input type="range" id="der" min="0" max="300" step="1" value="80">
+      <p class="extremos"><span>0 N</span><span>300 N</span></p>
+    </div>
+    <div class="control">
+      <label for="izq">Tirón hacia la izquierda <span class="valor" id="v-izq">0 N</span></label>
+      <input type="range" id="izq" min="0" max="300" step="1" value="0">
+      <p class="extremos"><span>0 N</span><span>300 N</span></p>
+    </div>
+
+    <p class="grupo-titulo">La superficie</p>
+    <div class="control">
+      <label for="sup">Sobre qué desliza la caja</label>
+      <select id="sup">
+        <option value="ideal">Superficie ideal, sin fricción</option>
+        <option value="hielo">Hielo</option>
+        <option value="madera" selected>Madera pulida</option>
+        <option value="asfalto">Asfalto seco</option>
+        <option value="caucho">Caucho sobre hormigón</option>
+      </select>
+    </div>
+
+    <p class="ayuda">La fricción máxima de cada superficie sale de multiplicar su aspereza por el peso de la caja, con g = 9,8 m/s².</p>
+
+    <div class="casilla">
+      <input type="checkbox" id="vertical">
+      <label for="vertical"><span>Mostrar también el peso y la fuerza normal, que se anulan entre sí y deciden cuánta fricción puede haber.</span></label>
+    </div>
+
+    <p class="grupo-titulo">Escenarios</p>
+    <div class="fila-botones">
+      <button type="button" id="btn-animar">Ver el movimiento</button>
+      <button type="button" class="secundario" data-esc="constante">Velocidad constante</button>
+      <button type="button" class="secundario" data-esc="atascada">Empujar sin moverla</button>
+      <button type="button" class="secundario" data-esc="hielo">Resbalar sobre hielo</button>
+      <button type="button" class="secundario" data-esc="ideal">Sin fricción ninguna</button>
+      <button type="button" class="secundario" id="btn-reiniciar">Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="escena">
+    <div class="lienzo">
+      <div id="lienzo-banco"></div>
+      <div id="lienzo-grafica"></div>
+    </div>
+    <p class="ayuda" style="text-align:center;margin:10px 0 0;">El contorno discontinuo marca dónde estará la caja a los 10 segundos. En la gráfica, una línea que sube es aceleración; una horizontal, velocidad constante.</p>
+  </div>
+
+</div>
+
+<ul class="cifras">
+  <li><span class="rotulo">Fuerza neta</span><span class="cifra" id="c-neta">—</span></li>
+  <li><span class="rotulo">Fricción</span><span class="cifra" id="c-fric">—</span></li>
+  <li><span class="rotulo">Aceleración</span><span class="cifra" id="c-acel">—</span></li>
+  <li><span class="rotulo">Distancia en 10 s</span><span class="cifra" id="c-dist">—</span></li>
+</ul>
+
+<div class="lectura" aria-live="polite">
+  <h2>Lectura de la escena</h2>
+  <p id="lectura-1"></p>
+  <p id="lectura-2"></p>
+  <p id="lectura-3"></p>
+</div>
+
+<div class="tabla-wrap">
+  <table class="datos">
+    <caption>Velocidad y distancia recorrida por la caja en la simulación actual, medidas cada dos segundos desde el inicio. La distancia se cuenta desde el punto de partida y es negativa si la caja avanza hacia la izquierda.</caption>
+    <thead>
+      <tr><th scope="col">Tiempo</th><th scope="col">Velocidad</th><th scope="col">Distancia recorrida</th><th scope="col">Qué está pasando</th></tr>
+    </thead>
+    <tbody id="tabla-hitos"></tbody>
+  </table>
+</div>
+
+<h3 style="font-size:18px;color:var(--u2);margin:26px 0 12px;">Cuatro retos</h3>
+<p class="ayuda">Mueve los controles hasta conseguir cada cosa y pulsa <em>Comprobar</em>. Cada reto desmonta una confusión distinta.</p>
+
+<div class="reto">
+  <h3>Reto 1 · Moverse sin fuerza neta</h3>
+  <p>Con la caja ya en marcha sobre una superficie que tenga fricción, consigue que avance a velocidad constante mientras la empujas. La fuerza neta debe quedar en cero sin que la caja se detenga.</p>
+  <div class="fila-botones"><button type="button" class="secundario" data-reto="1">Comprobar</button></div>
+  <div class="veredicto" id="ver1"></div>
+</div>
+
+<div class="reto">
+  <h3>Reto 2 · Doblar la aceleración sin tocar las fuerzas</h3>
+  <p>Deja el empuje en 80 N, el tirón en 0 N y la superficie en madera pulida. Consigue que la aceleración pase de los 2,0 m/s² de partida a más del doble.</p>
+  <div class="fila-botones"><button type="button" class="secundario" data-reto="2">Comprobar</button></div>
+  <div class="veredicto" id="ver2"></div>
+</div>
+
+<div class="reto">
+  <h3>Reto 3 · Empujar con fuerza y no conseguir nada</h3>
+  <p>Empuja con 100 N o más y consigue que la caja siga quieta los diez segundos enteros.</p>
+  <div class="fila-botones"><button type="button" class="secundario" data-reto="3">Comprobar</button></div>
+  <div class="veredicto" id="ver3"></div>
+</div>
+
+<div class="reto">
+  <h3>Reto 4 · Frenar sin tocar la caja</h3>
+  <p>Lanza la caja a 10 m/s o más, deja el empuje y el tirón en cero y consigue que se detenga sola antes de cinco segundos.</p>
+  <div class="fila-botones"><button type="button" class="secundario" data-reto="4">Comprobar</button></div>
+  <div class="veredicto" id="ver4"></div>
+</div>
+
+<div class="tarjeta">
+  <h2>Tres cosas que el examen pregunta sobre este banco</h2>
+  <h3>La fricción no vale siempre lo mismo</h3>
+  <p>Mientras la caja está quieta, la fricción vale exactamente lo que haga falta para equilibrar tu empuje, ni más ni menos, hasta llegar a su máximo. Si empujas con 40 N y la caja no se mueve, la fricción vale 40 N. Solo cuando tu empuje supera ese máximo la caja arranca, y a partir de ahí la fricción se queda fija.</p>
+  <h3>La masa no aparece en la fuerza neta, pero decide la aceleración</h3>
+  <p>Dos cajas empujadas con la misma fuerza neta reciben la misma fuerza y aceleran distinto. En <strong>a = F ÷ m</strong> la masa está dividiendo: al doblarla, la aceleración se reduce a la mitad. Compruébalo con el reto 2.</p>
+  <h3>Frenar también es acelerar</h3>
+  <p>En física, aceleración significa cambiar de velocidad, no ir deprisa. Cuando la caja frena por la fricción hay aceleración, solo que en sentido contrario al movimiento, y la línea de la gráfica baja en lugar de subir.</p>
+</div>
+
+<h2 class="modulo">2 · Las tres leyes, con dos preguntas</h2>
+
+<div class="tarjeta">
+  <h2>No hay que memorizarlas: se deducen</h2>
+  <p>Para saber qué ley explica una escena basta con responder dos cosas. Primero, de cuántos cuerpos habla. Si habla de dos que se empujan entre sí, es la tercera y no hay más que mirar. Si habla de uno solo, la segunda pregunta decide: ¿cambia su movimiento o sigue como estaba?</p>
+</div>
+
+<div class="tabla-wrap">
+  <table class="decision" id="decision">
+    <caption>Las tres leyes salen de combinar las dos preguntas. La fila que corresponda a tu respuesta se resaltará mientras resuelves cada caso.</caption>
+    <thead>
+      <tr>
+        <th scope="col">Lo que dice la escena</th>
+        <th scope="col">Ley</th>
+        <th scope="col">Enunciado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="f-ley1">
+        <th scope="row">Un cuerpo y su movimiento no cambia</th>
+        <td>Primera · inercia</td>
+        <td>Un cuerpo en reposo sigue en reposo y uno en movimiento sigue moviéndose igual, mientras la fuerza neta sea cero.</td>
+      </tr>
+      <tr id="f-ley2">
+        <th scope="row">Un cuerpo y su movimiento cambia</th>
+        <td>Segunda · F = m · a</td>
+        <td>La aceleración es proporcional a la fuerza neta e inversamente proporcional a la masa.</td>
+      </tr>
+      <tr id="f-ley3">
+        <th scope="row">Dos cuerpos que se empujan entre sí</th>
+        <td>Tercera · acción y reacción</td>
+        <td>A cada fuerza le corresponde otra igual y de sentido contrario sobre el otro cuerpo.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="caja-tip">
+  <p><strong>Por qué acción y reacción no se anulan:</strong> porque no actúan sobre el mismo cuerpo. El pie empuja al suelo y el suelo empuja al pie; son dos objetos distintos y cada uno siente su propia fuerza. Solo se anulan entre sí las fuerzas que actúan <em>sobre un mismo objeto</em>, que es justo lo que se suma en la fuerza neta del módulo 1.</p>
+</div>
+
+<div class="caso" id="caso">
+  <p class="contador" id="contador"></p>
+  <p class="enunciado-caso" id="texto-caso"></p>
+
+  <div class="eleccion">
+    <p class="pide">¿De cuántos cuerpos habla la escena?</p>
+    <div class="fila-botones" id="ops-a">
+      <button type="button" class="opcion" data-lado="a" data-v="uno" aria-pressed="false">De uno solo</button>
+      <button type="button" class="opcion" data-lado="a" data-v="dos" aria-pressed="false">De dos que se empujan entre sí</button>
+    </div>
+  </div>
+
+  <div class="eleccion segunda" id="bloque-b" hidden>
+    <p class="pide" id="pide-b">¿Cambia el movimiento de ese cuerpo?</p>
+    <div class="fila-botones" id="ops-b">
+      <button type="button" class="opcion" data-lado="b" data-v="no" aria-pressed="false">No cambia: sigue como estaba</button>
+      <button type="button" class="opcion" data-lado="b" data-v="si" aria-pressed="false">Sí cambia: arranca, frena o se desvía</button>
+    </div>
+  </div>
+
+  <p class="ayuda" id="pista-fila" aria-live="polite"></p>
+
+  <div class="fila-botones">
+    <button type="button" id="btn-comprobar">Comprobar</button>
+    <button type="button" class="secundario" id="btn-siguiente" hidden>Siguiente caso</button>
+  </div>
+
+  <div class="retro" id="retro-caso" aria-live="polite"></div>
+  <p class="marcador" id="marcador" style="margin-top:14px;"></p>
+</div>
+
+<div class="caja-tip">
+  <p><strong>Cuidado con el autobús que frena:</strong> la escena habla de los pasajeros, no del autobús. Lo que cambia de movimiento es el autobús; los pasajeros siguen exactamente como venían, y por eso se van hacia delante. Antes de responder, decide de qué cuerpo habla el enunciado.</p>
+</div>
+
+<h2 class="modulo">3 · La fricción: ¿estorba o es imprescindible?</h2>
+
+<div class="tarjeta">
+  <h2>La misma fuerza, dos papeles opuestos</h2>
+  <p>La fricción siempre hace lo mismo: oponerse al deslizamiento y convertir en calor parte de la energía del movimiento. Lo que cambia es si eso nos conviene o nos perjudica en cada situación. Decide en cada caso y comprueba la respuesta.</p>
+
+  <div class="pregunta" data-ok="a" data-expl="Las piezas rozando entre sí pierden energía en forma de calor y se desgastan. Por eso los motores se lubrican: el aceite reduce la fricción, no la elimina.">
+    <p class="enunciado">1. Las piezas metálicas de un motor rozando entre sí.</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Estorba</button>
+      <button type="button" class="secundario" data-op="b">Es imprescindible</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="b" data-expl="Sin fricción entre la pastilla y el disco no habría manera de detener el automóvil. Frenar es, literalmente, aprovechar la fricción a propósito.">
+    <p class="enunciado">2. La pastilla del freno apretando el disco de la rueda.</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Estorba</button>
+      <button type="button" class="secundario" data-op="b">Es imprescindible</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="a" data-expl="La resistencia del aire obliga al motor a gastar más combustible solo para mantener la velocidad. Por eso los vehículos se diseñan con formas que la reducen.">
+    <p class="enunciado">3. El aire empujando contra un autobús en marcha.</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Estorba</button>
+      <button type="button" class="secundario" data-op="b">Es imprescindible</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="b" data-expl="Al caminar, el pie empuja el suelo hacia atrás y la fricción permite que el suelo empuje al pie hacia delante. Sobre hielo esa fricción casi desaparece y el pie resbala.">
+    <p class="enunciado">4. La suela del zapato agarrando el pavimento al caminar.</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Estorba</button>
+      <button type="button" class="secundario" data-op="b">Es imprescindible</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="a" data-expl="Aquí la fricción es pura pérdida: frena el deslizamiento y calienta la base del trineo sin aportar nada útil.">
+    <p class="enunciado">5. El trineo arrastrándose por la nieve mojada, que apenas avanza.</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Estorba</button>
+      <button type="button" class="secundario" data-op="b">Es imprescindible</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="b" data-expl="El neumático empuja el asfalto hacia atrás y la fricción hace que el asfalto empuje al neumático hacia delante. Sin ella la rueda giraría en el sitio, como ocurre sobre hielo.">
+    <p class="enunciado">6. El neumático agarrando el asfalto para que el automóvil arranque.</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Estorba</button>
+      <button type="button" class="secundario" data-op="b">Es imprescindible</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="caja-tip">
+    <p><strong>Adónde va la energía:</strong> lo que la fricción le quita al movimiento no desaparece. Se convierte en <strong>calor</strong>, que es lo que se nota al frotarse las manos o al tocar un freno recién usado. Esa idea vuelve en la Lección 6.2: una montaña rusa nunca sube tan alto como empezó porque parte de su energía se ha ido en calor por el camino.</p>
+  </div>
+</div>
+
+<h2 class="modulo">4 · Preguntas rápidas</h2>
+
+<div class="tarjeta">
+
+  <div class="pregunta" data-ok="c" data-expl="Fuerza neta cero significa que el movimiento no cambia. Puede estar quieto o moviéndose a velocidad constante: las dos situaciones son la primera ley.">
+    <p class="enunciado">1. Que la fuerza neta sobre un objeto sea cero significa que el objeto:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Está necesariamente parado</button>
+      <button type="button" class="secundario" data-op="b">No tiene ninguna fuerza aplicada</button>
+      <button type="button" class="secundario" data-op="c">No cambia su movimiento: sigue como venía</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="b" data-expl="Las fuerzas opuestas se restan: 70 menos 25 son 45, y el resultado apunta hacia el lado de la fuerza mayor.">
+    <p class="enunciado">2. Sobre una caja actúan 70 N hacia la derecha y 25 N hacia la izquierda. La fuerza neta es:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">95 N hacia la derecha</button>
+      <button type="button" class="secundario" data-op="b">45 N hacia la derecha</button>
+      <button type="button" class="secundario" data-op="c">45 N hacia la izquierda</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="a" data-expl="Si el armario no se mueve, la fuerza neta es cero, y para que lo sea la fricción tiene que valer exactamente lo mismo que el empuje. La fricción estática da justo lo necesario, hasta llegar a su máximo.">
+    <p class="enunciado">3. Empujas un armario con 200 N y no se mueve. En ese momento la fricción vale:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">200 N, justo lo necesario para equilibrar el empuje</button>
+      <button type="button" class="secundario" data-op="b">Cero, porque no hay movimiento</button>
+      <button type="button" class="secundario" data-op="c">Más de 200 N, porque el armario retrocedería</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="c" data-expl="En a = F ÷ m la masa divide. Si se dobla la masa y la fuerza neta no cambia, la aceleración se reduce a la mitad.">
+    <p class="enunciado">4. Se dobla la masa de un carrito y se le aplica la misma fuerza neta. Su aceleración:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Se dobla también</button>
+      <button type="button" class="secundario" data-op="b">No cambia</button>
+      <button type="button" class="secundario" data-op="c">Se reduce a la mitad</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="b" data-expl="Actúan sobre cuerpos distintos: una sobre el bote y la otra sobre la persona. Solo se anulan entre sí las fuerzas aplicadas sobre un mismo objeto.">
+    <p class="enunciado">5. Al saltar de un bote al muelle, el bote se aleja. Las fuerzas de acción y reacción no se anulan porque:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">La del bote es más pequeña</button>
+      <button type="button" class="secundario" data-op="b">Cada una actúa sobre un cuerpo distinto</button>
+      <button type="button" class="secundario" data-op="c">Ocurren en momentos diferentes</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="b" data-expl="Lo plano no es lo detenido. La línea horizontal significa velocidad que no cambia, y para que no cambie la fuerza neta tiene que ser cero. Estaría parado solo si esa línea coincidiera con el cero del eje vertical.">
+    <p class="enunciado">6. En una gráfica de velocidad frente a tiempo, un tramo horizontal por encima del cero indica que el objeto:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Está detenido</button>
+      <button type="button" class="secundario" data-op="b">Se mueve a velocidad constante, con fuerza neta cero</button>
+      <button type="button" class="secundario" data-op="c">Está acelerando poco a poco</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+  <div class="pregunta" data-ok="a" data-expl="La energía no desaparece: se transforma en calor, que es lo que se nota al frotarse las manos o al tocar un freno recién usado.">
+    <p class="enunciado">7. La energía que la fricción le quita al movimiento:</p>
+    <div class="fila-botones">
+      <button type="button" class="secundario" data-op="a">Se convierte en calor</button>
+      <button type="button" class="secundario" data-op="b">Desaparece del universo</button>
+      <button type="button" class="secundario" data-op="c">Se guarda en la masa del objeto</button>
+    </div>
+    <div class="retro"></div>
+  </div>
+
+</div>
+
+<footer class="pie">
+  <p>Fuerza neta, las leyes de Newton y la fricción · Lección 6.1 · Spanish ASE Science</p>
+  <p>José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago</p>
+  <p>© 2026. Esta obra está licenciada bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</a>.</p>
+</footer>
+
+</div>
+<script>
+"use strict";
+
+/* ===========================================================================
+   MÓDULO 1 · BANCO DE FUERZAS
+   El modelo es la segunda ley con fricción seca. Dos ideas lo sostienen:
+   1) La fuerza neta suma las fuerzas con su signo; la fricción se opone
+      siempre al movimiento.
+   2) Mientras la caja está quieta, la fricción vale exactamente lo necesario
+      para equilibrar el empuje, hasta un máximo de mu · m · g. Solo cuando el
+      empuje supera ese máximo la caja arranca.
+   ========================================================================= */
+
+var G     = 9.8;    /* aceleración de la gravedad, m/s²            */
+var DT    = 0.05;   /* paso de integración, en segundos            */
+var TFIN  = 10;     /* duración simulada, en segundos              */
+var NPASO = Math.round(TFIN / DT);
+
+var SUPERFICIES = {
+  ideal:   {mu:0.00, nombre:"una superficie ideal sin fricción"},
+  hielo:   {mu:0.05, nombre:"hielo"},
+  madera:  {mu:0.20, nombre:"madera pulida"},
+  asfalto: {mu:0.60, nombre:"asfalto seco"},
+  caucho:  {mu:0.90, nombre:"caucho sobre hormigón"}
+};
+
+var ctrl = {masa:20, v0:0, der:80, izq:0, sup:"madera", vertical:false};
+var sim  = null;      /* resultado de la última simulación */
+var anim = null;      /* identificador de la animación en curso */
+
+/* ── Formato de números en español ─────────────────────────────────────── */
+function num(x, dec){
+  var s = x.toFixed(dec);
+  if (s === "-0" || s === "-0.0" || s === "-0.00") s = s.replace("-", "");
+  return s.replace(".", ",");
+}
+
+/* ── Simulación ────────────────────────────────────────────────────────── */
+function simular(c){
+  var mu   = SUPERFICIES[c.sup].mu;
+  var m    = c.masa;
+  var fap  = c.der - c.izq;          /* positiva hacia la derecha */
+  var fmax = mu * m * G;             /* fricción máxima disponible */
+  var v = c.v0, x = 0;
+  var pts = [{t:0, v:v, x:0}];
+  var parada = null, arranco = (Math.abs(v) > 0);
+  var i, t, fr, neta, a, vn;
+
+  /* estado inicial, que es el que se muestra en las cifras */
+  if (Math.abs(v) < 1e-9){
+    if (Math.abs(fap) <= fmax){ fr = -fap; }
+    else { fr = (fap > 0 ? -1 : 1) * fmax; }
+  } else {
+    fr = (v > 0 ? -1 : 1) * fmax;
+  }
+  var fr0 = fr, neta0 = fap + fr, a0 = neta0 / m;
+
+  for (i = 1; i <= NPASO; i++){
+    t = i * DT;
+    if (Math.abs(v) < 1e-9){
+      if (Math.abs(fap) <= fmax){ fr = -fap; neta = 0; }
+      else { fr = (fap > 0 ? -1 : 1) * fmax; neta = fap + fr; }
+    } else {
+      fr = (v > 0 ? -1 : 1) * fmax;
+      neta = fap + fr;
+    }
+    a  = neta / m;
+    vn = v + a * DT;
+    /* si la velocidad cruza el cero y el empuje no basta para sostener el
+       movimiento, la caja se detiene ahí y no retrocede */
+    if (v !== 0 && ((v > 0 && vn < 0) || (v < 0 && vn > 0)) && Math.abs(fap) <= fmax){
+      vn = 0;
+      if (parada === null) parada = t;
+    }
+    x += (v + vn) / 2 * DT;
+    v = vn;
+    if (Math.abs(v) > 1e-9) arranco = true;
+    pts.push({t:t, v:v, x:x});
+  }
+
+  var vmax = 0, vmin = 0, xabs = 0;
+  for (i = 0; i < pts.length; i++){
+    if (pts[i].v > vmax) vmax = pts[i].v;
+    if (pts[i].v < vmin) vmin = pts[i].v;
+    if (Math.abs(pts[i].x) > xabs) xabs = Math.abs(pts[i].x);
+  }
+
+  var estado;
+  if (!arranco)                        estado = "quieta";
+  else if (Math.abs(neta0) < 0.5)      estado = "constante";
+  else if (parada !== null)            estado = "para";
+  else if (c.v0 > 0 && neta0 < 0)      estado = "frena";
+  else                                 estado = "acelera";
+
+  return {pts:pts, mu:mu, fap:fap, fmax:fmax, fr0:fr0, neta0:neta0, a0:a0,
+          parada:parada, estado:estado, vmax:vmax, vmin:vmin, xabs:xabs,
+          xfin:pts[pts.length - 1].x, vfin:pts[pts.length - 1].v};
+}
+
+/* ── Escena del banco de fuerzas ───────────────────────────────────────── */
+function flecha(x1, y, largo, color, ancho){
+  var x2 = x1 + largo;
+  var p  = largo > 0 ? 1 : -1;
+  return '<line x1="' + x1 + '" y1="' + y + '" x2="' + (x2 - p * 11) + '" y2="' + y +
+         '" stroke="' + color + '" stroke-width="' + ancho + '"/>' +
+         '<polygon points="' + (x2 - p * 13) + ',' + (y - 7) + ' ' + x2 + ',' + y + ' ' +
+         (x2 - p * 13) + ',' + (y + 7) + '" fill="' + color + '"/>';
+}
+
+function rotulo(x, y, texto, color, anclaje){
+  return '<text x="' + x + '" y="' + y + '" font-family="Segoe UI, sans-serif" font-size="13" ' +
+         'font-weight="700" fill="' + color + '" text-anchor="' + anclaje + '">' + texto + '</text>';
+}
+
+function pintarBanco(idx){
+  var p    = sim.pts[idx];
+  var pfin = sim.pts[sim.pts.length - 1];
+  var XI = 190, XD = 510;                            /* recorrido visible de la caja */
+  var esc  = sim.xabs > 0 ? (XD - XI) / sim.xabs : 0;
+  var base = sim.xfin < 0 ? XD : XI;
+  var cx   = base + p.x * esc;
+  var cxf  = base + pfin.x * esc;
+  var suelo = 206, alto = 52, ancho = 64, arriba = suelo - alto;
+  var yF = arriba + 14, yR = suelo - 7;              /* filas de flechas */
+  var s = '';
+
+  /* suelo */
+  s += '<rect x="0" y="' + suelo + '" width="700" height="54" fill="#eceff1"/>';
+  s += '<line x1="0" y1="' + suelo + '" x2="700" y2="' + suelo + '" stroke="#546e7a" stroke-width="3"/>';
+
+  /* contorno de la posición a los diez segundos */
+  if (Math.abs(pfin.x) > 0.05){
+    s += '<rect x="' + (cxf - ancho / 2) + '" y="' + arriba + '" width="' + ancho +
+         '" height="' + alto + '" rx="6" fill="none" stroke="#90a4ae" stroke-width="2" stroke-dasharray="6 5"/>';
+    s += rotulo(cxf, suelo + 42, "a los 10 s", "#546e7a", "middle");
+  }
+
+  /* la caja */
+  s += '<rect x="' + (cx - ancho / 2) + '" y="' + arriba + '" width="' + ancho +
+       '" height="' + alto + '" rx="6" fill="#dbe2f7" stroke="#14265e" stroke-width="3"/>';
+  s += rotulo(cx, arriba + 32, ctrl.masa + " kg", "#14265e", "middle");
+
+  /* fricción que actúa en este instante */
+  var frAhora = Math.abs(p.v) > 1e-9 ? (p.v > 0 ? -1 : 1) * sim.fmax
+                                     : (Math.abs(sim.fap) <= sim.fmax ? -sim.fap
+                                        : (sim.fap > 0 ? -1 : 1) * sim.fmax);
+  var mayor = Math.max(ctrl.der, ctrl.izq, Math.abs(frAhora), 1);
+  function largo(f){ return 30 + 88 * (f / mayor); }
+
+  if (ctrl.der > 0){
+    var lD = largo(ctrl.der);
+    s += flecha(cx + ancho / 2, yF, lD, "#1e3a8a", 5);
+    s += rotulo(cx + ancho / 2 + lD / 2, yF - 12, "empuje " + ctrl.der + " N", "#14265e", "middle");
+  }
+  if (ctrl.izq > 0){
+    var lI = largo(ctrl.izq);
+    s += flecha(cx - ancho / 2, yF, -lI, "#1e3a8a", 5);
+    s += rotulo(cx - ancho / 2 - lI / 2, yF - 12, "tirón " + ctrl.izq + " N", "#14265e", "middle");
+  }
+  if (Math.abs(frAhora) > 0.05){
+    var lF  = largo(Math.abs(frAhora));
+    var dir = frAhora > 0 ? 1 : -1;
+    s += flecha(cx + dir * ancho / 2, yR, dir * lF, "#b45309", 5);
+    s += rotulo(cx + dir * (ancho / 2 + lF / 2), suelo + 22,
+                "fricción " + num(Math.abs(frAhora), 1) + " N", "#5c3900", "middle");
+  }
+
+  /* recuadro fijo del peso y la normal, que se anulan entre sí */
+  if (ctrl.vertical){
+    var peso = num(ctrl.masa * G, 0);
+    s += '<rect x="464" y="10" width="222" height="112" rx="8" fill="#ffffff" stroke="#cfd8dc" stroke-width="2"/>';
+    s += '<text x="475" y="30" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" fill="#455a64">Peso y normal: se anulan</text>';
+    s += '<rect x="492" y="58" width="38" height="28" rx="4" fill="#dbe2f7" stroke="#14265e" stroke-width="2"/>';
+    s += '<line x1="511" y1="56" x2="511" y2="44" stroke="#455a64" stroke-width="4"/>' +
+         '<polygon points="504,46 511,34 518,46" fill="#455a64"/>';
+    s += '<text x="540" y="46" font-family="Segoe UI, sans-serif" font-size="12" fill="#455a64">normal ' + peso + ' N</text>';
+    s += '<line x1="511" y1="88" x2="511" y2="100" stroke="#455a64" stroke-width="4"/>' +
+         '<polygon points="504,98 511,110 518,98" fill="#455a64"/>';
+    s += '<text x="540" y="108" font-family="Segoe UI, sans-serif" font-size="12" fill="#455a64">peso ' + peso + ' N</text>';
+  }
+
+  /* reloj y velocidad del instante, con el sentido escrito en palabras */
+  var lectorV;
+  if (Math.abs(p.v) < 0.05)   lectorV = "la caja está parada";
+  else if (p.v > 0)           lectorV = "v = " + num(p.v, 1) + " m/s hacia la derecha";
+  else                        lectorV = "v = " + num(Math.abs(p.v), 1) + " m/s hacia la izquierda";
+  s += '<text x="16" y="26" font-family="Segoe UI, sans-serif" font-size="14" fill="#14265e">' +
+       't = ' + num(p.t, 1) + ' s · ' + lectorV + '</text>';
+
+  var etiqueta = "Banco de fuerzas. Una caja de " + ctrl.masa + " kilogramos sobre " +
+    SUPERFICIES[ctrl.sup].nombre + ". Recibe un empuje de " + ctrl.der +
+    " newtons hacia la derecha y un tirón de " + ctrl.izq + " newtons hacia la izquierda. " +
+    "La fricción vale " + num(Math.abs(frAhora), 1) + " newtons. " + fraseEstado();
+
+  document.getElementById("lienzo-banco").innerHTML =
+    '<svg class="banco" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+    etiqueta + '">' + s + '</svg>';
+}
+
+/* ── Gráfica de velocidad frente a tiempo ──────────────────────────────── */
+function pintarGrafica(){
+  var L = 64, R = 24, T = 26, B = 48, AN = 660, AL = 320;
+  var x0 = L, x1 = AN - R, y0 = AL - B, y1 = T;
+  var vhi = Math.max(sim.vmax, 0), vlo = Math.min(sim.vmin, 0);
+  if (vhi - vlo < 1) vhi = vlo + 1;
+  vhi = vhi + (vhi - vlo) * 0.12;
+  var i, s = '';
+
+  function ex(t){ return x0 + (t / TFIN) * (x1 - x0); }
+  function ey(v){ return y0 - ((v - vlo) / (vhi - vlo)) * (y0 - y1); }
+
+  /* rejilla y marcas del eje horizontal */
+  for (i = 0; i <= 10; i += 2){
+    s += '<line x1="' + ex(i) + '" y1="' + y1 + '" x2="' + ex(i) + '" y2="' + y0 +
+         '" stroke="#eceff1" stroke-width="1"/>';
+    s += '<text x="' + ex(i) + '" y="' + (y0 + 20) + '" font-family="Segoe UI, sans-serif" ' +
+         'font-size="12" fill="#555" text-anchor="middle">' + i + '</text>';
+  }
+  /* marcas del eje vertical */
+  for (i = 0; i <= 4; i++){
+    var vv = vlo + (vhi - vlo) * i / 4;
+    s += '<line x1="' + x0 + '" y1="' + ey(vv) + '" x2="' + x1 + '" y2="' + ey(vv) +
+         '" stroke="#eceff1" stroke-width="1"/>';
+    s += '<text x="' + (x0 - 10) + '" y="' + (ey(vv) + 4) + '" font-family="Segoe UI, sans-serif" ' +
+         'font-size="12" fill="#555" text-anchor="end">' + num(vv, 1) + '</text>';
+  }
+  /* línea del cero, si el cero queda dentro */
+  if (vlo < 0){
+    s += '<line x1="' + x0 + '" y1="' + ey(0) + '" x2="' + x1 + '" y2="' + ey(0) +
+         '" stroke="#90a4ae" stroke-width="2" stroke-dasharray="5 4"/>';
+  }
+  /* ejes */
+  s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x1 + '" y2="' + y0 + '" stroke="#222" stroke-width="2"/>';
+  s += '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + y1 + '" stroke="#222" stroke-width="2"/>';
+  s += rotulo((x0 + x1) / 2, AL - 12, "Tiempo (s)", "#222", "middle");
+  s += '<text x="16" y="' + ((y0 + y1) / 2) + '" font-family="Segoe UI, sans-serif" font-size="13" ' +
+       'font-weight="700" fill="#222" transform="rotate(-90 16 ' + ((y0 + y1) / 2) + ')" ' +
+       'text-anchor="middle">Velocidad (m/s)</text>';
+
+  /* la curva */
+  var pts = "";
+  for (i = 0; i < sim.pts.length; i += 2){
+    pts += ex(sim.pts[i].t) + "," + ey(sim.pts[i].v) + " ";
+  }
+  pts += ex(TFIN) + "," + ey(sim.pts[sim.pts.length - 1].v);
+  s += '<polyline points="' + pts + '" fill="none" stroke="#1e3a8a" stroke-width="4"/>';
+
+  /* momento de la parada */
+  if (sim.parada !== null){
+    s += '<circle cx="' + ex(sim.parada) + '" cy="' + ey(0) + '" r="7" fill="#b45309"/>';
+    s += rotulo(ex(sim.parada) + 14, ey(0) - 14, "se detiene a los " + num(sim.parada, 1) + " s", "#5c3900", "start");
+  }
+
+  var etiqueta = "Gráfica de velocidad frente a tiempo durante diez segundos. " + fraseGrafica();
+  document.getElementById("lienzo-grafica").innerHTML =
+    '<svg class="grafica" viewBox="0 0 ' + AN + ' ' + AL + '" xmlns="http://www.w3.org/2000/svg" ' +
+    'role="img" aria-label="' + etiqueta + '">' + s + '</svg>';
+}
+
+/* ── Frases del estado, reutilizadas en la lectura y en las etiquetas ──── */
+function fraseEstado(){
+  if (sim.estado === "quieta")    return "La caja no se mueve: la fricción equilibra exactamente lo que empujas.";
+  if (sim.estado === "constante") return "La caja avanza a velocidad constante: la fuerza neta es cero.";
+  if (sim.estado === "para")      return "La caja frena y acaba deteniéndose a los " + num(sim.parada, 1) + " segundos.";
+  if (sim.estado === "frena")     return "La caja frena, porque la fuerza neta va en contra de su movimiento.";
+  return "La caja acelera en el sentido de la fuerza neta.";
+}
+
+function fraseGrafica(){
+  if (sim.estado === "quieta")    return "La línea se mantiene pegada al cero durante todo el tramo: la velocidad nunca cambia porque la caja no llega a moverse.";
+  if (sim.estado === "constante") return "La línea es horizontal por encima del cero: la velocidad se mantiene en " + num(sim.pts[0].v, 1) + " metros por segundo sin subir ni bajar.";
+  if (sim.estado === "para")      return "La línea baja en línea recta desde " + num(sim.pts[0].v, 1) + " metros por segundo hasta tocar el cero a los " + num(sim.parada, 1) + " segundos, y allí se queda.";
+  if (sim.estado === "frena")     return "La línea baja de forma constante: la velocidad disminuye sin llegar a cero dentro de los diez segundos.";
+  return "La línea sube de forma constante desde " + num(sim.pts[0].v, 1) + " hasta " + num(sim.vfin, 1) + " metros por segundo.";
+}
+
+/* ── Cifras, lectura y tabla ───────────────────────────────────────────── */
+function pintarCifras(){
+  var sentido = sim.neta0 > 0.05 ? " a la derecha" : (sim.neta0 < -0.05 ? " a la izquierda" : "");
+  document.getElementById("c-neta").textContent = num(Math.abs(sim.neta0), 1) + " N" + sentido;
+  document.getElementById("c-fric").textContent = num(Math.abs(sim.fr0), 1) + " N";
+  document.getElementById("c-acel").textContent = num(Math.abs(sim.a0), 2) + " m/s²";
+  document.getElementById("c-dist").textContent = num(Math.abs(sim.xfin), 1) + " m";
+}
+
+function pintarLectura(){
+  var l1, l2, l3;
+  var d = function(t){ return '<span class="dato">' + t + '</span>'; };
+
+  l1 = "Empujas con " + d(ctrl.der + " N") + " hacia la derecha y tiras con " + d(ctrl.izq + " N") +
+       " hacia la izquierda, de modo que entre las dos quedan " + d(num(Math.abs(ctrl.der - ctrl.izq), 0) + " N") +
+       ". La caja, de " + d(ctrl.masa + " kg") + ", descansa sobre " + SUPERFICIES[ctrl.sup].nombre + ".";
+
+  if (sim.mu === 0){
+    l2 = "Sin fricción no hay nada que se oponga al empuje, así que la fuerza neta es " +
+         d(num(Math.abs(sim.neta0), 1) + " N") + " y la aceleración, " + d(num(Math.abs(sim.a0), 2) + " m/s²") + ".";
+  } else if (sim.estado === "quieta"){
+    l2 = "La fricción puede llegar hasta " + d(num(sim.fmax, 1) + " N") + " en esta superficie, y tu empuje no alcanza esa cifra. " +
+         "Por eso la fricción se limita a devolver " + d(num(Math.abs(sim.fr0), 1) + " N") + ", justo los necesarios para dejar la fuerza neta en cero.";
+  } else {
+    l2 = "Con la caja en marcha, la fricción se fija en " + d(num(sim.fmax, 1) + " N") +
+         " y se opone al movimiento. La fuerza neta queda en " + d(num(Math.abs(sim.neta0), 1) + " N") +
+         " y la aceleración, en " + d(num(Math.abs(sim.a0), 2) + " m/s²") + ".";
+  }
+
+  l3 = fraseEstado() + " En diez segundos recorre " + d(num(Math.abs(sim.xfin), 1) + " m") +
+       " y termina a " + d(num(Math.abs(sim.vfin), 1) + " m/s") + ".";
+
+  document.getElementById("lectura-1").innerHTML = l1;
+  document.getElementById("lectura-2").innerHTML = l2;
+  document.getElementById("lectura-3").innerHTML = l3;
+}
+
+function pintarTabla(){
+  var cuerpo = document.getElementById("tabla-hitos");
+  var filas = "", i, t, idx, p, nota;
+  for (i = 0; i <= 10; i += 2){
+    t = i;
+    idx = Math.round(t / DT);
+    p = sim.pts[idx];
+    if (Math.abs(p.v) < 0.05 && sim.parada !== null && t >= sim.parada) nota = "Detenida";
+    else if (Math.abs(p.v) < 0.05)                                       nota = "En reposo";
+    else if (Math.abs(sim.neta0) < 0.5)                                  nota = "Velocidad constante";
+    else if (sim.a0 * p.v > 0)                                           nota = "Acelerando";
+    else                                                                 nota = "Frenando";
+    filas += '<tr><th scope="row">' + t + ' s</th><td>' + num(p.v, 1) + ' m/s</td><td>' +
+             num(p.x, 1) + ' m</td><td>' + nota + '</td></tr>';
+  }
+  cuerpo.innerHTML = filas;
+}
+
+function actualizar(){
+  detener();
+  sim = simular(ctrl);
+  pintarBanco(0);
+  pintarGrafica();
+  pintarCifras();
+  pintarLectura();
+  pintarTabla();
+}
+
+/* ── Animación ─────────────────────────────────────────────────────────── */
+function detener(){
+  if (anim){ cancelAnimationFrame(anim); anim = null; }
+  document.getElementById("btn-animar").textContent = "Ver el movimiento";
+}
+
+function animar(){
+  var reducido = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reducido){ pintarBanco(sim.pts.length - 1); return; }
+  if (anim){ detener(); pintarBanco(0); return; }
+
+  var inicio = null;
+  var boton = document.getElementById("btn-animar");
+  boton.textContent = "Detener";
+
+  function paso(marca){
+    if (inicio === null) inicio = marca;
+    var seg = (marca - inicio) / 1000 * 1.6;   /* 10 s simulados en ~6 s reales */
+    if (seg >= TFIN){ pintarBanco(sim.pts.length - 1); detener(); return; }
+    pintarBanco(Math.round(seg / DT));
+    anim = requestAnimationFrame(paso);
+  }
+  anim = requestAnimationFrame(paso);
+}
+
+/* ── Controles ─────────────────────────────────────────────────────────── */
+(function(){
+  var masa = document.getElementById("masa");
+  var v0   = document.getElementById("v0");
+  var der  = document.getElementById("der");
+  var izq  = document.getElementById("izq");
+  var sup  = document.getElementById("sup");
+  var vert = document.getElementById("vertical");
+
+  function leer(){
+    ctrl.masa = parseInt(masa.value, 10);
+    ctrl.v0   = parseInt(v0.value, 10);
+    ctrl.der  = parseInt(der.value, 10);
+    ctrl.izq  = parseInt(izq.value, 10);
+    ctrl.sup  = sup.value;
+    ctrl.vertical = vert.checked;
+    document.getElementById("v-masa").textContent = ctrl.masa + " kg";
+    document.getElementById("v-v0").textContent   = ctrl.v0 + " m/s";
+    document.getElementById("v-der").textContent  = ctrl.der + " N";
+    document.getElementById("v-izq").textContent  = ctrl.izq + " N";
+    actualizar();
+  }
+
+  function poner(m, vi, d, i, s){
+    masa.value = m; v0.value = vi; der.value = d; izq.value = i; sup.value = s;
+    leer();
+  }
+
+  masa.addEventListener("input", leer);
+  v0.addEventListener("input", leer);
+  der.addEventListener("input", leer);
+  izq.addEventListener("input", leer);
+  sup.addEventListener("change", leer);
+  vert.addEventListener("change", leer);
+
+  document.getElementById("btn-animar").addEventListener("click", animar);
+  document.getElementById("btn-reiniciar").addEventListener("click", function(){
+    vert.checked = false;
+    poner(20, 0, 80, 0, "madera");
+  });
+
+  var escenarios = document.querySelectorAll("button[data-esc]"), k;
+  for (k = 0; k < escenarios.length; k++){
+    escenarios[k].addEventListener("click", function(){
+      var e = this.getAttribute("data-esc");
+      /* 25 kg sobre madera dan exactamente 49 N de fricción: el empuje puede igualarla */
+      if (e === "constante") poner(25, 6, 49, 0, "madera");
+      if (e === "atascada")  poner(40, 0, 120, 0, "asfalto");
+      if (e === "hielo")     poner(20, 12, 0, 0, "hielo");
+      if (e === "ideal")     poner(20, 8, 0, 0, "ideal");
+    });
+  }
+
+  leer();
+})();
+
+/* ── Retos ─────────────────────────────────────────────────────────────── */
+var A_BASE = (80 - 0.20 * 20 * G) / 20;   /* aceleración de partida: 2,04 m/s² */
+
+function veredicto(id, bien, titulo, texto){
+  var caja = document.getElementById(id);
+  caja.className = "veredicto " + (bien ? "bien" : "aun");
+  caja.innerHTML = '<p><strong class="' + (bien ? "bien" : "aun") + '">' + titulo + '</strong> ' + texto + '</p>';
+}
+
+(function(){
+  var botones = document.querySelectorAll("button[data-reto]"), i;
+  for (i = 0; i < botones.length; i++){
+    botones[i].addEventListener("click", function(){
+      var n = this.getAttribute("data-reto");
+
+      if (n === "1"){
+        var mueve = ctrl.v0 > 0 && sim.parada === null;
+        if (mueve && sim.mu > 0 && ctrl.der > 0 && Math.abs(sim.neta0) < 1){
+          veredicto("ver1", true, "Conseguido.",
+            "La caja avanza a " + num(ctrl.v0, 0) + " m/s y no cambia de velocidad, porque tu empuje de " +
+            ctrl.der + " N iguala a la fricción. Fuerza neta cero con la caja en movimiento: esto es exactamente la primera ley, y es lo que le ocurre a un camión en autopista.");
+        } else if (ctrl.v0 === 0){
+          veredicto("ver1", false, "Todavía no.",
+            "La caja tiene que estar ya en marcha. Sube la velocidad inicial por encima de cero y luego ajusta el empuje.");
+        } else if (sim.mu === 0){
+          veredicto("ver1", false, "Casi, pero por el camino equivocado.",
+            "Sin fricción la velocidad también se mantiene, pero aquí se pide que el empuje iguale a la fricción. Elige una superficie que tenga rozamiento.");
+        } else {
+          veredicto("ver1", false, "Todavía no.",
+            "La fuerza neta vale ahora " + num(Math.abs(sim.neta0), 1) + " N. Ajusta el empuje hasta que coincida con la fricción de " + num(sim.fmax, 1) + " N.");
+        }
+        return;
+      }
+
+      if (n === "2"){
+        var mismasFuerzas = (ctrl.der === 80 && ctrl.izq === 0 && ctrl.sup === "madera");
+        if (mismasFuerzas && Math.abs(sim.a0) >= 2 * A_BASE - 0.01){
+          veredicto("ver2", true, "Conseguido.",
+            "Con " + ctrl.masa + " kg la aceleración es de " + num(Math.abs(sim.a0), 2) +
+            " m/s², más del doble de los 2,04 m/s² iniciales, y eso sin haber tocado ni una sola fuerza. En a = F ÷ m la masa divide: al reducirla, la aceleración sube.");
+        } else if (!mismasFuerzas){
+          veredicto("ver2", false, "Has cambiado lo que no debías.",
+            "Devuelve el empuje a 80 N, el tirón a 0 N y la superficie a madera pulida. Lo único que puedes mover es la masa.");
+        } else {
+          veredicto("ver2", false, "Todavía no.",
+            "La aceleración va por " + num(Math.abs(sim.a0), 2) + " m/s² y hace falta pasar de 4,08 m/s². Prueba a aligerar la caja.");
+        }
+        return;
+      }
+
+      if (n === "3"){
+        if (ctrl.der >= 100 && sim.estado === "quieta"){
+          veredicto("ver3", true, "Conseguido.",
+            "Empujas con " + ctrl.der + " N y la caja ni se inmuta, porque la fricción puede llegar hasta " +
+            num(sim.fmax, 1) + " N y se limita a devolver los " + ctrl.der +
+            " N que haces tú. Esfuerzo grande, fuerza neta cero.");
+        } else if (ctrl.der < 100){
+          veredicto("ver3", false, "Todavía no.",
+            "El empuje tiene que ser de 100 N o más. Ahora va por " + ctrl.der + " N.");
+        } else {
+          veredicto("ver3", false, "Todavía no.",
+            "La caja se mueve, porque la fricción máxima de esta superficie es de " + num(sim.fmax, 1) +
+            " N y tu empuje la supera. Prueba con una superficie más áspera o con una caja más pesada, y asegúrate de que la velocidad inicial es cero.");
+        }
+        return;
+      }
+
+      if (n === "4"){
+        if (ctrl.v0 >= 10 && ctrl.der === 0 && ctrl.izq === 0 && sim.parada !== null && sim.parada <= 5){
+          veredicto("ver4", true, "Conseguido.",
+            "La caja sale a " + ctrl.v0 + " m/s, nadie la toca y se detiene sola a los " + num(sim.parada, 1) +
+            " segundos. La única fuerza en juego es la fricción, y la energía del movimiento se ha ido en forma de calor.");
+        } else if (ctrl.v0 < 10){
+          veredicto("ver4", false, "Todavía no.",
+            "Hace falta lanzarla a 10 m/s o más. Ahora sale a " + ctrl.v0 + " m/s.");
+        } else if (ctrl.der > 0 || ctrl.izq > 0){
+          veredicto("ver4", false, "Todavía no.",
+            "Deja el empuje y el tirón en cero: el reto es que se detenga sola, sin que nadie la empuje ni la sujete.");
+        } else if (sim.parada === null){
+          veredicto("ver4", false, "Todavía no.",
+            "Con esta superficie la caja no llega a detenerse en diez segundos. Elige una con más fricción.");
+        } else {
+          veredicto("ver4", false, "Por poco.",
+            "Se detiene a los " + num(sim.parada, 1) + " segundos y el reto pide menos de cinco. Necesitas más fricción o menos velocidad inicial.");
+        }
+      }
+    });
+  }
+})();
+
+/* ===========================================================================
+   MÓDULO 2 · CLASIFICADOR DE LAS TRES LEYES
+   Dos preguntas bastan. Si la escena habla de dos cuerpos que se empujan, es
+   la tercera. Si habla de uno solo, decide si su movimiento cambia.
+   ========================================================================= */
+
+var CASOS = [
+  {texto:"Un autobús frena de golpe y los pasajeros que van de pie se inclinan hacia delante. Nadie los ha empujado.",
+   cuerpo:"los pasajeros", objetos:"uno", cambia:"no", ley:1,
+   expl:"Los pasajeros venían moviéndose con el autobús y siguen haciéndolo cuando este se detiene. Lo que cambia de movimiento es el autobús, no ellos."},
+
+  {texto:"Una persona salta desde un bote hacia el muelle y el bote se aleja de la orilla.",
+   cuerpo:"la persona", objetos:"dos", cambia:"si", ley:3,
+   expl:"La persona empuja el bote hacia atrás y el bote la empuja a ella hacia delante con la misma fuerza. Son dos cuerpos y dos fuerzas, una sobre cada uno."},
+
+  {texto:"Con el mismo empuje, un carrito de compras vacío arranca mucho más deprisa que uno lleno hasta arriba.",
+   cuerpo:"el carrito", objetos:"uno", cambia:"si", ley:2,
+   expl:"Misma fuerza y distinta masa dan distinta aceleración, que es justo lo que dice a = F ÷ m."},
+
+  {texto:"Se retira el mantel de un tirón rapidísimo y los platos se quedan en la mesa, en su sitio.",
+   cuerpo:"los platos", objetos:"uno", cambia:"no", ley:1,
+   expl:"Los platos estaban en reposo y siguen en reposo. El tirón es tan rápido que la fricción del mantel apenas actúa sobre ellos."},
+
+  {texto:"Un cohete expulsa gases a gran velocidad hacia abajo y asciende.",
+   cuerpo:"el cohete", objetos:"dos", cambia:"si", ley:3,
+   expl:"El cohete empuja los gases hacia abajo y los gases empujan al cohete hacia arriba. No necesita apoyarse en nada: le basta con el gas que expulsa."},
+
+  {texto:"Un camión circula por una recta a velocidad constante durante media hora.",
+   cuerpo:"el camión", objetos:"uno", cambia:"no", ley:1,
+   expl:"Su movimiento no cambia, de modo que la fuerza neta es cero: el empuje del motor iguala a la fricción y a la resistencia del aire. Fuerza neta cero no significa estar quieto."},
+
+  {texto:"Se duplica la fuerza neta sobre una misma caja y su aceleración también se duplica.",
+   cuerpo:"la caja", objetos:"uno", cambia:"si", ley:2,
+   expl:"Con la masa fija, la aceleración es proporcional a la fuerza neta. Esta es la relación que se calcula con F = m · a."},
+
+  {texto:"Un libro descansa sobre una mesa. El libro aprieta la mesa hacia abajo y la mesa sostiene al libro hacia arriba con la misma fuerza.",
+   cuerpo:"el libro", objetos:"dos", cambia:"no", ley:3,
+   expl:"Hay dos cuerpos y dos fuerzas iguales y opuestas, una sobre cada uno. Que el libro esté quieto lo explica la primera ley; lo que describe el enunciado es la pareja de fuerzas, y eso es la tercera."},
+
+  {texto:"Una bicicleta deja de pedalear en llano y se va deteniendo poco a poco por el rozamiento.",
+   cuerpo:"la bicicleta", objetos:"uno", cambia:"si", ley:2,
+   expl:"La fricción es una fuerza neta en contra del movimiento, y por eso hay aceleración, negativa en este caso. Sin ella, la bicicleta seguiría avanzando indefinidamente."}
+];
+
+var NOMBRE_LEY = {1:"primera ley", 2:"segunda ley", 3:"tercera ley"};
+var orden = [], puesto = 0, selA = null, selB = null, cerrado = false;
+var aciertos = 0, resueltos = 0, intentos = 0;
+
+function barajar(n){
+  var a = [], i, j, t;
+  for (i = 0; i < n; i++){ a.push(i); }
+  for (i = n - 1; i > 0; i--){
+    j = Math.floor(Math.random() * (i + 1));
+    t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function limpiarBotones(lado){
+  var ops = document.querySelectorAll('button.opcion[data-lado="' + lado + '"]'), i;
+  for (i = 0; i < ops.length; i++){ ops[i].setAttribute("aria-pressed", "false"); }
+}
+
+function marcarFila(){
+  var filas = ["f-ley1", "f-ley2", "f-ley3"], i;
+  for (i = 0; i < filas.length; i++){ document.getElementById(filas[i]).className = ""; }
+  var pista = document.getElementById("pista-fila");
+  var ley = null;
+  if (selA === "dos") ley = 3;
+  else if (selA === "uno" && selB === "no") ley = 1;
+  else if (selA === "uno" && selB === "si") ley = 2;
+  if (ley){
+    document.getElementById("f-ley" + ley).className = "marcada";
+    pista.textContent = "Tu respuesta lleva a la " + NOMBRE_LEY[ley] + ", resaltada en la tabla de arriba.";
+  } else {
+    pista.textContent = "";
+  }
+  document.getElementById("bloque-b").hidden = (selA !== "uno");
+}
+
+function pintarCaso(){
+  var c = CASOS[orden[puesto]];
+  selA = null; selB = null; cerrado = false; intentos = 0;
+  limpiarBotones("a"); limpiarBotones("b");
+  document.getElementById("contador").textContent = "Caso " + (puesto + 1) + " de " + CASOS.length;
+  document.getElementById("texto-caso").textContent = c.texto;
+  document.getElementById("pide-b").textContent = "¿Cambia el movimiento de " + c.cuerpo + "?";
+  document.getElementById("retro-caso").innerHTML = "";
+  document.getElementById("btn-siguiente").hidden = true;
+  document.getElementById("btn-comprobar").disabled = false;
+  marcarFila();
+  pintarMarcador();
+}
+
+function pintarMarcador(){
+  var m = document.getElementById("marcador");
+  m.textContent = resueltos === 0 ? "" : "Aciertos: " + aciertos + " de " + resueltos + " casos resueltos.";
+}
+
+function retroCaso(clase, titulo, texto){
+  document.getElementById("retro-caso").innerHTML =
+    '<div class="' + clase + '"><p><strong>' + titulo + '</strong> ' + texto + '</p></div>';
+}
+
+function cerrarCaso(bien){
+  cerrado = true;
+  resueltos++;
+  if (bien) aciertos++;
+  document.getElementById("btn-comprobar").disabled = true;
+  document.getElementById("btn-siguiente").hidden = (puesto >= CASOS.length - 1);
+  pintarMarcador();
+}
+
+function comprobarCaso(){
+  if (cerrado) return;
+  var c = CASOS[orden[puesto]];
+  if (!selA){ retroCaso("caja-mal", "Falta la primera respuesta.", "Decide de cuántos cuerpos habla la escena."); return; }
+  if (selA === "uno" && !selB){ retroCaso("caja-mal", "Falta la segunda respuesta.", "Decide si el movimiento de " + c.cuerpo + " cambia o no."); return; }
+
+  var leyElegida = selA === "dos" ? 3 : (selB === "no" ? 1 : 2);
+  intentos++;
+
+  if (leyElegida === c.ley){
+    retroCaso("caja-ok", "Correcto: " + NOMBRE_LEY[c.ley] + ".", c.expl);
+    cerrarCaso(intentos === 1);
+    return;
+  }
+
+  if (intentos < 2){
+    var pista;
+    if (selA !== c.objetos){
+      pista = "Relee el enunciado y cuenta los protagonistas: ¿hay dos cuerpos empujándose el uno al otro, o toda la escena gira alrededor de uno solo?";
+    } else {
+      pista = "El número de cuerpos está bien. Lo que falla es la segunda pregunta: fíjate en " + c.cuerpo +
+              " y decide si arranca, frena o se desvía, o si en realidad sigue exactamente como venía.";
+    }
+    retroCaso("caja-mal", "Todavía no.", pista + " Puedes corregir tu respuesta y volver a comprobar.");
+    return;
+  }
+
+  retroCaso("caja-mal", "La respuesta era la " + NOMBRE_LEY[c.ley] + ".", c.expl);
+  cerrarCaso(false);
+}
+
+(function(){
+  var ops = document.querySelectorAll("button.opcion"), i;
+  for (i = 0; i < ops.length; i++){
+    ops[i].addEventListener("click", function(){
+      if (cerrado) return;
+      var lado = this.getAttribute("data-lado"), v = this.getAttribute("data-v");
+      limpiarBotones(lado);
+      this.setAttribute("aria-pressed", "true");
+      if (lado === "a"){
+        selA = v;
+        if (v === "dos"){ selB = null; limpiarBotones("b"); }
+      } else {
+        selB = v;
+      }
+      marcarFila();
+    });
+  }
+  document.getElementById("btn-comprobar").addEventListener("click", comprobarCaso);
+  document.getElementById("btn-siguiente").addEventListener("click", function(){
+    if (puesto < CASOS.length - 1){ puesto++; pintarCaso(); }
+  });
+
+  orden = barajar(CASOS.length);
+  pintarCaso();
+})();
+
+/* ===========================================================================
+   PREGUNTAS RÁPIDAS (módulos 3 y 4)
+   ========================================================================= */
+(function(){
+  var preguntas = document.querySelectorAll(".pregunta"), i, j;
+  for (i = 0; i < preguntas.length; i++){
+    (function(p){
+      var ok = p.getAttribute("data-ok");
+      var expl = p.getAttribute("data-expl");
+      var caja = p.querySelector(".retro");
+      var botones = p.querySelectorAll("button[data-op]");
+      for (j = 0; j < botones.length; j++){
+        botones[j].addEventListener("click", function(){
+          if (this.getAttribute("data-op") === ok){
+            caja.innerHTML = '<div class="caja-ok"><p><strong>Correcto.</strong> ' + expl + '</p></div>';
+            var k;
+            for (k = 0; k < botones.length; k++){ botones[k].disabled = true; }
+            this.style.background = "#1b5e20";
+            this.style.color = "#ffffff";
+            this.style.borderColor = "#1b5e20";
+          } else {
+            caja.innerHTML = '<div class="caja-mal"><p><strong>No es esa.</strong> Vuelve a leer el enunciado y prueba con otra opción.</p></div>';
+          }
+        });
+      }
+    })(preguntas[i]);
+  }
+})();
+</script>
+</body>
+</html>
