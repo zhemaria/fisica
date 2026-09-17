@@ -261,6 +261,11 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
 .pregunta p.enunciado{font-weight:600;margin:0 0 10px;}
 .retro:empty{display:none;}
 .retro{margin-top:10px;}
+
+/* Índice de enlaces directos */
+table.datos button{padding:6px 12px;font-size:13px;}
+code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
+  font-size:14px;white-space:nowrap;}
 </style>
 </head>
 <body class="u6">
@@ -273,22 +278,22 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
 </header>
 
 <nav class="temas" aria-label="Temas de este interactivo">
-  <button type="button" class="tema" data-abre="m1" aria-controls="m1" aria-expanded="true">
+  <button type="button" class="tema" data-abre="banco" aria-controls="banco" aria-expanded="true">
     <span class="tema-n" aria-hidden="true">1</span>
     <span class="tema-t">El banco de fuerzas</span>
     <span class="tema-s">Empuja una caja y mira qué le pasa a su velocidad.</span>
   </button>
-  <button type="button" class="tema" data-abre="m2" aria-controls="m2" aria-expanded="false">
+  <button type="button" class="tema" data-abre="leyes" aria-controls="leyes" aria-expanded="false">
     <span class="tema-n" aria-hidden="true">2</span>
     <span class="tema-t">Las tres leyes de Newton</span>
     <span class="tema-s">Nueve escenas que se clasifican con solo dos preguntas.</span>
   </button>
-  <button type="button" class="tema" data-abre="m3" aria-controls="m3" aria-expanded="false">
+  <button type="button" class="tema" data-abre="friccion" aria-controls="friccion" aria-expanded="false">
     <span class="tema-n" aria-hidden="true">3</span>
     <span class="tema-t">La fricción</span>
     <span class="tema-s">Cuándo estorba y cuándo resulta imprescindible.</span>
   </button>
-  <button type="button" class="tema" data-abre="m4" aria-controls="m4" aria-expanded="false">
+  <button type="button" class="tema" data-abre="preguntas" aria-controls="preguntas" aria-expanded="false">
     <span class="tema-n" aria-hidden="true">4</span>
     <span class="tema-t">Preguntas rápidas</span>
     <span class="tema-s">Siete preguntas para repasar toda la lección.</span>
@@ -309,7 +314,7 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   </div>
 </div>
 
-<details class="bloque" id="m1" open>
+<details class="bloque" data-modulo id="banco" open>
   <summary>
     <span class="chevron" aria-hidden="true">&#9654;</span>
     <span class="num-modulo" aria-hidden="true">1</span>
@@ -418,7 +423,7 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   </table>
 </div>
 
-<h3 style="font-size:18px;color:var(--u2);margin:26px 0 12px;">Cuatro retos</h3>
+<h3 id="retos" style="font-size:18px;color:var(--u2);margin:26px 0 12px;">Cuatro retos</h3>
 <p class="ayuda">Mueve los controles hasta conseguir cada cosa y pulsa <em>Comprobar</em>. Cada reto desmonta una confusión distinta.</p>
 
 <div class="reto">
@@ -462,7 +467,7 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   </div>
 </details>
 
-<details class="bloque" id="m2">
+<details class="bloque" data-modulo id="leyes">
   <summary>
     <span class="chevron" aria-hidden="true">&#9654;</span>
     <span class="num-modulo" aria-hidden="true">2</span>
@@ -509,7 +514,7 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   <p><strong>Por qué acción y reacción no se anulan:</strong> porque no actúan sobre el mismo cuerpo. El pie empuja al suelo y el suelo empuja al pie; son dos objetos distintos y cada uno siente su propia fuerza. Solo se anulan entre sí las fuerzas que actúan <em>sobre un mismo objeto</em>, que es justo lo que se suma en la fuerza neta del módulo 1.</p>
 </div>
 
-<div class="caso" id="caso">
+<div class="caso" id="casos">
   <p class="contador" id="contador"></p>
   <p class="enunciado-caso" id="texto-caso"></p>
 
@@ -547,7 +552,7 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   </div>
 </details>
 
-<details class="bloque" id="m3">
+<details class="bloque" data-modulo id="friccion">
   <summary>
     <span class="chevron" aria-hidden="true">&#9654;</span>
     <span class="num-modulo" aria-hidden="true">3</span>
@@ -621,7 +626,7 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   </div>
 </details>
 
-<details class="bloque" id="m4">
+<details class="bloque" data-modulo id="preguntas">
   <summary>
     <span class="chevron" aria-hidden="true">&#9654;</span>
     <span class="num-modulo" aria-hidden="true">4</span>
@@ -706,6 +711,34 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
   </div>
 </details>
 
+<details class="bloque" id="enlaces">
+  <summary>
+    <span class="chevron" aria-hidden="true">&#9654;</span>
+    <span class="titulo-modulo">Enlaces directos a cada parte</span>
+  </summary>
+  <div class="cuerpo">
+    <p>Añadiendo un ancla al final de la dirección, el interactivo se abre ya colocado en esa parte: el módulo se despliega solo y la página baja hasta él. Sirve para enlazar desde Brightspace al terminar cada segmento de la clase, sin que el estudiante tenga que buscar.</p>
+    <p class="ayuda">Ejemplo: <code>fuerza_neta_newton_friccion.html#banco</code></p>
+    <div class="tabla-wrap">
+      <table class="datos">
+        <caption>Anclas disponibles en este archivo, con la parte a la que lleva cada una.</caption>
+        <thead>
+          <tr><th scope="col">Parte</th><th scope="col">Ancla</th><th scope="col">Qué encuentra el estudiante</th><th scope="col">Enlace</th></tr>
+        </thead>
+        <tbody>
+      <tr><th scope="row">Módulo 1 · El banco de fuerzas</th><td><code>#banco</code></td><td>El simulador completo, con la escena y la gráfica.</td><td><button type="button" class="secundario" data-copiar="banco">Copiar enlace</button></td></tr>
+      <tr><th scope="row">Los cuatro retos</th><td><code>#retos</code></td><td>Directamente en los retos del módulo 1.</td><td><button type="button" class="secundario" data-copiar="retos">Copiar enlace</button></td></tr>
+      <tr><th scope="row">Módulo 2 · Las tres leyes</th><td><code>#leyes</code></td><td>La tabla de decisión y el clasificador de casos.</td><td><button type="button" class="secundario" data-copiar="leyes">Copiar enlace</button></td></tr>
+      <tr><th scope="row">El clasificador de casos</th><td><code>#casos</code></td><td>Directamente en la primera escena que hay que clasificar.</td><td><button type="button" class="secundario" data-copiar="casos">Copiar enlace</button></td></tr>
+      <tr><th scope="row">Módulo 3 · La fricción</th><td><code>#friccion</code></td><td>Los seis casos de estorba o es imprescindible.</td><td><button type="button" class="secundario" data-copiar="friccion">Copiar enlace</button></td></tr>
+      <tr><th scope="row">Módulo 4 · Preguntas rápidas</th><td><code>#preguntas</code></td><td>Las siete preguntas de repaso.</td><td><button type="button" class="secundario" data-copiar="preguntas">Copiar enlace</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ayuda">El botón copia la dirección completa al portapapeles. Si el archivo está abierto desde el disco, la dirección copiada será local; una vez publicado en el sitio, será la definitiva.</p>
+  </div>
+</details>
+
 <footer class="pie">
   <p>Fuerza neta, las leyes de Newton y la fricción · Lección 6.1 · Spanish ASE Science</p>
   <p>José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago</p>
@@ -717,45 +750,107 @@ button.opcion[aria-pressed="true"]{background:var(--u);color:#fff;border-color:v
 "use strict";
 
 /* ===========================================================================
-   NAVEGACIÓN POR TARJETAS
-   Cada tarjeta del encabezado abre su módulo y cierra los demás, para que la
-   página quede corta y el tema elegido se vea entero. Los botones de abrir y
-   cerrar todo existen para quien prefiera leerlo seguido o imprimirlo.
+   NAVEGACIÓN POR TARJETAS Y ENLACES DIRECTOS
+   Cada tarjeta del encabezado abre su módulo y cierra los demás. Además, la
+   dirección admite un ancla al final: al abrir el archivo con #escala, por
+   ejemplo, ese módulo se despliega solo y la página baja hasta él. Eso
+   permite enlazar desde Brightspace al punto exacto de la lección.
    ========================================================================= */
+var tarjetas = document.querySelectorAll("button.tema");
+var modulos  = document.querySelectorAll("details.bloque[data-modulo]");
+
+function sincronizarTemas(){
+  var j;
+  for (j = 0; j < tarjetas.length; j++){
+    var destino = document.getElementById(tarjetas[j].getAttribute("data-abre"));
+    tarjetas[j].setAttribute("aria-expanded", destino && destino.open ? "true" : "false");
+  }
+}
+
+function bloqueQueContiene(nodo){
+  while (nodo && nodo !== document.body){
+    if (nodo.tagName === "DETAILS") return nodo;
+    nodo = nodo.parentNode;
+  }
+  return null;
+}
+
+function sinMovimiento(){
+  return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+/* Abre el módulo que contiene el destino, cierra los demás y baja hasta él.
+   Devuelve false si el ancla no corresponde a nada de este archivo. */
+function irA(id, desplazar){
+  var destino = document.getElementById(id);
+  if (!destino) return false;
+  var suyo = bloqueQueContiene(destino), j;
+  for (j = 0; j < modulos.length; j++){
+    modulos[j].open = (modulos[j] === suyo);
+  }
+  if (suyo && !suyo.hasAttribute("data-modulo")) suyo.open = true;
+  sincronizarTemas();
+  if (desplazar){
+    destino.scrollIntoView({behavior: sinMovimiento() ? "auto" : "smooth", block: "start"});
+  }
+  /* el foco va al destino para que un lector de pantalla siga el salto */
+  if (!destino.hasAttribute("tabindex")) destino.setAttribute("tabindex", "-1");
+  destino.focus({preventScroll: true});
+  return true;
+}
+
+function abrirTodos(abierto){
+  var j;
+  for (j = 0; j < modulos.length; j++){ modulos[j].open = abierto; }
+  sincronizarTemas();
+}
+
 (function(){
-  var tarjetas = document.querySelectorAll("button.tema");
-  var bloques  = document.querySelectorAll("details.bloque");
   var i;
-
-  function sincronizar(){
-    var j;
-    for (j = 0; j < tarjetas.length; j++){
-      var destino = document.getElementById(tarjetas[j].getAttribute("data-abre"));
-      tarjetas[j].setAttribute("aria-expanded", destino.open ? "true" : "false");
-    }
-  }
-
-  function todos(abierto){
-    var j;
-    for (j = 0; j < bloques.length; j++){ bloques[j].open = abierto; }
-    sincronizar();
-  }
-
   for (i = 0; i < tarjetas.length; i++){
     tarjetas[i].addEventListener("click", function(){
-      var id = this.getAttribute("data-abre"), j;
-      for (j = 0; j < bloques.length; j++){ bloques[j].open = (bloques[j].id === id); }
-      sincronizar();
-      var reducido = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      document.getElementById(id).scrollIntoView({behavior: reducido ? "auto" : "smooth", block: "start"});
+      var id = this.getAttribute("data-abre");
+      irA(id, true);
+      /* la dirección muestra el ancla, lista para copiar y pegar */
+      if (window.history && window.history.replaceState){
+        window.history.replaceState(null, "", "#" + id);
+      }
     });
   }
+  for (i = 0; i < modulos.length; i++){ modulos[i].addEventListener("toggle", sincronizarTemas); }
+  document.getElementById("btn-abrir-todo").addEventListener("click", function(){ abrirTodos(true); });
+  document.getElementById("btn-cerrar-todo").addEventListener("click", function(){ abrirTodos(false); });
 
-  for (i = 0; i < bloques.length; i++){ bloques[i].addEventListener("toggle", sincronizar); }
+  /* ancla al cargar y ancla al cambiar dentro de la misma página */
+  function atender(){
+    var h = window.location.hash.replace("#", "");
+    if (h) irA(h, true);
+  }
+  window.addEventListener("hashchange", atender);
+  sincronizarTemas();
+  if (window.location.hash) window.setTimeout(atender, 60);
+})();
 
-  document.getElementById("btn-abrir-todo").addEventListener("click", function(){ todos(true); });
-  document.getElementById("btn-cerrar-todo").addEventListener("click", function(){ todos(false); });
-  sincronizar();
+/* ── Botones de copiar enlace del índice final ─────────────────────────── */
+(function(){
+  var botones = document.querySelectorAll("button[data-copiar]"), i;
+  for (i = 0; i < botones.length; i++){
+    botones[i].addEventListener("click", function(){
+      var boton = this;
+      var url = window.location.href.split("#")[0] + "#" + boton.getAttribute("data-copiar");
+      function avisar(texto){
+        var previo = boton.textContent;
+        boton.textContent = texto;
+        window.setTimeout(function(){ boton.textContent = previo; }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(function(){ avisar("Copiado"); },
+                                                function(){ avisar("No se pudo"); });
+      } else {
+        avisar("No se pudo");
+      }
+    });
+  }
 })();
 
 /* ===========================================================================
