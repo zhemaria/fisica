@@ -242,6 +242,15 @@ a.puente .detalle{display:block;font-size:14px;color:#333;margin-top:3px;}
 table.datos button{padding:6px 12px;font-size:13px;}
 code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
   font-size:14px;white-space:nowrap;}
+/* Volver arriba: botón flotante y botón al final de cada tema */
+button.subir{position:fixed;right:20px;bottom:20px;z-index:50;width:54px;height:54px;padding:0;
+  border-radius:50%;background:var(--u);color:#fff;font-size:24px;line-height:1;
+  box-shadow:0 3px 10px rgba(0,0,0,.28);display:none;align-items:center;justify-content:center;}
+button.subir.visible{display:flex;}
+button.subir:hover{background:var(--u2);}
+@media print{ button.subir{display:none !important;} }
+.fin-tema{display:flex;justify-content:flex-end;margin-top:22px;
+  border-top:1px solid var(--linea);padding-top:14px;}
 </style>
 </head>
 <body class="u6">
@@ -375,6 +384,9 @@ code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
       <p>De W = F × d salen las otras dos formas según qué falte: F = W ÷ d y d = W ÷ F. Es el mismo procedimiento de la densidad en la Lección 5.2 y de F = m · a en la 6.1.</p>
     </div>
 
+    <div class="fin-tema">
+      <button type="button" class="secundario volver">Volver a los temas</button>
+    </div>
   </div>
 </details>
 
@@ -470,6 +482,9 @@ code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
       <p><strong>Lo que hay que llevarse de aquí:</strong> el trabajo mide <em>cuánto</em> se hizo; la potencia, <em>en cuánto tiempo</em>. Subir una caja en la mitad de tiempo dobla la potencia y no cambia el trabajo ni un julio. Por eso dos motores pueden hacer exactamente lo mismo y costar precios muy distintos.</p>
     </div>
 
+    <div class="fin-tema">
+      <button type="button" class="secundario volver">Volver a los temas</button>
+    </div>
   </div>
 </details>
 
@@ -593,6 +608,9 @@ code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
       </a>
     </div>
 
+    <div class="fin-tema">
+      <button type="button" class="secundario volver">Volver a los temas</button>
+    </div>
   </div>
 </details>
 
@@ -679,6 +697,9 @@ code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
       <p class="marcador" id="marcador">Aciertos a la primera: 0 de 7</p>
     </div>
 
+    <div class="fin-tema">
+      <button type="button" class="secundario volver">Volver a los temas</button>
+    </div>
   </div>
 </details>
 
@@ -716,6 +737,10 @@ code{background:var(--u-bg);color:var(--u2);padding:2px 6px;border-radius:5px;
   <p>José M. Fernández, ABE/ASE Math Master Teacher, Harry S. Truman College — City Colleges of Chicago</p>
   <p>© 2026. Esta obra está licenciada bajo <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" rel="license">Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional (CC BY-NC-SA 4.0)</a>.</p>
 </footer>
+
+<button type="button" class="subir" id="btn-subir" aria-label="Volver al principio de la página">
+  <span aria-hidden="true">&#8593;</span>
+</button>
 
 </div>
 <script>
@@ -1503,6 +1528,32 @@ function actualizarEnergia(){
       }
     })(preguntas[i]);
   }
+})();
+/* ===========================================================================
+   VOLVER ARRIBA
+   Un botón flotante que aparece al bajar y otro al cerrar cada tema. Los dos
+   devuelven el foco a la primera tarjeta, para que quien navega con teclado o
+   con lector de pantalla quede donde está la vista.
+   ========================================================================= */
+(function(){
+  var subir = document.getElementById("btn-subir");
+
+  function alPrincipio(){
+    window.scrollTo({top: 0, behavior: sinMovimiento() ? "auto" : "smooth"});
+    var primera = document.querySelector("button.tema");
+    if (primera) primera.focus({preventScroll: true});
+  }
+
+  subir.addEventListener("click", alPrincipio);
+  var vueltas = document.querySelectorAll("button.volver"), i;
+  for (i = 0; i < vueltas.length; i++){ vueltas[i].addEventListener("click", alPrincipio); }
+
+  function mirar(){
+    subir.className = (window.pageYOffset || document.documentElement.scrollTop) > 420 ? "subir visible" : "subir";
+  }
+  window.addEventListener("scroll", mirar);
+  window.addEventListener("resize", mirar);
+  mirar();
 })();
 </script>
 </body>
